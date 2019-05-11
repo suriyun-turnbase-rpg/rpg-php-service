@@ -14,6 +14,10 @@ if ((float)PCRE_VERSION < 7.9) {
 // Read configs
 $f3->config('configs/config.ini');
 
+// Read game data
+$gameDataJson = file_get_contents('./GameData.json');
+$f3->set('GameData', json_decode($gameDataJson, true));
+
 // Prepare database
 $f3->set('DB', new DB\SQL('mysql:'.
     'host='.$GLOBALS['db_host'].';'.
@@ -22,8 +26,10 @@ $f3->set('DB', new DB\SQL('mysql:'.
     $GLOBALS['db_user'], 
     $GLOBALS['db_pass']));
 
-// Services
+// Prepare functions
 $f3->set('AUTOLOAD', 'databases/|functions/|jwt/');
+
+// Services
 $f3->route('GET /', function() {
     echo ';)';
 });
