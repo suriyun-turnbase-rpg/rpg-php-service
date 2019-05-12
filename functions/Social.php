@@ -86,8 +86,8 @@ function FriendDecline($targetPlayerId)
 
 function FriendDelete($targetPlayerId)
 {
-    $player = Spark.getPlayer();
-    $playerId = player.getPlayerId();
+    $player = GetPlayer();
+    $playerId = $player->id;
     $playerFriendDb = new PlayerFriend();
     $playerFriendDb->erase(array(
         '(playerId = ? AND targetPlayerId = ?) OR (playerId = ? AND targetPlayerId = ?)',
@@ -98,7 +98,7 @@ function FriendDelete($targetPlayerId)
     ));
 }
 
-function FindUser(displayName)
+function FindUser($displayName)
 {
     
 }
