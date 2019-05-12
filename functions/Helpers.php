@@ -29,7 +29,7 @@ function WeightedRandom($weights, $noResultWeight)
     $sum = 0;
     foreach ($weights as $key => $weight) {
         $sum += $weight;
-        $keys.push($key);
+        $keys[] = $key;
     }
     
     if (count($keys) == 0) {
@@ -608,7 +608,7 @@ function GetFormationCharacterIds($playerId, $playerSelectedFormation)
     ));
     foreach ($formations as $formation) {
         if ($formation->dataId == $playerSelectedFormation && !empty($formation->itemId)) {
-            $characterIds.push($formation->itemId);
+            $characterIds[] = $formation->itemId;
         }
     }
     return $characterIds;
