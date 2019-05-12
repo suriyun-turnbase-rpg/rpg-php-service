@@ -282,7 +282,7 @@ function SetNewPlayerData($player)
             }
             for ($j = 0; $j < $countUpdateItems; ++$j)
             {
-                $updateItem = $updateItem[$j];
+                $updateItem = $updateItems[$j];
                 $updateItem->update();
             }
         }
@@ -309,7 +309,7 @@ function SetNewPlayerData($player)
             }
             for ($j = 0; $j < $countUpdateItems; ++$j)
             {
-                $updateItem = $updateItem[$j];
+                $updateItem = $updateItems[$j];
                 $updateItem->update();
             }
         }
