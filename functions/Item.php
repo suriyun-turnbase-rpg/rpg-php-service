@@ -364,6 +364,7 @@ function GetAvailableLootBoxList()
     foreach ($lootBoxes as $key => $value) {
         $list[] = $key;
     }
+    $output = array();
     $output['list'] = $list;
     echo json_encode($output);
 }
@@ -375,6 +376,7 @@ function GetAvailableIapPackageList()
     foreach ($iapPackages as $key => $value) {
         $list[] = $key;
     }
+    $output = array();
     $output['list'] = $list;
     echo json_encode($output);
 }
