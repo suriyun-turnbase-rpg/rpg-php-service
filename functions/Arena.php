@@ -1,5 +1,5 @@
 <?php
-function StartDuel($f3, $params, $targetPlayerId)
+function StartDuel($targetPlayerId)
 {
     $gameData = \Base::instance()->get('GameData');
     $output = array();
@@ -111,20 +111,21 @@ function FinishDuel($session, $battleResult, $deadCharacters)
                 $rewardSoftCurrency = $arenaRank['rewardSoftCurrency'];
                 $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']);
                 $softCurrency->amount += $rewardSoftCurrency;
-                $updateCurrencies.push($softCurrency);
+                $updateCurrencies[] = $softCurrency;
                 // Hard currency
                 $rewardHardCurrency = $arenaRank['rewardHardCurrency'];
                 $hardCurrency = GetCurrency($playerId, $gameData['currencies']['HARD_CURRENCY']);
                 $hardCurrency->amount += $rewardHardCurrency;
-                $updateCurrencies.push($hardCurrency);
+                $updateCurrencies[] = $hardCurrency;
                 // Items
-                $countRewardItems = count($arenaRank['rewardItems']);
+                $rewardItems = $arenaRank['rewardItems'];
+                $countRewardItems = count($rewardItems);
                 for ($i = 0; $i < $countRewardItems; ++$i) {
-                    $rewardItem = $arenaRank['rewardItems'][$i];
+                    $rewardItem = $rewardItems[$i];
                     if (empty($rewardItem) || empty($rewardItem['id'])) {
                         continue;
                     }
-                        
+                    
                     $addItemsResult = AddItems($playerId, $rewardItem['id'], $rewardItem['amount']);
                     if ($addItemsResult['success'])
                     {
@@ -171,5 +172,6 @@ function FinishDuel($session, $battleResult, $deadCharacters)
         $output['updateScore'] = $updateScore;
         $output['player'] = $player;
     }
+    echo json_encode($output);
 }
 ?>
