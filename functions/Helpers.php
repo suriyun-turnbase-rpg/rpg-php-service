@@ -331,6 +331,23 @@ function InsertNewPlayer($type, $username, $password)
     return $player;
 }
 
+function UpdatePlayerLoginToken($player)
+{
+    $player->loginToken = '';   // TODO: Login token stuffs
+    $player->update();
+    return $player;
+}
+
+function IsPlayerWithUsernameFound($type, $username)
+{
+    $playerAuthDb = new PlayerAuth();
+    return $playerAuthDb->count(array(
+        'type = ?, username = ?',
+        $type,
+        $username
+    )) > 0;
+}
+
 function DecreasePlayerStamina($playerId, $staminaType, $decreaseAmount)
 {
     $gameData = \Base::instance()->get('GameData');
