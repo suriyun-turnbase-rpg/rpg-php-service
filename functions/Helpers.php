@@ -19,7 +19,7 @@ function GetPlayer()
 
 function WeightedRandom($weights, $noResultWeight)
 {
-    // Usage example: WeightedRandom({"a":0.5,"b":0.3,"c":0.2}); //Have chance to receives a = 50%, b = 30%, c = 20%
+    // Usage example: WeightedRandom({'a':0.5,'b':0.3,'c':0.2}); //Have chance to receives a = 50%, b = 30%, c = 20%
     
     if (!$noResultWeight) {
         $noResultWeight = 0;
@@ -60,7 +60,7 @@ function RandomLootBoxReward($lootBox)
     for ($i = 0; $i < $countLootboxRewards; ++$i)
     {
         $lootboxReward = $lootboxRewards[$i];
-        $id = "_" + $i;
+        $id = '_' + $i;
         $generatedResult[$id] = $lootboxReward;
         $generatedWeight[$id] = $lootboxReward.randomWeight;
     }
@@ -415,8 +415,8 @@ function UpdatePlayerStamina($playerId, $staminaType)
 
 function UpdateAllPlayerStamina($playerId)
 {
-    UpdatePlayerStamina($playerId, "STAGE");
-    UpdatePlayerStamina($playerId, "ARENA");
+    UpdatePlayerStamina($playerId, 'STAGE');
+    UpdatePlayerStamina($playerId, 'ARENA');
 }
 
 function GetCurrency($playerId, $dataId)
@@ -459,7 +459,7 @@ function AddItems($playerId, $dataId, $amount)
     $gameData = \Base::instance()->get('GameData');
     $item = $gameData['items'][$dataId];
     if (!$item) {
-        return array("success" => false);
+        return array('success' => false);
     }
         
     $maxStack = $item['maxStack'];
@@ -502,7 +502,7 @@ function AddItems($playerId, $dataId, $amount)
         }
         $createItems[] = $newEntry;
     }
-    return array("success" => true, "createItems" => $createItems, "updateItems" => $updateItems);
+    return array('success' => true, 'createItems' => $createItems, 'updateItems' => $updateItems);
 }
 
 function HelperSetFormation($playerId, $characterId, $formationName, $position)
@@ -709,12 +709,12 @@ function GetSocialPlayer($playerId, $targetPlayerId)
         $character = GetLeaderCharacter($targetPlayerId, $player->selectedFormation);
         if (!empty($player->profileName) && $character) {
             return array(
-                "id" => $targetPlayerId,
-                "profileName" => $player->profileName,
-                "exp" => $player->exp,
-                "mainCharacter" => $character->dataId,
-                "mainCharacterExp" => $character->exp,
-                "isFriend" => $isFriend
+                'id' => $targetPlayerId,
+                'profileName' => $player->profileName,
+                'exp' => $player->exp,
+                'mainCharacter' => $character->dataId,
+                'mainCharacterExp' => $character->exp,
+                'isFriend' => $isFriend
             );
         }
     }
