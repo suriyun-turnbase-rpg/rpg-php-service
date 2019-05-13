@@ -98,7 +98,7 @@ function FriendDelete($targetPlayerId)
     ));
 }
 
-function FindUser($displayName)
+function FindPlayer($profileName)
 {
     
 }
