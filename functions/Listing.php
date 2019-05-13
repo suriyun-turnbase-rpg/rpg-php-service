@@ -1,5 +1,5 @@
 <?php
-function GetItemList($f3, $params)
+function GetItemList()
 {
     $player = GetPlayer();
     $playerId = $player->id;
@@ -13,7 +13,7 @@ function GetItemList($f3, $params)
     echo json_encode(array('list' => $list));
 }
 
-function GetCurrencyList($f3, $params)
+function GetCurrencyList()
 {
     $player = GetPlayer();
     $playerId = $player->id;
@@ -25,7 +25,7 @@ function GetCurrencyList($f3, $params)
     echo json_encode(array('list' => $list));
 }
 
-function GetStaminaList($f3, $params)
+function GetStaminaList()
 {
     $player = GetPlayer();
     $playerId = $player->id;
@@ -37,7 +37,7 @@ function GetStaminaList($f3, $params)
     echo json_encode(array('list' => $list));
 }
 
-function GetFormationList($f3, $params)
+function GetFormationList()
 {
     $player = GetPlayer();
     $playerId = $player->id;
@@ -49,7 +49,7 @@ function GetFormationList($f3, $params)
     echo json_encode(array('list' => $list));
 }
 
-function GetUnlockItemList($f3, $params)
+function GetUnlockItemList()
 {
     $player = GetPlayer();
     $playerId = $player->id;
@@ -61,7 +61,7 @@ function GetUnlockItemList($f3, $params)
     echo json_encode(array('list' => $list));
 }
 
-function GetClearStageList($f3, $params)
+function GetClearStageList()
 {
     $player = GetPlayer();
     $playerId = $player->id;
@@ -73,7 +73,7 @@ function GetClearStageList($f3, $params)
     echo json_encode(array('list' => $list));
 }
 
-function GetHelperList($f3, $params)
+function GetHelperList()
 {
     $player = GetPlayer();
     $playerId = $player->id;
@@ -82,7 +82,7 @@ function GetHelperList($f3, $params)
     echo json_encode(array('list' => $list));
 }
 
-function GetFriendList($f3, $params)
+function GetFriendList()
 {
     $player = GetPlayer();
     $playerId = $player->id;
@@ -91,7 +91,7 @@ function GetFriendList($f3, $params)
     echo json_encode(array('list' => $list));
 }
 
-function GetFriendRequestList($f3, $params)
+function GetFriendRequestList()
 {
     $player = GetPlayer();
     $playerId = $player->id;
@@ -100,7 +100,7 @@ function GetFriendRequestList($f3, $params)
     echo json_encode(array('list' => $list));
 }
 
-function GetOpponentList($f3, $params)
+function GetOpponentList()
 {
     $player = GetPlayer();
     $playerId = $player->id;
@@ -109,7 +109,7 @@ function GetOpponentList($f3, $params)
     echo json_encode(array('list' => $list));
 }
 
-function ServiceTime($f3, $params)
+function GetServiceTime()
 {
     echo json_encode(array('serviceTime' => time()));
 }
