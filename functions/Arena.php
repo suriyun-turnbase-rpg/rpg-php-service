@@ -16,7 +16,7 @@ function StartDuel($targetPlayerId)
     if (!DecreasePlayerStamina($playerId, 'ARENA', 1)) {
         $output['error'] = 'ERROR_NOT_ENOUGH_ARENA_STAMINA';
     } else {
-        $session = md5($playerId + '_' + $targetPlayerId + '_' + time());
+        $session = md5($playerId . '_' . $targetPlayerId . '_' . time());
         $newData = new PlayerBattle();
         $newData->playerId = $playerId;
         $newData->targetPlayerId = $targetPlayerId;

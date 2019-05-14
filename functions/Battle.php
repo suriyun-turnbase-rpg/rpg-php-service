@@ -19,7 +19,7 @@ function StartStage($stageDataId)
     } else if (!DecreasePlayerStamina($playerId, 'STAGE', $stage['requireStamina'])) {
         $output['error'] = 'ERROR_NOT_ENOUGH_STAGE_STAMINA';
     } else {
-        $session = md5($playerId + '_' + $stageDataId + '_' + time());
+        $session = md5($playerId . '_' . $stageDataId . '_' . time());
         $newData = new PlayerBattle();
         $newData->playerId = $playerId;
         $newData->dataId = $dataId;
