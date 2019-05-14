@@ -108,6 +108,7 @@ function FinishStage($session, $battleResult, $deadCharacters)
                 $rewardSoftCurrency = rand($stage['randomSoftCurrencyMinAmount'], $stage['randomSoftCurrencyMaxAmount']);
                 $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
                 $softCurrency->amount += $rewardSoftCurrency;
+                $softCurrency->update();
                 $updateCurrencies[] = $softCurrency;
                 // Items
                 $rewardItems = $stage['rewardItems'];
@@ -169,9 +170,7 @@ function ReviveCharacters()
     $gameData = \Base::instance()->get('GameData');
     $output = array('error' => '');
     $player = GetPlayer();
-    $playerId = $player->id;
-    $hardCurrencyId = $gameData['currencies']['HARD_CURRENCY']['id'];
-    $hardCurrency = GetCurrency($playerId, $hardCurrencyId);
+    $hardCurrency = GetCurrency($player->id, $gameData['currencies']['HARD_CURRENCY']['id']);
     $revivePrice = $gameData['revivePrice'];
     if ($revivePrice > $hardCurrency->amount) {
         $output['error'] = 'ERROR_NOT_ENOUGH_HARD_CURRENCY';
@@ -179,6 +178,7 @@ function ReviveCharacters()
     else
     {
         $hardCurrency->amount -= $revivePrice;
+        $hardCurrency->update();
         $updateCurrencies = array();
         $updateCurrencies[] = $hardCurrency;
         $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
