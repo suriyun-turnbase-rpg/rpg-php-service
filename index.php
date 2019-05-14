@@ -26,7 +26,14 @@ $f3->set('DB', new DB\SQL('mysql:'.
     $GLOBALS['db_pass']));
 
 // Prepare functions
-$f3->set('AUTOLOAD', 'databases/|functions/|jwt/');
+$f3->set('AUTOLOAD', 'databases/|jwt/');
+require_once('functions/Helpers.php');
+require_once('functions/Listing.php');
+require_once('functions/Auth.php');
+require_once('functions/Item.php');
+require_once('functions/Social.php');
+require_once('functions/Battle.php');
+require_once('functions/Arena.php');
 
 // Services
 $f3->route('GET /', function() {
