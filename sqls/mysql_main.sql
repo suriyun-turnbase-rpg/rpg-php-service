@@ -182,7 +182,7 @@ CREATE TABLE `player_stamina` (
   `playerId` bigint(20) NOT NULL,
   `dataId` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `amount` int(11) NOT NULL,
-  `recoveredTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `recoveredTime` int(11) NOT NULL,
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
