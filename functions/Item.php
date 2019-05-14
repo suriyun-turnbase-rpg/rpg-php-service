@@ -450,7 +450,7 @@ function OpenLootBox($lootBoxDataId, $packIndex)
                         HelperUnlockItem($playerId, $createItem->dataId);
                         $createItems[] = $createItem;
                     }
-                    for ($j = 0; j < $countUpdateItems; ++$j)
+                    for ($j = 0; $j < $countUpdateItems; ++$j)
                     {
                         $updateItem = $updateItems[$j];
                         $updateItem->update();
