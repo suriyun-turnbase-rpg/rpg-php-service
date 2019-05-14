@@ -19,11 +19,11 @@ $f3->set('GameData', json_decode($gameDataJson, true));
 
 // Prepare database
 $f3->set('DB', new DB\SQL('mysql:'.
-    'host='.$GLOBALS['db_host'].';'.
-    'port='.$GLOBALS['db_port'].';'.
-    'dbname='.$GLOBALS['db_name'], 
-    $GLOBALS['db_user'], 
-    $GLOBALS['db_pass']));
+    'host='.$f3->get('db_host').';'.
+    'port='.$f3->get('db_port').';'.
+    'dbname='.$f3->get('db_name'), 
+    $f3->get('db_user'), 
+    $f3->get('db_pass')));
 
 // Prepare functions
 $f3->set('AUTOLOAD', 'databases/|jwt/');
