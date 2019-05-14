@@ -112,7 +112,7 @@ function FinishStage($session, $battleResult, $deadCharacters)
                 $updateCurrencies[] = $softCurrency;
                 // Items
                 $rewardItems = $stage['rewardItems'];
-                $countRewardItems = $stage['rewardItems'];
+                $countRewardItems = count($rewardItems);
                 for ($i = 0; $i < $countRewardItems; ++$i)
                 {
                     $rewardItem = $rewardItems[$i];
