@@ -4,7 +4,7 @@ function Login($username, $password)
 {
     $output = array();
     if (empty($username) || empty($password)) {
-        $output['error'] = 'EMPTY_USERNAME_OR_PASSWORD';
+        $output['error'] = 'ERROR_EMPTY_USERNAME_OR_PASSWORD';
     } else {
         $playerAuthDb = new PlayerAuth();
         $playerAuth = $playerAuthDb->load(array(
@@ -18,7 +18,7 @@ function Login($username, $password)
             $playerAuth->id
         ));
         if (!$player) {
-            $output['error'] = 'INVALID_USERNAME_OR_PASSWORD';
+            $output['error'] = 'ERROR_INVALID_USERNAME_OR_PASSWORD';
         } else {
             $player = UpdatePlayerLoginToken($player);
             UpdatePlayerStamina($player);
@@ -46,7 +46,7 @@ function GuestLogin($deviceId)
 {
     $output = array();
     if (empty($deviceId)) {
-        $output['error'] = 'EMPTY_USERNAME_OR_PASSWORD';
+        $output['error'] = 'ERROR_EMPTY_USERNAME_OR_PASSWORD';
     }  else if (IsPlayerWithUsernameFound(0, $deviceId)) {
         $playerDb = new Player();
         $player = $playerDb->load(array(
@@ -54,7 +54,7 @@ function GuestLogin($deviceId)
             $playerAuth->id
         ));
         if (!$player) {
-            $output['error'] = 'INVALID_USERNAME_OR_PASSWORD';
+            $output['error'] = 'ERROR_INVALID_USERNAME_OR_PASSWORD';
         } else {
             $player = UpdatePlayerLoginToken($player);
             UpdatePlayerStamina($player);
@@ -72,7 +72,7 @@ function ValidateLoginToken($refreshToken)
     $output = array();
     $player = GetPlayer();
     if (!$player) {
-        $output['error'] = 'INVALID_LOGIN_TOKEN';
+        $output['error'] = 'ERROR_INVALID_LOGIN_TOKEN';
     } else {
         if ($refreshToken) {
             $player = UpdatePlayerLoginToken($player);
@@ -93,11 +93,11 @@ function SetProfileName($profileName)
         $profileName
     ));
     if (!$player) {
-        $output['error'] = 'INVALID_LOGIN_TOKEN';
+        $output['error'] = 'ERROR_INVALID_LOGIN_TOKEN';
     } else if (empty($profileName)) {
-        $output['error'] = 'EMPTY_PROFILE_NAME';
+        $output['error'] = 'ERROR_EMPTY_PROFILE_NAME';
     } else if ($countPlayerWithName > 0) {
-        $output['error'] = 'EXISTED_PROFILE_NAME';
+        $output['error'] = 'ERROR_EXISTED_PROFILE_NAME';
     } else {
         $player->profileName = $profileName;
         $player->update();
@@ -110,9 +110,9 @@ function Register($username, $password)
 {
     $output = array();
     if (empty($username) || empty($password)) {
-        $output['error'] = 'EMPTY_USERNAME_OR_PASSWORD';
+        $output['error'] = 'ERROR_EMPTY_USERNAME_OR_PASSWORD';
     } else if (IsPlayerWithUsernameFound(1, $username)) {
-        $output['error'] = 'EXISTED_USERNAME';
+        $output['error'] = 'ERROR_EXISTED_USERNAME';
     } else {
         $player = InsertNewPlayer(1, $username, $password);
         $output['player'] = $player;
