@@ -48,7 +48,7 @@ function CursorToArray($cursor)
     $fields = $cursor->fields();
     foreach ($fields as $field)
     {
-        if ($field == 'createdAt' || $field == 'updatedAt') {
+        if ($field == 'createdAt' || $field == 'updatedAt' || $field == 'recoveredTime') {
             $arr[$field] = strtotime($cursor->get($field));
         } else {
             $arr[$field] = $cursor->get($field);
