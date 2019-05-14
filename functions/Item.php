@@ -304,16 +304,16 @@ function EquipItem($characterId, $equipmentId, $equipPosition)
         } else {
             $updateItems = array();
             $unEquipItems = $playerItemDb->find(array(
-                'playerId = ?',
+                'equipItemId = ? AND equipPosition = ? AND playerId = ?',
+                $characterId,
+                $equipPosition,
                 $playerId
             ));
             foreach ($unEquipItems as $unEquipItem) {
-                if ($unEquipItem->equipItemId == $characterId && $unEquipItem->equipPosition == $equipPosition) {
-                    $unEquipItem->equipItemId = '';
-                    $unEquipItem->equipPosition = '';
-                    $unEquipItem->update();
-                    $updateItems[] = $unEquipItem;
-                }
+                $unEquipItem->equipItemId = '';
+                $unEquipItem->equipPosition = '';
+                $unEquipItem->update();
+                $updateItems[] = $unEquipItem;
             }
             $equipment->equipItemId = $characterId;
             $equipment->equipPosition = $equipPosition;
