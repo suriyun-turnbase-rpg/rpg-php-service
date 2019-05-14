@@ -120,10 +120,10 @@ function FinishDuel($session, $battleResult, $deadCharacters)
                 $hardCurrency->update();
                 $updateCurrencies[] = $hardCurrency;
                 // Items
-                $rewardItems = $arenaRank['rewardItems'];
-                $countRewardItems = count($rewardItems);
+                $arenaRewardItems = $arenaRank['rewardItems'];
+                $countRewardItems = count($arenaRewardItems);
                 for ($i = 0; $i < $countRewardItems; ++$i) {
-                    $rewardItem = $rewardItems[$i];
+                    $rewardItem = $arenaRewardItems[$i];
                     if (empty($rewardItem) || empty($rewardItem['id'])) {
                         continue;
                     }

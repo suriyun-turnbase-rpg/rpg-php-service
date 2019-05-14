@@ -111,11 +111,11 @@ function FinishStage($session, $battleResult, $deadCharacters)
                 $softCurrency->update();
                 $updateCurrencies[] = $softCurrency;
                 // Items
-                $rewardItems = $stage['rewardItems'];
-                $countRewardItems = count($rewardItems);
+                $stageRewardItems = $stage['rewardItems'];
+                $countRewardItems = count($stageRewardItems);
                 for ($i = 0; $i < $countRewardItems; ++$i)
                 {
-                    $rewardItem = $rewardItems[$i];
+                    $rewardItem = $stageRewardItems[$i];
                     if (empty($rewardItem) || empty($rewardItem['id']) || rand(0, 1) > $rewardItem['randomRate']) {
                         continue;
                     }
