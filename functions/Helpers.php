@@ -356,7 +356,7 @@ function IsPlayerWithUsernameFound($type, $username)
 {
     $playerAuthDb = new PlayerAuth();
     return $playerAuthDb->count(array(
-        'type = ?, username = ?',
+        'type = ? AND username = ?',
         $type,
         $username
     )) > 0;

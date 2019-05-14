@@ -26,7 +26,7 @@ function LevelUpItem($itemId, $materials)
         $materialItems = array();
         foreach ($materials as $materialItemId => $amount) {
             $foundItem = $playerItemDb->load(array(
-                'playerId = ?, id = ?',
+                'playerId = ? AND id = ?',
                 $playerId,
                 $materialItemId
             ));
@@ -115,7 +115,7 @@ function EvolveItem($itemId, $materials)
         $requiredMaterials = GetItemEvolveMaterials($item);   // This is Key-Value Pair for `playerItem.DataId`, `Required Amount`
         foreach ($requiredMaterials as $materialItemId => $amount) {
             $foundItem = $playerItemDb->load(array(
-                'playerId = ?, id = ?',
+                'playerId = ? AND id = ?',
                 $playerId,
                 $materialItemId
             ));
@@ -217,7 +217,7 @@ function SellItems($items)
     $playerItemDb = new PlayerItem();
     foreach ($items as $sellingItemId => $amount) {
         $foundItem = $playerItemDb->load(array(
-            'playerId = ?, id = ?',
+            'playerId = ? AND id = ?',
             $playerId,
             $sellingItemId
         ));
