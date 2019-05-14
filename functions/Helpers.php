@@ -202,12 +202,12 @@ function CalculateLevel($exp, $maxLevel, $minValue, $maxValue, $growth)
 
 function CanItemBeMaterial($item)
 {
-    return !empty($item->equipItemId);
+    return empty($item->equipItemId);
 }
 
 function CanSellItem($item)
 {
-    return !empty($item->equipItemId);
+    return empty($item->equipItemId);
 }
 
 function CalculateItemLevelUpPrice($item)
