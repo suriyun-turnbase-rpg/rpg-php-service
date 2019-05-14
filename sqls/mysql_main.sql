@@ -101,7 +101,7 @@ CREATE TABLE `player_clear_stage` (
 
 CREATE TABLE `player_currency` (
   `id` bigint(20) NOT NULL,
-  `player_id` bigint(20) NOT NULL,
+  `playerId` bigint(20) NOT NULL,
   `dataId` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `amount` int(11) NOT NULL,
   `purchasedAmount` int(11) NOT NULL,
