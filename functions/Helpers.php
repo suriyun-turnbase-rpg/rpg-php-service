@@ -1,4 +1,14 @@
 <?php
+function EncodeJwt($payload)
+{
+    return \Firebase\JWT\JWT::encode($payload, \Base::instance()->get('jwt_secret'));
+}
+
+function DecodeJwt($token)
+{
+    return \Firebase\JWT\JWT::decode($token, \Base::instance()->get('jwt_secret'), array('HS256'));
+}
+
 function GetPlayer()
 {
     $player = \Base::instance()->get('PLAYER');
@@ -333,7 +343,11 @@ function InsertNewPlayer($type, $username, $password)
 
 function UpdatePlayerLoginToken($player)
 {
-    $player->loginToken = '';   // TODO: Login token stuffs
+    $payload = array(
+        'id' => $player->id,
+        'profileName' => $player->profileName
+    );
+    $player->loginToken = EncodeJwt($payload);
     $player->update();
     return $player;
 }
