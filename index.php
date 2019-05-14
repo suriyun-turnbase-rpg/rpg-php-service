@@ -42,23 +42,23 @@ $f3->route('GET /', function() {
 
 // Auth services
 $f3->route('POST /login', function($f3, $params) {
-    $postBody = json_decode($f3->get('BODY'), true);
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
     Login($postBody['username'], $postBody['password']);
 });
 $f3->route('POST /register', function($f3, $params) {
-    $postBody = json_decode($f3->get('BODY'), true);
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
     Register($postBody['username'], $postBody['password']);
 });
 $f3->route('POST /guest-login', function($f3, $params) {
-    $postBody = json_decode($f3->get('BODY'), true);
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
     GuestLogin($postBody['deviceId']);
 });
 $f3->route('POST /validate-login-token', function($f3, $params) {
-    $postBody = json_decode($f3->get('BODY'), true);
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
     GuestLogin($postBody['refreshToken']);
 });
 $f3->route('POST /set-profile-name', function($f3, $params) {
-    $postBody = json_decode($f3->get('BODY'), true);
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
     GuestLogin($postBody['profileName']);
 });
 // Listing services
@@ -97,23 +97,23 @@ $f3->route('GET /service-time', function($f3, $params) {
 });
 // Item services
 $f3->route('POST /levelup-item', function($f3, $params) {
-    $postBody = json_decode($f3->get('BODY'), true);
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
     LevelUpItem($postBody['itemId'], $postBody['materials']);
 });
 $f3->route('POST /evolve-item', function($f3, $params) {
-    $postBody = json_decode($f3->get('BODY'), true);
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
     EvolveItem($postBody['itemId'], $postBody['materials']);
 });
 $f3->route('POST /sell-items', function($f3, $params) {
-    $postBody = json_decode($f3->get('BODY'), true);
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
     SellItems($postBody['items']);
 });
 $f3->route('POST /equip-item', function($f3, $params) {
-    $postBody = json_decode($f3->get('BODY'), true);
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
     EquipItem($postBody['characterId'], $postBody['equipmentId'], $postBody['equipPosition']);
 });
 $f3->route('POST /unequip-item', function($f3, $params) {
-    $postBody = json_decode($f3->get('BODY'), true);
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
     UnEquipItem($postBody['equipmentId']);
 });
 $f3->route('GET /available-lootboxes', function($f3, $params) {
@@ -123,57 +123,57 @@ $f3->route('GET /available-iap-packages', function($f3, $params) {
     GetAvailableIapPackageList();
 });
 $f3->route('POST /open-lootbox', function($f3, $params) {
-    $postBody = json_decode($f3->get('BODY'), true);
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
     OpenLootBox($postBody['lootBoxDataId'], $postBody['packIndex']);
 });
 // Social services
 $f3->route('POST /friend-request', function($f3, $params) {
-    $postBody = json_decode($f3->get('BODY'), true);
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
     FriendRequest($postBody['targetPlayerId']);
 });
 $f3->route('POST /friend-accept', function($f3, $params) {
-    $postBody = json_decode($f3->get('BODY'), true);
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
     FriendAccept($postBody['targetPlayerId']);
 });
 $f3->route('POST /friend-decline', function($f3, $params) {
-    $postBody = json_decode($f3->get('BODY'), true);
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
     FriendDecline($postBody['targetPlayerId']);
 });
 $f3->route('POST /friend-delete', function($f3, $params) {
-    $postBody = json_decode($f3->get('BODY'), true);
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
     FriendDelete($postBody['targetPlayerId']);
 });
 $f3->route('POST /find-player', function($f3, $params) {
-    $postBody = json_decode($f3->get('BODY'), true);
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
     FindPlayer($postBody['profileName']);
 });
 // Battle services
 $f3->route('POST /start-stage', function($f3, $params) {
-    $postBody = json_decode($f3->get('BODY'), true);
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
     StartStage($postBody['stageDataId']);
 });
 $f3->route('POST /finish-stage', function($f3, $params) {
-    $postBody = json_decode($f3->get('BODY'), true);
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
     FinishStage($postBody['session'], $postBody['battleResult'], $postBody['deadCharacters']);
 });
 $f3->route('POST /revive-characters', function($f3, $params) {
     ReviveCharacters();
 });
 $f3->route('POST /select-formation', function($f3, $params) {
-    $postBody = json_decode($f3->get('BODY'), true);
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
     SelectFormation($postBody['formationName'], $postBody['formationType']);
 });
 $f3->route('POST /set-formation', function($f3, $params) {
-    $postBody = json_decode($f3->get('BODY'), true);
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
     SetFormation($postBody['characterId'], $postBody['formationName'], $postBody['position']);
 });
 // Arena services
 $f3->route('POST /start-duel', function($f3, $params) {
-    $postBody = json_decode($f3->get('BODY'), true);
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
     StartStage($postBody['targetPlayerId']);
 });
 $f3->route('POST /finish-duel', function($f3, $params) {
-    $postBody = json_decode($f3->get('BODY'), true);
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
     FinishDuel($postBody['session'], $postBody['battleResult'], $postBody['deadCharacters']);
 });
 
