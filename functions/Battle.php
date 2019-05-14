@@ -22,7 +22,7 @@ function StartStage($stageDataId)
         $session = md5($playerId . '_' . $stageDataId . '_' . time());
         $newData = new PlayerBattle();
         $newData->playerId = $playerId;
-        $newData->dataId = $dataId;
+        $newData->dataId = $stageDataId;
         $newData->session = $session;
         $newData->save();
 
@@ -47,8 +47,8 @@ function FinishStage($session, $battleResult, $deadCharacters)
         $session
     ));
 
-    if ($playerBattle) {
-        $output['error'] = 'ERROR_INVALID_BATTLE_SESSION';
+    if (!$playerBattle) {
+        $output['error'] = 'ERROR_INVALID_BATTLE_SESSION'.$session;
     } else {
         $stage = $gameData['stages'][$playerBattle->dataId];
         if (!$stage) {

@@ -19,7 +19,7 @@ function StartDuel($targetPlayerId)
         $session = md5($playerId . '_' . $targetPlayerId . '_' . time());
         $newData = new PlayerBattle();
         $newData->playerId = $playerId;
-        $newData->targetPlayerId = $targetPlayerId;
+        $newData->dataId = $targetPlayerId;
         $newData->session = $session;
         $newData->save();
         
@@ -64,7 +64,7 @@ function FinishDuel($session, $battleResult, $deadCharacters)
         $session
     ));
 
-    if ($playerBattle) {
+    if (!$playerBattle) {
         $output['error'] = 'ERROR_INVALID_BATTLE_SESSION';
     } else {
         // Prepare results
