@@ -295,11 +295,12 @@ function EquipItem($characterId, $equipmentId, $equipPosition)
         $output['error'] = 'ERROR_INVALID_PLAYER_ITEM_DATA';
     } else {
         $equipmentData = $gameData['items'][$equipment->dataId];
+        $equippablePositions = $equipmentData['equippablePositions'];
         if (!$equipmentData) {
             $output['error'] = 'ERROR_INVALID_ITEM_DATA';
-        } else if ($equipmentData['equippablePositions'] && 
-            count($equipmentData['equippablePositions']) > 0 && 
-            in_array($equipPosition, $equipmentData['equippablePositions']) == -1) {
+        } else if ($equippablePositions && 
+            count($equippablePositions) > 0 && 
+            !in_array($equipPosition, $equippablePositions)) {
             $output['error'] = 'ERROR_INVALID_EQUIP_POSITION';
         } else {
             $updateItems = array();
