@@ -26,7 +26,7 @@ $f3->set('DB', new DB\SQL('mysql:'.
     $f3->get('db_pass')));
 
 // Prepare functions
-$f3->set('AUTOLOAD', 'databases/|jwt/');
+$f3->set('AUTOLOAD', 'databases/|enums/|jwt/');
 require_once('functions/Helpers.php');
 require_once('functions/Listing.php');
 require_once('functions/Auth.php');
