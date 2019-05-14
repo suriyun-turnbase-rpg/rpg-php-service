@@ -9,6 +9,35 @@ function DecodeJwt($token)
     return \Firebase\JWT\JWT::decode($token, \Base::instance()->get('jwt_secret'), array('HS256'));
 }
 
+function GetAuthorizationHeader(){
+    $headers = null;
+    if (isset($_SERVER['Authorization'])) {
+        $headers = trim($_SERVER["Authorization"]);
+    }
+    else if (isset($_SERVER['HTTP_AUTHORIZATION'])) { //Nginx or fast CGI
+        $headers = trim($_SERVER["HTTP_AUTHORIZATION"]);
+    } else if (function_exists('apache_request_headers')) {
+        $requestHeaders = apache_request_headers();
+        // Server-side fix for bug in old Android versions (a nice side-effect of this fix means we don't care about capitalization for Authorization)
+        $requestHeaders = array_combine(array_map('ucwords', array_keys($requestHeaders)), array_values($requestHeaders));
+        //print_r($requestHeaders);
+        if (isset($requestHeaders['Authorization'])) {
+            $headers = trim($requestHeaders['Authorization']);
+        }
+    }
+    return $headers;
+}
+
+function GetBearerToken() {
+    $headers = GetAuthorizationHeader();
+    // HEADER: Get the access token from the header
+    if (!empty($headers)) {
+        $headersData = explode(" ", $headers);
+        return $headersData[1];
+    }
+    return null;
+}
+
 function GetPlayer()
 {
     $player = \Base::instance()->get('PLAYER');
@@ -16,13 +45,17 @@ function GetPlayer()
     {
         // Get Player by Id and LoginToken from header
         // Then get player from database, finally set to f3 data
+        $loginToken = GetBearerToken();
+        $decodedData = (array)DecodeJwt($loginToken);
         $playerDb = new Player();
         $player = $playerDb->load(array(
-            'playerId = ? AND loginToken = ?',
-            $_SERVER['playerId'],
-            $_SERVER['loginToken'],
+            'id = ? AND loginToken = ?',
+            $decodedData['id'],
+            $loginToken,
         ));
-        \Base::instance()->set('PLAYER', $player);
+        if ($player) {
+            \Base::instance()->set('PLAYER', $player);
+        }
     }
     return $player;
 }
@@ -338,7 +371,7 @@ function InsertNewPlayer($type, $username, $password)
     $playerAuth->type = $type;
     $playerAuth->username = $username;
     $playerAuth->password = $password;
-    UpdateAllPlayerStamina($player);
+    UpdateAllPlayerStamina($player->id);
     return $player;
 }
 
@@ -404,7 +437,7 @@ function UpdatePlayerStamina($playerId, $staminaType)
     
     $playerDb = new Player();
     $player = $playerDb->load(array(
-        'playerId = ?',
+        'id = ?',
         $playerId
     ));
     $exp = $player->exp;
