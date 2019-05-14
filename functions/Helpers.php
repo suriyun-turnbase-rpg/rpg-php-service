@@ -384,6 +384,13 @@ function SetNewPlayerData($player)
             }
         }
     }
+    
+    $hardCurrency = GetCurrency($player->id, $gameData['currencies']['HARD_CURRENCY']['id']);
+    $hardCurrency->amount = $gameData['currencies']['HARD_CURRENCY']['startAmount'];
+    $hardCurrency->update();
+    $softCurrency = GetCurrency($player->id, $gameData['currencies']['SOFT_CURRENCY']['id']);
+    $softCurrency->amount = $gameData['currencies']['SOFT_CURRENCY']['startAmount'];
+    $softCurrency->update();
     return $player;
 }
 

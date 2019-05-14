@@ -16,7 +16,7 @@ function LevelUpItem($itemId, $materials)
     if (!$item) {
         $output['error'] = 'ERROR_INVALID_PLAYER_ITEM_DATA';
     } else {
-        $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']);
+        $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
         $levelUpPrice = CalculateItemLevelUpPrice($item);
         $requireCurrency = 0;
         $increasingExp = 0;
@@ -105,7 +105,7 @@ function EvolveItem($itemId, $materials)
     if (!$item) {
         $output['error'] = 'ERROR_INVALID_PLAYER_ITEM_DATA';
     } else {
-        $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']);
+        $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
         $requireCurrency = CalculateItemEvolvePrice($item);
         $enoughMaterials = true;
         $updateItems = array();
@@ -207,7 +207,7 @@ function SellItems($items)
     $player = GetPlayer();
     $playerId = $player->id;
     
-    $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']);
+    $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
     $returnCurrency = 0;
     $updateItems = array();
     $deleteItemIds = array();
@@ -394,8 +394,8 @@ function OpenLootBox($lootBoxDataId, $packIndex)
     if (!$lootBox) {
         $output['error'] = 'ERROR_INVALID_LOOT_BOX_DATA';
     } else {
-        $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']);
-        $hardCurrency = GetCurrency($playerId, $gameData['currencies']['HARD_CURRENCY']);
+        $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
+        $hardCurrency = GetCurrency($playerId, $gameData['currencies']['HARD_CURRENCY']['id']);
         
         $createItems = array();
         $updateItems = array();

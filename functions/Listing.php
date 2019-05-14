@@ -17,12 +17,11 @@ function GetCurrencyList()
 {
     $player = GetPlayer();
     $playerId = $player->id;
-    $playerCurrencyDb = new PlayerCurrency();
-    $list = $playerCurrencyDb->find(array(
-        'playerId = ?',
-        $playerId
-    ));
-    echo json_encode(array('list' => CursorsToArray($list)));
+    $gameData = \Base::instance()->get('GameData');
+    echo json_encode(array('list' => CursorsToArray([
+        GetCurrency($playerId, $gameData['currencies']['HARD_CURRENCY']['id']),
+        GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id'])
+    ])));
 }
 
 function GetStaminaList()
