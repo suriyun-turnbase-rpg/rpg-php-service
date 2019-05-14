@@ -45,15 +45,13 @@ function GetBearerToken()
 function CursorToArray($cursor)
 {
     $arr = array();
-    if (!empty($fields)) {
-        $fields = $cursor->fields();
-        foreach ($fields as $field)
-        {
-            if ($field == 'createdAt' || $field == 'updatedAt') {
-                $arr[$field] = strtotime($cursor->get($field));
-            } else {
-                $arr[$field] = $cursor->get($field);
-            }
+    $fields = $cursor->fields();
+    foreach ($fields as $field)
+    {
+        if ($field == 'createdAt' || $field == 'updatedAt') {
+            $arr[$field] = strtotime($cursor->get($field));
+        } else {
+            $arr[$field] = $cursor->get($field);
         }
     }
     return $arr;
@@ -62,9 +60,11 @@ function CursorToArray($cursor)
 function CursorsToArray($cursors)
 {
     $arr = array();
-    foreach ($cursors as $cursor)
-    {
-        $arr[] = CursorToArray($cursor);
+    if (!empty($cursors)) {
+        foreach ($cursors as $cursor)
+        {
+            $arr[] = CursorToArray($cursor);
+        }
     }
     return $arr;
 }
