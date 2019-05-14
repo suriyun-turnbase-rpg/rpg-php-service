@@ -21,7 +21,7 @@ function Login($username, $password)
             $output['error'] = 'ERROR_INVALID_USERNAME_OR_PASSWORD';
         } else {
             $player = UpdatePlayerLoginToken($player);
-            UpdateAllPlayerStamina($player);
+            UpdateAllPlayerStamina($player->id);
             $output['player'] = $player;
         }
     }
@@ -57,7 +57,7 @@ function GuestLogin($deviceId)
             $output['error'] = 'ERROR_INVALID_USERNAME_OR_PASSWORD';
         } else {
             $player = UpdatePlayerLoginToken($player);
-            UpdateAllPlayerStamina($player);
+            UpdateAllPlayerStamina($player->id);
             $output['player'] = $player;
         }
     } else {
@@ -77,7 +77,7 @@ function ValidateLoginToken($refreshToken)
         if ($refreshToken) {
             $player = UpdatePlayerLoginToken($player);
         }
-        UpdateAllPlayerStamina($player);
+        UpdateAllPlayerStamina($player->id);
         $output['player'] = $player;
     }
     echo json_encode($output);
