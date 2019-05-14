@@ -446,7 +446,7 @@ function DecreasePlayerStamina($playerId, $staminaType, $decreaseAmount)
 
     $playerDb = new Player();
     $player = $playerDb->load(array(
-        'playerId = ?',
+        'id = ?',
         $playerId
     ));
     $exp = $player->exp;
