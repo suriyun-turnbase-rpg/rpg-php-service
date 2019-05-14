@@ -10,7 +10,7 @@ function GetItemList()
     ), array(
         'order' => 'updatedAt DESC'
     ));
-    echo json_encode(array('list' => $list));
+    echo json_encode(array('list' => CursorsToArray($list)));
 }
 
 function GetCurrencyList()
@@ -22,7 +22,7 @@ function GetCurrencyList()
         'playerId = ?',
         $playerId
     ));
-    echo json_encode(array('list' => $list));
+    echo json_encode(array('list' => CursorsToArray($list)));
 }
 
 function GetStaminaList()
@@ -34,7 +34,7 @@ function GetStaminaList()
         'playerId = ?',
         $playerId
     ));
-    echo json_encode(array('list' => $list));
+    echo json_encode(array('list' => CursorsToArray($list)));
 }
 
 function GetFormationList()
@@ -46,7 +46,7 @@ function GetFormationList()
         'playerId = ?',
         $playerId
     ));
-    echo json_encode(array('list' => $list));
+    echo json_encode(array('list' => CursorsToArray($list)));
 }
 
 function GetUnlockItemList()
@@ -58,7 +58,7 @@ function GetUnlockItemList()
         'playerId = ?',
         $playerId
     ));
-    echo json_encode(array('list' => $list));
+    echo json_encode(array('list' => CursorsToArray($list)));
 }
 
 function GetClearStageList()
@@ -70,7 +70,7 @@ function GetClearStageList()
         'playerId = ?',
         $playerId
     ));
-    echo json_encode(array('list' => $list));
+    echo json_encode(array('list' => CursorsToArray($list)));
 }
 
 function GetHelperList()
@@ -79,7 +79,7 @@ function GetHelperList()
     $playerId = $player->id;
     $list = array();
     // TODO: Implement this
-    echo json_encode(array('list' => $list));
+    echo json_encode(array('list' => CursorsToArray($list)));
 }
 
 function GetFriendList()
@@ -88,7 +88,7 @@ function GetFriendList()
     $playerId = $player->id;
     $list = array();
     // TODO: Implement this
-    echo json_encode(array('list' => $list));
+    echo json_encode(array('list' => CursorsToArray($list)));
 }
 
 function GetFriendRequestList()
@@ -97,7 +97,7 @@ function GetFriendRequestList()
     $playerId = $player->id;
     $list = array();
     // TODO: Implement this
-    echo json_encode(array('list' => $list));
+    echo json_encode(array('list' => CursorsToArray($list)));
 }
 
 function GetOpponentList()
@@ -106,7 +106,7 @@ function GetOpponentList()
     $playerId = $player->id;
     $list = array();
     // TODO: Implement this
-    echo json_encode(array('list' => $list));
+    echo json_encode(array('list' => CursorsToArray($list)));
 }
 
 function GetServiceTime()

@@ -28,7 +28,7 @@ function StartDuel($targetPlayerId)
         
         $staminaTable = $gameData['staminas']['ARENA'];
         $stamina = GetStamina($playerId, $staminaTable['id']);
-        $output['stamina'] = $stamina;
+        $output['stamina'] = CursorToArray($stamina);
         $output['session'] = $session;
         
         $opponentCharacters = [];
@@ -46,7 +46,7 @@ function StartDuel($targetPlayerId)
                 $opponentCharacters[] = $characterEntry;
             }
         }
-        $output['opponentCharacters'] = $opponentCharacters;
+        $output['opponentCharacters'] = CursorsToArray($opponentCharacters);
     }
     echo json_encode($output);
 }
@@ -161,16 +161,16 @@ function FinishDuel($session, $battleResult, $deadCharacters)
             $player->arenaScore = $arenaScore;
         }
         $player->update();
-        $output['rewardItems'] = $rewardItems;
-        $output['createItems'] = $createItems;
-        $output['updateItems'] = $updateItems;
+        $output['rewardItems'] = CursorsToArray($rewardItems);
+        $output['createItems'] = CursorsToArray($createItems);
+        $output['updateItems'] = CursorsToArray($updateItems);
         $output['deleteItemIds'] = $deleteItemIds;
-        $output['updateCurrencies'] = $updateCurrencies;
+        $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
         $output['rewardSoftCurrency'] = $rewardSoftCurrency;
         $output['rewardHardCurrency'] = $rewardHardCurrency;
         $output['rating'] = $rating;
         $output['updateScore'] = $updateScore;
-        $output['player'] = $player;
+        $output['player'] = CursorToArray($player);
     }
     echo json_encode($output);
 }

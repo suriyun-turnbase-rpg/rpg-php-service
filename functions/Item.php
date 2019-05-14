@@ -80,9 +80,9 @@ function LevelUpItem($itemId, $materials)
             }
             $softCurrency->update();
             $updateCurrencies[] = $softCurrency;
-            $output['updateItems'] = $updateItems;
+            $output['updateItems'] = CursorsToArray($updateItems);
             $output['deleteItemIds'] = $deleteItemIds;
-            $output['updateCurrencies'] = $updateCurrencies;
+            $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
         }
     }
     echo json_encode($output);
@@ -192,9 +192,9 @@ function EvolveItem($itemId, $materials)
             }
             $softCurrency->update();
             $updateCurrencies[] = $softCurrency;
-            $output['updateItems'] = $updateItems;
+            $output['updateItems'] = CursorsToArray($updateItems);
             $output['deleteItemIds'] = $deleteItemIds;
-            $output['updateCurrencies'] = $updateCurrencies;
+            $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
         }
     }
     echo json_encode($output);
@@ -265,9 +265,9 @@ function SellItems($items)
     }
     $softCurrency->update();
     $updateCurrencies[] = $softCurrency;
-    $output['updateItems'] = $updateItems;
+    $output['updateItems'] = CursorsToArray($updateItems);
     $output['deleteItemIds'] = $deleteItemIds;
-    $output['updateCurrencies'] = $updateCurrencies;
+    $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
 }
 
 function EquipItem($characterId, $equipmentId, $equipPosition)
@@ -323,7 +323,7 @@ function EquipItem($characterId, $equipmentId, $equipPosition)
             ));
             $equipment->update();
             $updateItems[] = $equipment;
-            $output['updateItems'] = $updateItems;
+            $output['updateItems'] = CursorsToArray($updateItems);
         }
     }
     echo json_encode($output);
@@ -352,7 +352,7 @@ function UnEquipItem($equipmentId)
         $unEquipItem->equipPosition = '';
         $unEquipItem->update();
         $updateItems[] = $unEquipItem;
-        $output['updateItems'] = $updateItems;
+        $output['updateItems'] = CursorsToArray($updateItems);
     }
     echo json_encode($output);
 }
@@ -360,24 +360,26 @@ function UnEquipItem($equipmentId)
 function GetAvailableLootBoxList()
 {
     $list = array();
+    $gameData = \Base::instance()->get('GameData');
     $lootBoxes = $gameData['lootBoxes'];
     foreach ($lootBoxes as $key => $value) {
         $list[] = $key;
     }
     $output = array('error' => '');
-    $output['list'] = $list;
+    $output['list'] = CursorsToArray($list);
     echo json_encode($output);
 }
 
 function GetAvailableIapPackageList()
 {
     $list = array();
+    $gameData = \Base::instance()->get('GameData');
     $iapPackages = $gameData['iapPackages'];
     foreach ($iapPackages as $key => $value) {
         $list[] = $key;
     }
     $output = array('error' => '');
-    $output['list'] = $list;
+    $output['list'] = CursorsToArray($list);
     echo json_encode($output);
 }
 
@@ -458,10 +460,10 @@ function OpenLootBox($lootBoxDataId, $packIndex)
             }
             // End reward items loop
         }
-        $output['createItems'] = $createItems;
-        $output['updateItems'] = $updateItems;
+        $output['createItems'] = CursorsToArray($createItems);
+        $output['updateItems'] =CursorsToArray($updateItems);
         $output['deleteItemIds'] = $deleteItemIds;
-        $output['updateCurrencies'] = $updateCurrencies;
+        $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
     }
     echo json_encode($output);
 }

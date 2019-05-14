@@ -13,6 +13,8 @@ function Login($username, $password)
             $password
         ));
         if (!$playerAuth) {
+            $output['error'] = 'ERROR_INVALID_USERNAME_OR_PASSWORD';
+        } else {
             $playerDb = new Player();
             $player = $playerDb->load(array(
                 'id = ?',
@@ -23,7 +25,7 @@ function Login($username, $password)
             } else {
                 $player = UpdatePlayerLoginToken($player);
                 UpdateAllPlayerStamina($player->id);
-                $output['player'] = $player;
+                $output['player'] = CursorToArray($player);
             }
         }
     }
@@ -46,11 +48,11 @@ function GuestLogin($deviceId)
         } else {
             $player = UpdatePlayerLoginToken($player);
             UpdateAllPlayerStamina($player->id);
-            $output['player'] = $player;
+            $output['player'] = CursorToArray($player);
         }
     } else {
         $player = InsertNewPlayer(0, $deviceId, $deviceId);
-        $output['player'] = $resultPlayer;
+        $output['player'] = CursorToArray($player);
     }
     echo json_encode($output);
 }
@@ -66,7 +68,7 @@ function ValidateLoginToken($refreshToken)
             $player = UpdatePlayerLoginToken($player);
         }
         UpdateAllPlayerStamina($player->id);
-        $output['player'] = $player;
+        $output['player'] = CursorToArray($player);
     }
     echo json_encode($output);
 }
@@ -89,7 +91,7 @@ function SetProfileName($profileName)
     } else {
         $player->profileName = $profileName;
         $player->update();
-        $output['player'] = $player;
+        $output['player'] = CursorToArray($player);
     }
     echo json_encode($output);
 }
@@ -103,7 +105,7 @@ function Register($username, $password)
         $output['error'] = 'ERROR_EXISTED_USERNAME';
     } else {
         $player = InsertNewPlayer(1, $username, $password);
-        $output['player'] = $player;
+        $output['player'] = CursorToArray($player);
     }
     echo json_encode($output);
 }

@@ -28,7 +28,7 @@ function StartStage($stageDataId)
 
         $staminaTable = $gameData['staminas']['STAGE'];
         $stamina = GetStamina($playerId, $staminaTable['id']);
-        $output['stamina'] = $stamina;
+        $output['stamina'] = CursorToArray($stamina);
         $output['session'] = $session;
     }
     echo json_encode($output);
@@ -148,17 +148,17 @@ function FinishStage($session, $battleResult, $deadCharacters)
                 $clearedStage = HelperClearStage($playerId, $stage['id'], $rating);
             }
             $player->update();
-            $output['rewardItems'] = $rewardItems;
-            $output['createItems'] = $createItems;
-            $output['updateItems'] = $updateItems;
+            $output['rewardItems'] = CursorsToArray($rewardItems);
+            $output['createItems'] = CursorsToArray($createItems);
+            $output['updateItems'] = CursorsToArray($updateItems);
             $output['deleteItemIds'] = $deleteItemIds;
-            $output['updateCurrencies'] = $updateCurrencies;
+            $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
             $output['rewardPlayerExp'] = $rewardPlayerExp;
             $output['rewardCharacterExp'] = $rewardCharacterExp;
             $output['rewardSoftCurrency'] = $rewardSoftCurrency;
             $output['rating'] = $rating;
-            $output['clearStage'] = $clearedStage;
-            $output['player'] = $player;
+            $output['clearStage'] = CursorToArray($clearedStage);
+            $output['player'] = CursorToArray($player);
         }
     }
     echo json_encode($output);
@@ -181,7 +181,7 @@ function ReviveCharacters()
         $hardCurrency->amount -= $revivePrice;
         $updateCurrencies = array();
         $updateCurrencies[] = $hardCurrency;
-        $output['updateCurrencies'] = $updateCurrencies;
+        $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
     }
     echo json_encode($output);
 }
@@ -201,7 +201,7 @@ function SelectFormation($formationName, $formationType)
         $player->selectedArenaFormation = $formationName;
     }
     $player->update();
-    $output['player'] = $player;
+    $output['player'] = CursorToArray($player);
     echo json_encode($output);
 }
 
@@ -218,7 +218,7 @@ function SetFormation($characterId, $formationName, $position)
         'playerId = ?',
         $playerId
     ));
-    $output['list'] = $list;
+    $output['list'] = CursorsToArray($list);
     echo json_encode($output);
 }
 ?>

@@ -11,7 +11,8 @@ function DecodeJwt($token)
     return (array)\Firebase\JWT\JWT::decode($token, \Base::instance()->get('jwt_secret'), array('HS256'));
 }
 
-function GetAuthorizationHeader(){
+function GetAuthorizationHeader()
+{
     $headers = null;
     if (isset($_SERVER['Authorization'])) {
         $headers = trim($_SERVER["Authorization"]);
@@ -30,7 +31,8 @@ function GetAuthorizationHeader(){
     return $headers;
 }
 
-function GetBearerToken() {
+function GetBearerToken()
+{
     $headers = GetAuthorizationHeader();
     // HEADER: Get the access token from the header
     if (!empty($headers)) {
@@ -38,6 +40,27 @@ function GetBearerToken() {
         return $headersData[1];
     }
     return null;
+}
+
+function CursorToArray($cursor)
+{
+    $arr = array();
+    $fields = $cursor->fields();
+    foreach ($fields as $field)
+    {
+        $arr[$field] = $cursor->get($field);
+    }
+    return $arr;
+}
+
+function CursorsToArray($cursors)
+{
+    $arr = array();
+    foreach ($cursors as $cursor)
+    {
+        $arr[] = CursorToArray($cursor);
+    }
+    return $arr;
 }
 
 function GetPlayer()
