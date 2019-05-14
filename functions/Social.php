@@ -1,6 +1,7 @@
 <?php
 function FriendRequest($targetPlayerId)
 {
+    $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
     $playerFriendDb = new PlayerFriend();
@@ -24,10 +25,12 @@ function FriendRequest($targetPlayerId)
         $newRequest->targetPlayerId = $targetPlayerId;
         $newRequest->save();
     }
+    echo json_encode($output);
 }
 
 function FriendAccept($targetPlayerId)
 {
+    $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
     // Validate request
@@ -58,10 +61,12 @@ function FriendAccept($targetPlayerId)
         $playerFriendB->targetPlayerId = $playerId;
         $playerFriendB->save();
     }
+    echo json_encode($output);
 }
 
 function FriendDecline($targetPlayerId)
 {
+    $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
     // Validate request
@@ -82,10 +87,12 @@ function FriendDecline($targetPlayerId)
             $playerId
         ));
     }
+    echo json_encode($output);
 }
 
 function FriendDelete($targetPlayerId)
 {
+    $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
     $playerFriendDb = new PlayerFriend();
@@ -96,6 +103,7 @@ function FriendDelete($targetPlayerId)
         $targetPlayerId,
         $playerId
     ));
+    echo json_encode($output);
 }
 
 function FindPlayer($profileName)

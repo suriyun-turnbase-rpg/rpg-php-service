@@ -6,7 +6,9 @@ function EncodeJwt($payload)
 
 function DecodeJwt($token)
 {
-    return \Firebase\JWT\JWT::decode($token, \Base::instance()->get('jwt_secret'), array('HS256'));
+    if (empty($token))
+        return array();
+    return (array)\Firebase\JWT\JWT::decode($token, \Base::instance()->get('jwt_secret'), array('HS256'));
 }
 
 function GetAuthorizationHeader(){
@@ -46,7 +48,7 @@ function GetPlayer()
         // Get Player by Id and LoginToken from header
         // Then get player from database, finally set to f3 data
         $loginToken = GetBearerToken();
-        $decodedData = (array)DecodeJwt($loginToken);
+        $decodedData = DecodeJwt($loginToken);
         $playerDb = new Player();
         $player = $playerDb->load(array(
             'id = ? AND loginToken = ?',
@@ -303,8 +305,6 @@ function SetNewPlayerData($player)
     $gameData = \Base::instance()->get('GameData');
     $firstFormation = $gameData['formations'][0];
     $playerId = $player->id;
-    $player->exp = 0;
-    $player->selectedFormation = $firstFormation;
     
     $startItems = $gameData['startItems'];
     $countStartItems = count($startItems);
@@ -362,7 +362,12 @@ function SetNewPlayerData($player)
 
 function InsertNewPlayer($type, $username, $password)
 {
+    $gameData = \Base::instance()->get('GameData');
+    $firstFormation = $gameData['formations'][0];
     $player = new Player();
+    $player->exp = 0;
+    $player->selectedFormation = $firstFormation;
+    $player->selectedArenaFormation = $firstFormation;
     $player->save();
     $player = SetNewPlayerData($player);
     $player->update();
@@ -371,6 +376,7 @@ function InsertNewPlayer($type, $username, $password)
     $playerAuth->type = $type;
     $playerAuth->username = $username;
     $playerAuth->password = $password;
+    $playerAuth->save();
     UpdateAllPlayerStamina($player->id);
     return $player;
 }

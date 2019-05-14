@@ -2,7 +2,7 @@
 function LevelUpItem($itemId, $materials)
 {
     $gameData = \Base::instance()->get('GameData');
-    $output = array();
+    $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
 
@@ -91,7 +91,7 @@ function LevelUpItem($itemId, $materials)
 function EvolveItem($itemId, $materials)
 {
     $gameData = \Base::instance()->get('GameData');
-    $output = array();
+    $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
 
@@ -203,7 +203,7 @@ function EvolveItem($itemId, $materials)
 function SellItems($items)
 {
     $gameData = \Base::instance()->get('GameData');
-    $output = array();
+    $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
     
@@ -273,7 +273,7 @@ function SellItems($items)
 function EquipItem($characterId, $equipmentId, $equipPosition)
 {
     $gameData = \Base::instance()->get('GameData');
-    $output = array();
+    $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
 
@@ -332,7 +332,7 @@ function EquipItem($characterId, $equipmentId, $equipPosition)
 function UnEquipItem($equipmentId)
 {
     $gameData = \Base::instance()->get('GameData');
-    $output = array();
+    $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
     
@@ -364,7 +364,7 @@ function GetAvailableLootBoxList()
     foreach ($lootBoxes as $key => $value) {
         $list[] = $key;
     }
-    $output = array();
+    $output = array('error' => '');
     $output['list'] = $list;
     echo json_encode($output);
 }
@@ -376,7 +376,7 @@ function GetAvailableIapPackageList()
     foreach ($iapPackages as $key => $value) {
         $list[] = $key;
     }
-    $output = array();
+    $output = array('error' => '');
     $output['list'] = $list;
     echo json_encode($output);
 }
@@ -384,7 +384,7 @@ function GetAvailableIapPackageList()
 function OpenLootBox($lootBoxDataId, $packIndex)
 {
     $gameData = \Base::instance()->get('GameData');
-    $output = array();
+    $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
 

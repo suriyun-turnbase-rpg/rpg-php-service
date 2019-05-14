@@ -2,7 +2,7 @@
 function StartStage($stageDataId)
 {
     $gameData = \Base::instance()->get('GameData');
-    $output = array();
+    $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
     $playerBattleDb = new PlayerBattle();
@@ -37,7 +37,7 @@ function StartStage($stageDataId)
 function FinishStage($session, $battleResult, $deadCharacters)
 {
     $gameData = \Base::instance()->get('GameData');
-    $output = array();
+    $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
     $playerBattleDb = new PlayerBattle();
@@ -167,7 +167,7 @@ function FinishStage($session, $battleResult, $deadCharacters)
 function ReviveCharacters()
 {
     $gameData = \Base::instance()->get('GameData');
-    $output = array();
+    $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
     $hardCurrencyId = $gameData['currencies']['HARD_CURRENCY'];
@@ -189,7 +189,7 @@ function ReviveCharacters()
 function SelectFormation($formationName, $formationType)
 {
     $gameData = \Base::instance()->get('GameData');
-    $output = array();
+    $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
     if (formationType == EFormationType::Stage)
@@ -208,7 +208,7 @@ function SelectFormation($formationName, $formationType)
 function SetFormation($characterId, $formationName, $position)
 {
     $gameData = \Base::instance()->get('GameData');
-    $output = array();
+    $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
     

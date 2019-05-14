@@ -2,7 +2,7 @@
 
 function Login($username, $password)
 {
-    $output = array();
+    $output = array('error' => '');
     if (empty($username) || empty($password)) {
         $output['error'] = 'ERROR_EMPTY_USERNAME_OR_PASSWORD';
     } else {
@@ -12,46 +12,34 @@ function Login($username, $password)
             $username,
             $password
         ));
-        $playerDb = new Player();
-        $player = $playerDb->load(array(
-            'id = ?',
-            $playerAuth->id
-        ));
-        if (!$player) {
-            $output['error'] = 'ERROR_INVALID_USERNAME_OR_PASSWORD';
-        } else {
-            $player = UpdatePlayerLoginToken($player);
-            UpdateAllPlayerStamina($player->id);
-            $output['player'] = $player;
+        if (!$playerAuth) {
+            $playerDb = new Player();
+            $player = $playerDb->load(array(
+                'id = ?',
+                $playerAuth->playerId
+            ));
+            if (!$player) {
+                $output['error'] = 'ERROR_INVALID_USERNAME_OR_PASSWORD';
+            } else {
+                $player = UpdatePlayerLoginToken($player);
+                UpdateAllPlayerStamina($player->id);
+                $output['player'] = $player;
+            }
         }
     }
     echo json_encode($output);
 }
 
-function RegisterOrLogin($username, $password)
-{
-    $playerAuthDb = new PlayerAuth();
-    $playerAuth = $playerAuthDb->load(array(
-        'username = ? AND type = 1',
-        $username
-    ));
-    if ($playerAuth) {
-        Login($username, $password);
-    } else {
-        Register($username, $password);
-    }
-}
-
 function GuestLogin($deviceId)
 {
-    $output = array();
+    $output = array('error' => '');
     if (empty($deviceId)) {
         $output['error'] = 'ERROR_EMPTY_USERNAME_OR_PASSWORD';
     }  else if (IsPlayerWithUsernameFound(0, $deviceId)) {
         $playerDb = new Player();
         $player = $playerDb->load(array(
             'id = ?',
-            $playerAuth->id
+            $playerAuth->playerId
         ));
         if (!$player) {
             $output['error'] = 'ERROR_INVALID_USERNAME_OR_PASSWORD';
@@ -69,7 +57,7 @@ function GuestLogin($deviceId)
 
 function ValidateLoginToken($refreshToken)
 {
-    $output = array();
+    $output = array('error' => '');
     $player = GetPlayer();
     if (!$player) {
         $output['error'] = 'ERROR_INVALID_LOGIN_TOKEN';
@@ -85,7 +73,7 @@ function ValidateLoginToken($refreshToken)
 
 function SetProfileName($profileName)
 {
-    $output = array();
+    $output = array('error' => '');
     $player = GetPlayer();
     $playerDb = new Player();
     $countPlayerWithName = $playerDb->count(array(
@@ -108,7 +96,7 @@ function SetProfileName($profileName)
 
 function Register($username, $password)
 {
-    $output = array();
+    $output = array('error' => '');
     if (empty($username) || empty($password)) {
         $output['error'] = 'ERROR_EMPTY_USERNAME_OR_PASSWORD';
     } else if (IsPlayerWithUsernameFound(1, $username)) {

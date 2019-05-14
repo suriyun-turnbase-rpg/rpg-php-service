@@ -2,7 +2,7 @@
 function StartDuel($targetPlayerId)
 {
     $gameData = \Base::instance()->get('GameData');
-    $output = array();
+    $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
     $playerBattleDb = new PlayerBattle();
@@ -54,7 +54,7 @@ function StartDuel($targetPlayerId)
 function FinishDuel($session, $battleResult, $deadCharacters)
 {
     $gameData = \Base::instance()->get('GameData');
-    $output = array();
+    $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
     $playerBattleDb = new PlayerBattle();
