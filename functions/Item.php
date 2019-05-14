@@ -366,7 +366,7 @@ function GetAvailableLootBoxList()
         $list[] = $key;
     }
     $output = array('error' => '');
-    $output['list'] = CursorsToArray($list);
+    $output['list'] = $list;
     echo json_encode($output);
 }
 
@@ -379,7 +379,7 @@ function GetAvailableIapPackageList()
         $list[] = $key;
     }
     $output = array('error' => '');
-    $output['list'] = CursorsToArray($list);
+    $output['list'] = $list;
     echo json_encode($output);
 }
 
