@@ -324,6 +324,7 @@ function SetNewPlayerData($player)
             }
         }
     }
+    return $player;
 }
 
 function InsertNewPlayer($type, $username, $password)
@@ -337,7 +338,7 @@ function InsertNewPlayer($type, $username, $password)
     $playerAuth->type = $type;
     $playerAuth->username = $username;
     $playerAuth->password = $password;
-    UpdatePlayerStamina($player);
+    UpdateAllPlayerStamina($player);
     return $player;
 }
 
