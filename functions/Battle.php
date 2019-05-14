@@ -149,7 +149,7 @@ function FinishStage($session, $battleResult, $deadCharacters)
                 $clearedStage = HelperClearStage($playerId, $stage['id'], $rating);
             }
             $player->update();
-            $output['rewardItems'] = $rewardItems;
+            $output['rewardItems'] = CursorsToArray($rewardItems);
             $output['createItems'] = CursorsToArray($createItems);
             $output['updateItems'] = CursorsToArray($updateItems);
             $output['deleteItemIds'] = $deleteItemIds;
