@@ -112,8 +112,7 @@ function EvolveItem($itemId, $materials)
         $deleteItemIds = array();
         $updateCurrencies = array();
         $materialItems = array();
-        $requiredMaterials = GetItemEvolveMaterials($item);   // This is Key-Value Pair for `playerItem.DataId`, `Required Amount`
-        foreach ($requiredMaterials as $materialItemId => $amount) {
+        foreach ($materials as $materialItemId => $amount) {
             $foundItem = $playerItemDb->load(array(
                 'playerId = ? AND id = ?',
                 $playerId,
@@ -128,6 +127,7 @@ function EvolveItem($itemId, $materials)
                 $materialItems[] = $foundItem;
             }
         }
+        $requiredMaterials = GetItemEvolveMaterials($item);   // This is Key-Value Pair for `playerItem.DataId`, `Required Amount`
         $countRequiredMaterials = count($requiredMaterials);
         for ($i = 0; $i < $countRequiredMaterials; ++$i) {
             $requiredMaterial = $requiredMaterials[$i];
@@ -139,7 +139,6 @@ function EvolveItem($itemId, $materials)
                 if ($materialItem->dataId != $dataId) {
                     continue;
                 }
-                
                 $usingAmount = $materials[$materialItem->id];
                 if ($usingAmount > $materialItem->amount) {
                     $usingAmount = $materialItem->amount;
@@ -268,6 +267,7 @@ function SellItems($items)
     $output['updateItems'] = CursorsToArray($updateItems);
     $output['deleteItemIds'] = $deleteItemIds;
     $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
+    echo json_encode($output);
 }
 
 function EquipItem($characterId, $equipmentId, $equipPosition)
