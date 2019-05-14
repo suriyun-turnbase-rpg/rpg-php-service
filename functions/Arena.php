@@ -163,7 +163,7 @@ function FinishDuel($session, $battleResult, $deadCharacters)
             $player->arenaScore = $arenaScore;
         }
         $player->update();
-        $output['rewardItems'] = CursorsToArray($rewardItems);
+        $output['rewardItems'] = $rewardItems;
         $output['createItems'] = CursorsToArray($createItems);
         $output['updateItems'] = CursorsToArray($updateItems);
         $output['deleteItemIds'] = $deleteItemIds;
