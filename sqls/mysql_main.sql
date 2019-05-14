@@ -31,7 +31,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `player` (
   `id` bigint(20) NOT NULL,
   `profileName` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `loginToken` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `loginToken` varchar(512) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `exp` int(11) NOT NULL,
   `selectedFormation` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `selectedArenaFormation` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
