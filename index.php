@@ -26,7 +26,11 @@ $f3->set('DB', new DB\SQL('mysql:'.
     $f3->get('db_pass')));
 
 // Prepare functions
-$f3->set('AUTOLOAD', 'databases/|enums/|jwt/');
+$f3->set('AUTOLOAD', 'databases/|enums/');
+require_once('jwt/BeforeValidException.php');
+require_once('jwt/ExpiredException.php');
+require_once('jwt/SignatureInvalidException.php');
+require_once('jwt/JWT.php');
 require_once('functions/Helpers.php');
 require_once('functions/Listing.php');
 require_once('functions/Auth.php');
@@ -55,11 +59,11 @@ $f3->route('POST /guest-login', function($f3, $params) {
 });
 $f3->route('POST /validate-login-token', function($f3, $params) {
     $postBody = json_decode(urldecode($f3->get('BODY')), true);
-    GuestLogin($postBody['refreshToken']);
+    ValidateLoginToken($postBody['refreshToken']);
 });
 $f3->route('POST /set-profile-name', function($f3, $params) {
     $postBody = json_decode(urldecode($f3->get('BODY')), true);
-    GuestLogin($postBody['profileName']);
+    SetProfileName($postBody['profileName']);
 });
 // Listing services
 $f3->route('GET /items', function($f3, $params) {
