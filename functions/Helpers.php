@@ -132,9 +132,9 @@ function RandomLootBoxReward($lootBox)
     for ($i = 0; $i < $countLootboxRewards; ++$i)
     {
         $lootboxReward = $lootboxRewards[$i];
-        $id = '_' + $i;
+        $id = '_' . $i;
         $generatedResult[$id] = $lootboxReward;
-        $generatedWeight[$id] = $lootboxReward.randomWeight;
+        $generatedWeight[$id] = $lootboxReward['randomWeight'];
     }
     
     $takenId = WeightedRandom($generatedWeight, 0);
