@@ -131,13 +131,13 @@ function FinishDuel($session, $battleResult, $deadCharacters)
                     $addItemsResult = AddItems($playerId, $rewardItem['id'], $rewardItem['amount']);
                     if ($addItemsResult['success'])
                     {
-                        $createItems = $addItemsResult['createItems'];
-                        $updateItems = $addItemsResult['updateItems'];
-                        $countCreateItems = count($createItems);
-                        $countUpdateItems = count($updateItems);
+                        $resultCreateItems = $addItemsResult['createItems'];
+                        $resultUpdateItems = $addItemsResult['updateItems'];
+                        $countCreateItems = count($resultCreateItems);
+                        $countUpdateItems = count($resultUpdateItems);
                         for ($j = 0; $j < $countCreateItems; ++$j)
                         {
-                            $createItem = $createItems[$j];
+                            $createItem = $resultCreateItems[$j];
                             $createItem->save();
                             HelperUnlockItem($playerId, $createItem->dataId);
                             $rewardItems[] = $createItem;
@@ -145,7 +145,7 @@ function FinishDuel($session, $battleResult, $deadCharacters)
                         }
                         for ($j = 0; j < $countUpdateItems; ++$j)
                         {
-                            $updateItem = $updateItems[$j];
+                            $updateItem = $resultUpdateItems[$j];
                             $updateItem->update();
                             $rewardItems[] = $updateItem;
                             $updateItems[] = $updateItem;

@@ -45,13 +45,15 @@ function GetBearerToken()
 function CursorToArray($cursor)
 {
     $arr = array();
-    $fields = $cursor->fields();
-    foreach ($fields as $field)
-    {
-        if ($field == 'createdAt' || $field == 'updatedAt' || $field == 'recoveredTime') {
-            $arr[$field] = strtotime($cursor->get($field));
-        } else {
-            $arr[$field] = $cursor->get($field);
+    if (!empty($fields)) {
+        $fields = $cursor->fields();
+        foreach ($fields as $field)
+        {
+            if ($field == 'createdAt' || $field == 'updatedAt') {
+                $arr[$field] = strtotime($cursor->get($field));
+            } else {
+                $arr[$field] = $cursor->get($field);
+            }
         }
     }
     return $arr;
@@ -340,19 +342,19 @@ function SetNewPlayerData($player)
         $addItemsResult = AddItems($playerId, $startItem['id'], $startItem['amount']);
         if ($addItemsResult['success'])
         {
-            $createItems = $addItemsResult['createItems'];
-            $updateItems = $addItemsResult['updateItems'];
-            $countCreateItems = count($createItems);
-            $countUpdateItems = count($updateItems);
+            $resultCreateItems = $addItemsResult['createItems'];
+            $resultUpdateItems = $addItemsResult['updateItems'];
+            $countCreateItems = count($resultCreateItems);
+            $countUpdateItems = count($resultUpdateItems);
             for ($j = 0; $j < $countCreateItems; ++$j)
             {
-                $createItem = $createItems[$j];
+                $createItem = $resultCreateItems[$j];
                 $createItem->save();
                 HelperUnlockItem($playerId, $createItem->dataId);
             }
             for ($j = 0; $j < $countUpdateItems; ++$j)
             {
-                $updateItem = $updateItems[$j];
+                $updateItem = $resultUpdateItems[$j];
                 $updateItem->update();
             }
         }
@@ -366,20 +368,20 @@ function SetNewPlayerData($player)
         $addItemsResult = AddItems($playerId, $startCharacter, 1);
         if ($addItemsResult['success'])
         {
-            $createItems = $addItemsResult['createItems'];
-            $updateItems = $addItemsResult['updateItems'];
-            $countCreateItems = count($createItems);
-            $countUpdateItems = count($updateItems);
+            $resultCreateItems = $addItemsResult['createItems'];
+            $resultUpdateItems = $addItemsResult['updateItems'];
+            $countCreateItems = count($resultCreateItems);
+            $countUpdateItems = count($resultUpdateItems);
             for ($j = 0; $j < $countCreateItems; ++$j)
             {
-                $createItem = $createItems[$j];
+                $createItem = $resultCreateItems[$j];
                 $createItem->save();
                 HelperUnlockItem($playerId, $createItem->dataId);
                 HelperSetFormation($playerId, $createItem->id, $firstFormation, $i);
             }
             for ($j = 0; $j < $countUpdateItems; ++$j)
             {
-                $updateItem = $updateItems[$j];
+                $updateItem = $resultUpdateItems[$j];
                 $updateItem->update();
             }
         }
