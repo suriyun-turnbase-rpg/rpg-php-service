@@ -1,7 +1,7 @@
 <?php
 class PlayerCurrency extends \DB\SQL\Mapper {
 	public function __construct() {
-		parent::__construct( \Base::instance()->get('DB'), 'player_currency' );
+		parent::__construct( \Base::instance()->get('DB'), \Base::instance()->get('db_prefix') . 'player_currency' );
 	}
 }
 ?>
