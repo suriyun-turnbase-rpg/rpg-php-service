@@ -490,31 +490,31 @@ function UpdatePlayerStamina($playerId, $staminaType)
     $maxStamina = CalculateIntAttribute($currentLevel, $maxLevel, $maxAmountTable['minValue'], $maxAmountTable['maxValue'], $maxAmountTable['growth']);
     if ($stamina->amount < $maxStamina)
     {
-        $currentTimeInMillisecond = time();
-        $diffTimeInMillisecond = $currentTimeInMillisecond - $stamina->recoveredTime;
+        $currentTimeInSeconds = time();
+        $diffTimeInSeconds = $currentTimeInSeconds - $stamina->recoveredTime;
         $devideAmount = 1;
         switch ($staminaTable['recoverUnit'])
         {
             case EStaminaUnit::Days:
-                $devideAmount = 1000 * 60 * 60 * 24;
+                $devideAmount = 60 * 60 * 24;
                 break;
             case EStaminaUnit::Hours:
-                $devideAmount = 1000 * 60 * 60;
+                $devideAmount = 60 * 60;
                 break;
             case EStaminaUnit::Minutes:
-                $devideAmount = 1000 * 60;
+                $devideAmount = 60;
                 break;
             case EStaminaUnit::Seconds:
-                $devideAmount = 1000;
+                $devideAmount = 1;
                 break;
         }
-        $recoveryAmount = floor(($diffTimeInMillisecond / $devideAmount) / $staminaTable['recoverDuration']);
+        $recoveryAmount = floor(($diffTimeInSeconds / $devideAmount) / $staminaTable['recoverDuration']);
         if ($recoveryAmount > 0)
         {
             $stamina->amount += $recoveryAmount;
             if ($stamina->amount > $maxStamina)
                 $stamina->amount = $maxStamina;
-            $stamina->recoveredTime = $currentTimeInMillisecond;
+            $stamina->recoveredTime = $currentTimeInSeconds;
             $stamina->update();
         }
     }
