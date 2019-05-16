@@ -38,6 +38,7 @@ require_once('functions/Item.php');
 require_once('functions/Social.php');
 require_once('functions/Battle.php');
 require_once('functions/Arena.php');
+require_once('functions/Billing.php');
 
 // Services
 $f3->route('GET /', function() {
@@ -179,6 +180,15 @@ $f3->route('POST /start-duel', function($f3, $params) {
 $f3->route('POST /finish-duel', function($f3, $params) {
     $postBody = json_decode(urldecode($f3->get('BODY')), true);
     FinishDuel($postBody['session'], $postBody['battleResult'], $postBody['deadCharacters']);
+});
+// Billing services
+$f3->route('POST /ios-buy-goods', function($f3, $params) {
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
+    IOSBuyGoods($postBody['iapPackageDataId'], $postBody['receipt']);
+});
+$f3->route('POST /google-play-buy-goods', function($f3, $params) {
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
+    AndroidBuyGoods($postBody['iapPackageDataId'], $postBody['data'], $postBody['signature']);
 });
 
 $f3->run();
