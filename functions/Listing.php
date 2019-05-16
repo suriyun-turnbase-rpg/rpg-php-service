@@ -79,16 +79,14 @@ function GetHelperList()
     $list = array();
     // TODO: Improve this
     $db = \Base::instance()->get('DB');
-    $prefix = \Base::instance()->get('db_prefix');
-    $rows = $db->exec('SELECT ' . $prefix . 'player.id AS id, ' .
-        $prefix . 'player_friend.targetPlayerId AS targetPlayerId FROM ' .
-        $prefix . 'player RIGHT JOIN ' . $prefix . 'player_friend ON ' .
-        $prefix . 'player.id = ' . $prefix . 'player_friend.playerId WHERE '.
-        $prefix . 'player.id = :playerId',
-        array(':playerId' => $playerId));
+    $playerFriendDb = new PlayerFriend();
+    $playerFriends = $playerFriendDb->find(array(
+        'playerId = ?',
+        $playerId
+    ));
     // Add list
-    foreach ($rows as $row) {
-        $socialPlayer = GetSocialPlayer($playerId, $row['targetPlayerId']);
+    foreach ($playerFriends as $playerFriend) {
+        $socialPlayer = GetSocialPlayer($playerId, $playerFriend->targetPlayerId);
         if ($socialPlayer) {
             $list[] = $socialPlayer;
         }
@@ -114,17 +112,14 @@ function GetFriendList()
     $playerId = $player->id;
     $list = array();
     // TODO: Improve this
-    $db = \Base::instance()->get('DB');
-    $prefix = \Base::instance()->get('db_prefix');
-    $rows = $db->exec('SELECT ' . $prefix . 'player.id AS id, ' .
-        $prefix . 'player_friend.targetPlayerId AS targetPlayerId FROM ' .
-        $prefix . 'player RIGHT JOIN ' . $prefix . 'player_friend ON ' .
-        $prefix . 'player.id = ' . $prefix . 'player_friend.playerId WHERE '.
-        $prefix . 'player.id = :playerId',
-        array(':playerId' => $playerId));
+    $playerFriendDb = new PlayerFriend();
+    $playerFriends = $playerFriendDb->find(array(
+        'playerId = ?',
+        $playerId
+    ));
     // Add list
-    foreach ($rows as $row) {
-        $socialPlayer = GetSocialPlayer($playerId, $row['targetPlayerId']);
+    foreach ($playerFriends as $playerFriend) {
+        $socialPlayer = GetSocialPlayer($playerId, $playerFriend->targetPlayerId);
         if ($socialPlayer) {
             $list[] = $socialPlayer;
         }
@@ -138,17 +133,14 @@ function GetFriendRequestList()
     $playerId = $player->id;
     $list = array();
     // TODO: Improve this
-    $db = \Base::instance()->get('DB');
-    $prefix = \Base::instance()->get('db_prefix');
-    $rows = $db->exec('SELECT ' . $prefix . 'player.id AS id, ' .
-        $prefix . 'player_friend_request.targetPlayerId AS targetPlayerId FROM ' .
-        $prefix . 'player RIGHT JOIN ' . $prefix . 'player_friend_request ON ' .
-        $prefix . 'player.id = ' . $prefix . 'player_friend_request.playerId WHERE '.
-        $prefix . 'player_friend_request.playerId = :playerId',
-        array(':playerId' => $playerId));
+    $playerFriendRequestDb = new PlayerFriendRequest();
+    $playerFriendRequests = $playerFriendRequestDb->find(array(
+        'targetPlayerId = ?',
+        $playerId
+    ));
     // Add list
-    foreach ($rows as $row) {
-        $socialPlayer = GetSocialPlayer($playerId, $row['targetPlayerId']);
+    foreach ($playerFriendRequests as $playerFriendRequest) {
+        $socialPlayer = GetSocialPlayer($playerId, $playerFriendRequest->playerId);
         if ($socialPlayer) {
             $list[] = $socialPlayer;
         }
