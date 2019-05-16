@@ -61,15 +61,11 @@ function ValidateLoginToken($refreshToken)
 {
     $output = array('error' => '');
     $player = GetPlayer();
-    if (!$player) {
-        $output['error'] = 'ERROR_INVALID_LOGIN_TOKEN';
-    } else {
-        if ($refreshToken) {
-            $player = UpdatePlayerLoginToken($player);
-        }
-        UpdateAllPlayerStamina($player->id);
-        $output['player'] = CursorToArray($player);
+    if ($refreshToken) {
+        $player = UpdatePlayerLoginToken($player);
     }
+    UpdateAllPlayerStamina($player->id);
+    $output['player'] = CursorToArray($player);
     echo json_encode($output);
 }
 
@@ -82,9 +78,7 @@ function SetProfileName($profileName)
         'profileName = ?',
         $profileName
     ));
-    if (!$player) {
-        $output['error'] = 'ERROR_INVALID_LOGIN_TOKEN';
-    } else if (empty($profileName)) {
+    if (empty($profileName)) {
         $output['error'] = 'ERROR_EMPTY_PROFILE_NAME';
     } else if ($countPlayerWithName > 0) {
         $output['error'] = 'ERROR_EXISTED_PROFILE_NAME';

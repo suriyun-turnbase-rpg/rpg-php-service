@@ -88,6 +88,9 @@ function GetPlayer()
             \Base::instance()->set('PLAYER', $player);
         }
     }
+    if (!$player) {
+        exit('{"error":"ERROR_INVALID_LOGIN_TOKEN"}');
+    }
     return $player;
 }
 
