@@ -212,6 +212,9 @@ CREATE TABLE `<<__prefix__>>player_unlock_item` (
 ALTER TABLE `<<__prefix__>>player`
   ADD PRIMARY KEY (`id`);
 
+ALTER TABLE `<<__prefix__>>player`
+  ADD INDEX(`loginToken`);
+
 --
 -- Indexes for table `player_auth`
 --
