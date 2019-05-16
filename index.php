@@ -174,7 +174,7 @@ $f3->route('POST /set-formation', function($f3, $params) {
 // Arena services
 $f3->route('POST /start-duel', function($f3, $params) {
     $postBody = json_decode(urldecode($f3->get('BODY')), true);
-    StartStage($postBody['targetPlayerId']);
+    StartDuel($postBody['targetPlayerId']);
 });
 $f3->route('POST /finish-duel', function($f3, $params) {
     $postBody = json_decode(urldecode($f3->get('BODY')), true);
