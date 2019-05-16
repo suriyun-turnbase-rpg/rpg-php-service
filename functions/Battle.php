@@ -158,7 +158,7 @@ function FinishStage($session, $battleResult, $deadCharacters)
             $output['rewardCharacterExp'] = $rewardCharacterExp;
             $output['rewardSoftCurrency'] = $rewardSoftCurrency;
             $output['rating'] = $rating;
-            $output['clearStage'] = CursorToArray($clearedStage);
+            $output['clearStage'] = !empty($clearedStage) ? CursorToArray($clearedStage) : array('' => '');
             $output['player'] = CursorToArray($player);
         }
     }
