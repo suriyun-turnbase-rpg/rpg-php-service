@@ -97,7 +97,7 @@ function GetHelperList()
     $countRows = count($rows);
     $limit = 25 - $countRows;
     if ($limit > 0) {
-        $rows = $db->exec('SELECT id FROM ' . $prefix . 'player WHERE profileName != "" ORDER BY rand() LIMIT ' . $limit);
+        $rows = $db->exec('SELECT id FROM ' . $prefix . 'player WHERE profileName != "" AND id != "' . $playerId . '" ORDER BY rand() LIMIT ' . $limit);
         foreach ($rows as $row) {
             $socialPlayer = GetSocialPlayer($playerId, $row['id']);
             if ($socialPlayer) {
@@ -163,11 +163,13 @@ function GetOpponentList()
     $arenaScore = $player->arenaScore;
     $list = array();
     // TODO: Improve this
+    $db = \Base::instance()->get('DB');
     $arenaScoreCap = $arenaScore + 100;
     $limit = 25;
-    $rows = $db->exec('SELECT id FROM ' . $prefix . 'player WHERE ' . 
-        'profileName != "" AND ' . 
-        'arenaScore < ' . $arenaScoreCap . ' ' . 
+    $rows = $db->exec('SELECT id FROM ' . $prefix . 'player WHERE ' .
+        'id != "' . $playerId . '" AND ' .
+        'profileName != "" AND ' .
+        'arenaScore < ' . $arenaScoreCap . ' ' .
         'ORDER BY arenaScore DESC LIMIT ' . $limit);
     foreach ($rows as $row) {
         $socialPlayer = GetSocialPlayer($playerId, $row['id']);
