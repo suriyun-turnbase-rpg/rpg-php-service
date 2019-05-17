@@ -8,13 +8,17 @@ function Login($username, $password)
     } else {
         $playerAuthDb = new PlayerAuth();
         $playerAuth = $playerAuthDb->load(array(
-            'username = ? AND password = ? AND type = 1',
-            $username,
-            $password
+            'username = ? AND type = 1',
+            $username
         ));
+        $bcrypt = \Bcrypt::instance();
         if (!$playerAuth) {
             $output['error'] = 'ERROR_INVALID_USERNAME_OR_PASSWORD';
-        } else {
+        } else if (!$bcrypt->verify($password, $playerAuth->password)) {
+            $output['error'] = 'ERROR_INVALID_USERNAME_OR_PASSWORD';
+        }
+        else
+        {
             $playerDb = new Player();
             $player = $playerDb->load(array(
                 'id = ?',
@@ -98,7 +102,9 @@ function Register($username, $password)
     } else if (IsPlayerWithUsernameFound(1, $username)) {
         $output['error'] = 'ERROR_EXISTED_USERNAME';
     } else {
-        $player = InsertNewPlayer(1, $username, $password);
+        $bcrypt = \Bcrypt::instance();
+        $salt = \Base::instance()->get('password_salt');
+        $player = InsertNewPlayer(1, $username, $bcrypt->hash($password, $salt));
         $output['player'] = CursorToArray($player);
     }
     echo json_encode($output);
