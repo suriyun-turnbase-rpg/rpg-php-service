@@ -1,5 +1,5 @@
 # tbrpg-php-service
-PHP web-service for Turnbase RPG project
+PHP web-service for RPG project
 
 ## How to setup
 * Set config in `./configs/config.ini`
