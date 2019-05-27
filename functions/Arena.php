@@ -97,6 +97,7 @@ function FinishDuel($session, $battleResult, $deadCharacters)
             $highestArenaRankCurrentSeason = $player->highestArenaRankCurrentSeason;
             $updateScore = $gameData['arenaWinScoreIncrease'];
             $arenaScore += $gameData['arenaWinScoreIncrease'];
+            $player->arenaScore = $arenaScore;
             $arenaLevel = CalculateArenaRankLevel($arenaScore);
             // Arena rank up, rewarding items
             if ($arenaRank && $arenaLevel > $oldArenaLevel && $highestArenaRankCurrentSeason < $arenaLevel)
@@ -160,6 +161,11 @@ function FinishDuel($session, $battleResult, $deadCharacters)
         {
             $updateScore = -$gameData['arenaLoseScoreDecrease'];
             $arenaScore -= $gameData['arenaLoseScoreDecrease'];
+            if ($arenaScore < 0)
+            {
+                // Min arena score is 0
+                $arenaScore = 0;
+            }
             $player->arenaScore = $arenaScore;
         }
         $player->update();
