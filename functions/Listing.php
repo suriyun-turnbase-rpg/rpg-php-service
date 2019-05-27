@@ -79,6 +79,7 @@ function GetHelperList()
     $list = array();
     // TODO: Improve this
     $db = \Base::instance()->get('DB');
+    $prefix = \Base::instance()->get('db_prefix');
     $playerFriendDb = new PlayerFriend();
     $playerFriends = $playerFriendDb->find(array(
         'playerId = ?',
@@ -156,6 +157,7 @@ function GetOpponentList()
     $list = array();
     // TODO: Improve this
     $db = \Base::instance()->get('DB');
+    $prefix = \Base::instance()->get('db_prefix');
     $arenaScoreCap = $arenaScore + 100;
     $limit = 25;
     $rows = $db->exec('SELECT id FROM ' . $prefix . 'player WHERE ' .
