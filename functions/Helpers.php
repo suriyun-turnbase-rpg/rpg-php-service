@@ -788,13 +788,13 @@ function CalculateArenaRankLevel($arenaScore)
         }
         $level++;
     }
-    return level;
+    return $level;
 }
 
 function GetArenaRank($arenaScore)
 {
     $gameData = \Base::instance()->get('GameData');
-    $level = CalculateArenaRankLevel(arenaScore);
+    $level = CalculateArenaRankLevel($arenaScore);
     if ($level >= count($gameData['arenaRanks'])) {
         $level = count($gameData['arenaRanks']) - 1;
     }
