@@ -1,11 +1,8 @@
 <?php
 abstract class BasicEnum {
-    private static $constCacheArray = NULL;
+    private static $constCacheArray = [];
 
     private static function getConstants() {
-        if (self::$constCacheArray == NULL) {
-            self::$constCacheArray = [];
-        }
         $calledClass = get_called_class();
         if (!array_key_exists($calledClass, self::$constCacheArray)) {
             $reflect = new ReflectionClass($calledClass);
