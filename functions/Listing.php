@@ -93,7 +93,7 @@ function GetHelperList()
         }
     }
     // If helpers not enough, fill more
-    $countRows = count($rows);
+    $countRows = count($list);
     $limit = 25 - $countRows;
     if ($limit > 0) {
         $rows = $db->exec('SELECT id FROM ' . $prefix . 'player WHERE profileName != "" AND id != "' . $playerId . '" ORDER BY rand() LIMIT ' . $limit);
