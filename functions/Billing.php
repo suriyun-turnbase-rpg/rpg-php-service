@@ -99,7 +99,7 @@ function IOSBuyGoods($iapPackageDataId, $receipt)
     }
     else if (!verify_app_store_in_app($receipt, \Base::instance()->get('appstore_is_sandbox')))
     {
-        BuyGoods($playerId, $gameData, $packageData);
+        $buyGoodsOutput = BuyGoods($playerId, $gameData, $packageData);
         $output['rewardItems'] = $buyGoodsOutput['rewardItems'];
         $output['createItems'] = $buyGoodsOutput['createItems'];
         $output['updateItems'] = $buyGoodsOutput['updateItems'];
@@ -147,17 +147,17 @@ function BuyGoods($playerId, $gameData, $packageData)
 
     // Update currencies
     // Soft currency
-    $packageRewardSoftCurrency = $packageData['rewardSoftCurrency'];
+    $rewardSoftCurrency = $packageData['rewardSoftCurrency'];
     $updateCurrencies = array();
     $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
-    $softCurrency->amount += $packageRewardSoftCurrency;
+    $softCurrency->amount += $rewardSoftCurrency;
     $softCurrency->update();
     $updateCurrencies[] = $softCurrency;
     // Hard currency
-    $packageRewardHardCurrency = $packageData['rewardHardCurrency'];
+    $rewardHardCurrency = $packageData['rewardHardCurrency'];
     $updateCurrencies = array();
     $hardCurrency = GetCurrency($playerId, $gameData['currencies']['HARD_CURRENCY']['id']);
-    $hardCurrency->amount += $packageRewardHardCurrency;
+    $hardCurrency->amount += $rewardHardCurrency;
     $hardCurrency->update();
     $updateCurrencies[] = $hardCurrency;
     // Add items
