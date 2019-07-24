@@ -42,6 +42,11 @@ function GuestLogin($deviceId)
     if (empty($deviceId)) {
         $output['error'] = 'ERROR_EMPTY_USERNAME_OR_PASSWORD';
     }  else if (IsPlayerWithUsernameFound(0, $deviceId)) {
+        $playerAuthDb = new PlayerAuth();
+        $playerAuth = $playerAuthDb->load(array(
+            'username = ? AND type = 1',
+            $deviceId
+        ));
         $playerDb = new Player();
         $player = $playerDb->load(array(
             'id = ?',
