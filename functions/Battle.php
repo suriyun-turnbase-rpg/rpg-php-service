@@ -192,11 +192,11 @@ function SelectFormation($formationName, $formationType)
     $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
-    if (formationType == EFormationType::Stage)
+    if ($formationType == EFormationType::Stage)
     {
         $player->selectedFormation = $formationName;
     }
-    else if (formationType == EFormationType::Arena)
+    else if ($formationType == EFormationType::Arena)
     {
         $player->selectedArenaFormation = $formationName;
     }
