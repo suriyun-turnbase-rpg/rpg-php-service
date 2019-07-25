@@ -77,21 +77,21 @@ function GetPlayer()
         // Get Player by Id and LoginToken from header
         // Then get player from database, finally set to f3 data
         $loginToken = GetBearerToken();
-        $decodedData = DecodeJwt($loginToken);
-        $playerDb = new Player();
-        $player = $playerDb->load(array(
-            'id = ? AND loginToken = ?',
-            $decodedData['id'],
-            $loginToken,
-        ));
-        if ($player) {
-            \Base::instance()->set('PLAYER', $player);
-        } else {
-            exit('{"error":"ERROR_INVALID_LOGIN_TOKEN","loginToken":"'.$loginToken.'"}');
+        if (!empty($loginToken))
+        {
+            $decodedData = DecodeJwt($loginToken);
+            $playerDb = new Player();
+            $player = $playerDb->load(array(
+                'id = ? AND loginToken = ?',
+                $decodedData['id'],
+                $loginToken,
+            ));
         }
-    }
-    if (!$player) {
-        exit('{"error":"ERROR_INVALID_LOGIN_TOKEN"}');
+        if (!$player) {
+            exit('{"error":"ERROR_INVALID_LOGIN_TOKEN","loginToken":"'.$loginToken.'"}');
+        } else {
+            \Base::instance()->set('PLAYER', $player);
+        }
     }
     return $player;
 }
