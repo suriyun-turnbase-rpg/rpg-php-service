@@ -10,7 +10,7 @@ function verify_app_store_in_app($receipt, $is_sandbox)
 	$json = '{"receipt-data":"'.$receipt.'"}';
 	//opening socket to itunes
 	$fp = fsockopen ($verify_host, 443, $errno, $errstr, 30);
-	if (!isset($fp))
+	if (!$fp) 
 	{
 		// HTTP ERROR
 		return false;

@@ -13,7 +13,7 @@ function LevelUpItem($itemId, $materials)
         $itemId
     ));
     
-    if (!isset($item)) {
+    if (!$item) {
         $output['error'] = 'ERROR_INVALID_PLAYER_ITEM_DATA';
     } else {
         $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
@@ -31,7 +31,7 @@ function LevelUpItem($itemId, $materials)
                 $materialItemId
             ));
             
-            if (!isset($foundItem)) {
+            if (!$foundItem) {
                 continue;
             }
     
@@ -74,7 +74,7 @@ function LevelUpItem($itemId, $materials)
                     'id = ?',
                     $deleteItemId
                 ));
-                if (isset($deletingItem)) {
+                if ($deletingItem) {
                     $deletingItem->erase();
                 }
             }
@@ -102,7 +102,7 @@ function EvolveItem($itemId, $materials)
         $itemId
     ));
     
-    if (!isset($item)) {
+    if (!$item) {
         $output['error'] = 'ERROR_INVALID_PLAYER_ITEM_DATA';
     } else {
         $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
@@ -119,7 +119,7 @@ function EvolveItem($itemId, $materials)
                 $materialItemId
             ));
             
-            if (!isset($foundItem)) {
+            if (!$foundItem) {
                 continue;
             }
     
@@ -185,7 +185,7 @@ function EvolveItem($itemId, $materials)
                     'id = ?',
                     $deleteItemId
                 ));
-                if (isset($deletingItem)) {
+                if ($deletingItem) {
                     $deletingItem->erase();
                 }
             }
@@ -221,7 +221,7 @@ function SellItems($items)
             $sellingItemId
         ));
         
-        if (!isset($foundItem)) {
+        if (!$foundItem) {
             continue;
         }
 
@@ -258,7 +258,7 @@ function SellItems($items)
             'id = ?',
             $deleteItemId
         ));
-        if (isset($deletingItem)) {
+        if ($deletingItem) {
             $deletingItem->erase();
         }
     }
@@ -291,14 +291,14 @@ function EquipItem($characterId, $equipmentId, $equipPosition)
         $equipmentId
     ));
 
-    if (!isset($character) || !isset($equipment)) {
+    if (!$character || !$equipment) {
         $output['error'] = 'ERROR_INVALID_PLAYER_ITEM_DATA';
     } else {
         $equipmentData = $gameData['items'][$equipment->dataId];
         $equippablePositions = $equipmentData['equippablePositions'];
-        if (!isset($equipmentData)) {
+        if (!$equipmentData) {
             $output['error'] = 'ERROR_INVALID_ITEM_DATA';
-        } else if (isset($equippablePositions) && 
+        } else if ($equippablePositions && 
             count($equippablePositions) > 0 && 
             !in_array($equipPosition, $equippablePositions)) {
             $output['error'] = 'ERROR_INVALID_EQUIP_POSITION';
@@ -345,7 +345,7 @@ function UnEquipItem($equipmentId)
         $equipmentId
     ));
 
-    if (!isset($unEquipItem)) {
+    if (!$unEquipItem) {
         $output['error'] = 'ERROR_INVALID_PLAYER_ITEM_DATA';
     } else {
         $updateItems = array();
@@ -392,7 +392,7 @@ function OpenLootBox($lootBoxDataId, $packIndex)
     $playerId = $player->id;
 
     $lootBox = $gameData['lootBoxes'][$lootBoxDataId];
-    if (!isset($lootBox)) {
+    if (!$lootBox) {
         $output['error'] = 'ERROR_INVALID_LOOT_BOX_DATA';
     } else {
         $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
@@ -432,7 +432,7 @@ function OpenLootBox($lootBoxDataId, $packIndex)
             {
                 $rewardItem = RandomLootBoxReward($lootBox);
 
-                if (!isset($rewardItem)) {
+                if (!$rewardItem) {
                     continue;
                 }
                     

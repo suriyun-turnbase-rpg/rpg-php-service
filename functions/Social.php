@@ -18,7 +18,7 @@ function FriendRequest($targetPlayerId)
         $targetPlayerId
     ));
     
-    if (!isset($playerFriend) && !isset($playerFriendRequest))
+    if (!$playerFriend && !$playerFriendRequest)
     {
         $newRequest = new PlayerFriendRequest();
         $newRequest->playerId = $playerId;

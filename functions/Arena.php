@@ -42,7 +42,7 @@ function StartDuel($targetPlayerId)
                 'id = ?',
                 $characterId
             ));
-            if (isset($characterEntry)) {
+            if ($characterEntry) {
                 $opponentCharacters[] = $characterEntry;
             }
         }
@@ -64,7 +64,7 @@ function FinishDuel($session, $battleResult, $deadCharacters)
         $session
     ));
 
-    if (!isset($playerBattle)) {
+    if (!$playerBattle) {
         $output['error'] = 'ERROR_INVALID_BATTLE_SESSION';
     } else {
         // Prepare results

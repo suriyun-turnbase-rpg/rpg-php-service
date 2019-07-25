@@ -12,7 +12,7 @@ function Login($username, $password)
             $username
         ));
         $bcrypt = \Bcrypt::instance();
-        if (!isset($playerAuth)) {
+        if (!$playerAuth) {
             $output['error'] = 'ERROR_INVALID_USERNAME_OR_PASSWORD';
         } else if (!$bcrypt->verify($password, $playerAuth->password)) {
             $output['error'] = 'ERROR_INVALID_USERNAME_OR_PASSWORD';
@@ -24,7 +24,7 @@ function Login($username, $password)
                 'id = ?',
                 $playerAuth->playerId
             ));
-            if (!isset($player)) {
+            if (!$player) {
                 $output['error'] = 'ERROR_INVALID_USERNAME_OR_PASSWORD';
             } else {
                 $player = UpdatePlayerLoginToken($player);
@@ -52,7 +52,7 @@ function GuestLogin($deviceId)
             'id = ?',
             $playerAuth->playerId
         ));
-        if (!isset($player)) {
+        if (!$player) {
             $output['error'] = 'ERROR_INVALID_USERNAME_OR_PASSWORD';
         } else {
             $player = UpdatePlayerLoginToken($player);
@@ -70,7 +70,7 @@ function ValidateLoginToken($refreshToken)
 {
     $output = array('error' => '');
     $player = GetPlayer();
-    if (isset($refreshToken)) {
+    if ($refreshToken) {
         $player = UpdatePlayerLoginToken($player);
     }
     UpdateAllPlayerStamina($player->id);

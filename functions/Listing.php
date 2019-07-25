@@ -88,7 +88,7 @@ function GetHelperList()
     // Add list
     foreach ($playerFriends as $playerFriend) {
         $socialPlayer = GetSocialPlayer($playerId, $playerFriend->targetPlayerId);
-        if (isset($socialPlayer)) {
+        if ($socialPlayer) {
             $list[] = $socialPlayer;
         }
     }
@@ -99,7 +99,7 @@ function GetHelperList()
         $rows = $db->exec('SELECT id FROM ' . $prefix . 'player WHERE profileName != "" AND id != "' . $playerId . '" ORDER BY rand() LIMIT ' . $limit);
         foreach ($rows as $row) {
             $socialPlayer = GetSocialPlayer($playerId, $row['id']);
-            if (isset($socialPlayer)) {
+            if ($socialPlayer) {
                 $list[] = $socialPlayer;
             }
         }
@@ -121,7 +121,7 @@ function GetFriendList()
     // Add list
     foreach ($playerFriends as $playerFriend) {
         $socialPlayer = GetSocialPlayer($playerId, $playerFriend->targetPlayerId);
-        if (isset($socialPlayer)) {
+        if ($socialPlayer) {
             $list[] = $socialPlayer;
         }
     }
@@ -142,7 +142,7 @@ function GetFriendRequestList()
     // Add list
     foreach ($playerFriendRequests as $playerFriendRequest) {
         $socialPlayer = GetSocialPlayer($playerId, $playerFriendRequest->playerId);
-        if (isset($socialPlayer)) {
+        if ($socialPlayer) {
             $list[] = $socialPlayer;
         }
     }
@@ -167,7 +167,7 @@ function GetOpponentList()
         'ORDER BY arenaScore DESC LIMIT ' . $limit);
     foreach ($rows as $row) {
         $socialPlayer = GetSocialPlayer($playerId, $row['id']);
-        if (isset($socialPlayer)) {
+        if ($socialPlayer) {
             $list[] = $socialPlayer;
         }
     }
