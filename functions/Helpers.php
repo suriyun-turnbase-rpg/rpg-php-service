@@ -38,7 +38,10 @@ function GetBearerToken()
     if (!empty($headers)) {
         $headersData = explode(" ", $headers);
         return $headersData[1];
+    } else if (!empty($_GET["logintoken"])) {
+        return $_GET["logintoken"];
     }
+    
     return null;
 }
 
