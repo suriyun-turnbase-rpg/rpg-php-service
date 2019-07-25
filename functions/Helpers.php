@@ -86,6 +86,8 @@ function GetPlayer()
         ));
         if ($player) {
             \Base::instance()->set('PLAYER', $player);
+        } else {
+            exit('{"error":"ERROR_INVALID_LOGIN_TOKEN","loginToken":"'.$loginToken.'","jwt":"'.json_encode($decodedData).'"}');
         }
     }
     if (!$player) {
