@@ -135,7 +135,7 @@ function FinishStage($session, $battleResult, $deadCharacters)
                             $rewardItems[] = $createItem;
                             $createItems[] = $createItem;
                         }
-                        for ($j = 0; j < $countUpdateItems; ++$j)
+                        for ($j = 0; $j < $countUpdateItems; ++$j)
                         {
                             $updateItem = $resultUpdateItems[$j];
                             $updateItem->update();
