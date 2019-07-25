@@ -72,7 +72,7 @@ function CursorsToArray($cursors)
 function GetPlayer()
 {
     $player = \Base::instance()->get('PLAYER');
-    if (!$player)
+    if (!isset($player))
     {
         // Get Player by Id and LoginToken from header
         // Then get player from database, finally set to f3 data
@@ -84,13 +84,13 @@ function GetPlayer()
             $decodedData['id'],
             $loginToken,
         ));
-        if ($player) {
+        if (isset($player)) {
             \Base::instance()->set('PLAYER', $player);
         } else {
             exit('{"error":"ERROR_INVALID_LOGIN_TOKEN","loginToken":"'.$loginToken.'"}');
         }
     }
-    if (!$player) {
+    if (!isset($player)) {
         exit('{"error":"ERROR_INVALID_LOGIN_TOKEN"}');
     }
     return $player;
@@ -100,7 +100,7 @@ function WeightedRandom($weights, $noResultWeight)
 {
     // Usage example: WeightedRandom({'a':0.5,'b':0.3,'c':0.2}); //Have chance to receives a = 50%, b = 30%, c = 20%
     
-    if (!$noResultWeight) {
+    if (!isset($noResultWeight)) {
         $noResultWeight = 0;
     }
         
@@ -145,7 +145,7 @@ function RandomLootBoxReward($lootBox)
     }
     
     $takenId = WeightedRandom($generatedWeight, 0);
-    if ($takenId) {
+    if (!empty($takenId)) {
         return $generatedResult[$takenId];
     }
     return NULL;
@@ -221,7 +221,7 @@ function CalculateItemLevelUpPrice($item)
 {
     $gameData = \Base::instance()->get('GameData');
     $itemData = $gameData['items'][$item->dataId];
-    if (!$itemData) {
+    if (!isset($itemData)) {
         return 0;
     }
         
@@ -230,7 +230,7 @@ function CalculateItemLevelUpPrice($item)
     }
     
     $itemTier = $itemData['itemTier'];
-    if (!$itemTier) {
+    if (!isset($itemTier)) {
         return 0;
     }
         
@@ -243,12 +243,12 @@ function CalculateItemEvolvePrice($item)
 {
     $gameData = \Base::instance()->get('GameData');
     $itemData = $gameData['items'][$item->dataId];
-    if (!$itemData) {
+    if (!isset($itemData)) {
         return 0;
     }
     
     $itemTier = $itemData['itemTier'];
-    if (!$itemTier) {
+    if (!isset($itemTier)) {
         return 0;
     }
         
@@ -259,7 +259,7 @@ function CalculateItemRewardExp($item)
 {
     $gameData = \Base::instance()->get('GameData');
     $itemData = $gameData['items'][$item->dataId];
-    if (!$itemData) {
+    if (!isset($itemData)) {
         return 0;
     }
         
@@ -268,7 +268,7 @@ function CalculateItemRewardExp($item)
     }
     
     $itemTier = $itemData['itemTier'];
-    if (!$itemTier) {
+    if (!isset($itemTier)) {
         return 0;
     }
         
@@ -281,7 +281,7 @@ function CalculateItemSellPrice($item)
 {
     $gameData = \Base::instance()->get('GameData');
     $itemData = $gameData['items'][$item->dataId];
-    if (!$itemData) {
+    if (!isset($itemData)) {
         return 0;
     }
         
@@ -290,7 +290,7 @@ function CalculateItemSellPrice($item)
     }
     
     $itemTier = $itemData['itemTier'];
-    if (!$itemTier) {
+    if (!isset($itemTier)) {
         return 0;
     }
         
@@ -303,12 +303,12 @@ function GetItemEvolveMaterials($item)
 {
     $gameData = \Base::instance()->get('GameData');
     $itemData = $gameData['items'][$item->dataId];
-    if (!$itemData) {
+    if (!isset($itemData)) {
         return [];
     }
         
     $evolveInfo = $itemData['evolveInfo'];
-    if (!$evolveInfo) {
+    if (!isset($evolveInfo)) {
         return [];
     }
     
@@ -319,12 +319,12 @@ function GetItemEvolve($item)
 {
     $gameData = \Base::instance()->get('GameData');
     $itemData = $gameData['items'][$item->dataId];
-    if (!$itemData) {
+    if (!isset($itemData)) {
         return $item;
     }
     
     $evolveInfo = $itemData['evolveInfo'];
-    if (!$evolveInfo) {
+    if (!isset($evolveInfo)) {
         return $item;
     }
     
@@ -447,7 +447,7 @@ function DecreasePlayerStamina($playerId, $staminaType, $decreaseAmount)
 {
     $gameData = \Base::instance()->get('GameData');
     $staminaTable = $gameData['staminas'][$staminaType];
-    if (!$staminaTable) {
+    if (!isset($staminaTable)) {
         return;
     }
 
@@ -478,7 +478,7 @@ function UpdatePlayerStamina($playerId, $staminaType)
 {
     $gameData = \Base::instance()->get('GameData');
     $staminaTable = $gameData['staminas'][$staminaType];
-    if (!$staminaTable) {
+    if (!isset($staminaTable)) {
         return;
     }
     
@@ -539,7 +539,7 @@ function GetCurrency($playerId, $dataId)
         $playerId,
         $dataId
     ));
-    if (!$playerCurrency) {
+    if (!isset($playerCurrency)) {
         $playerCurrency = new PlayerCurrency();
         $playerCurrency->playerId = $playerId;
         $playerCurrency->dataId = $dataId;
@@ -556,7 +556,7 @@ function GetStamina($playerId, $dataId)
         $playerId,
         $dataId
     ));
-    if (!$playerStamina) {
+    if (!isset($playerStamina)) {
         $playerStamina = new PlayerStamina();
         $playerStamina->playerId = $playerId;
         $playerStamina->dataId = $dataId;
@@ -570,7 +570,7 @@ function AddItems($playerId, $dataId, $amount)
 {
     $gameData = \Base::instance()->get('GameData');
     $item = $gameData['items'][$dataId];
-    if (!$item) {
+    if (!isset($item)) {
         return array('success' => false);
     }
         
@@ -630,8 +630,7 @@ function HelperSetFormation($playerId, $characterId, $formationName, $position)
             $formationName
         ));
         
-        if ($oldFormation)
-        {
+        if (isset($oldFormation)) {
             $oldFormation->itemId = '';
             $oldFormation->update();
         }
@@ -645,7 +644,7 @@ function HelperSetFormation($playerId, $characterId, $formationName, $position)
         $position
     ));
 
-    if (!$formation) {
+    if (!isset($formation)) {
         $formation = new PlayerFormation();
         $formation->playerId = $playerId;
         $formation->dataId = $formationName;
@@ -653,7 +652,7 @@ function HelperSetFormation($playerId, $characterId, $formationName, $position)
         $formation->itemId = $characterId;
         $formation->save();
     } else {
-        if ($oldFormation) {
+        if (isset($oldFormation)) {
             $oldFormation->itemId = $formation->itemId;
             $oldFormation->update();
         }
@@ -671,7 +670,7 @@ function HelperUnlockItem($playerId, $dataId)
         $dataId
     ));
 
-    if (!$playerUnlockItem)
+    if (!isset($playerUnlockItem))
     {
         $playerUnlockItem = new PlayerUnlockItem();
         $playerUnlockItem->playerId = $playerId;
@@ -694,7 +693,7 @@ function HelperClearStage($playerId, $dataId, $rating)
         $dataId
     ));
     
-    if (!$playerClearStage) {
+    if (!isset($playerClearStage)) {
         $playerClearStage = new PlayerClearStage();
         $playerClearStage->playerId = $playerId;
         $playerClearStage->dataId = $dataId;
@@ -740,7 +739,7 @@ function GetFormationCharacter($playerId, $playerSelectedFormation)
             $characterId
         ));
         // Add data to list if existed
-        if ($characterData) {
+        if (isset($characterData)) {
             $characters[] = $characterData;
         }
     }
@@ -757,15 +756,13 @@ function GetLeaderCharacter($playerId, $playerSelectedFormation)
     ));
     $playerItemDb = new PlayerItem();
     foreach ($formations as $formation) {
-        if ($formation->dataId == $playerSelectedFormation && !empty($formation->itemId))
-        {
+        if ($formation->dataId == $playerSelectedFormation && !empty($formation->itemId)) {
             $currentCharacterData = $playerItemDb->load(array(
                 'id = ?',
                 $formation->itemId
             ));
-            if ($currentCharacterData)
-            {
-                if (!$characterData) {
+            if (isset($currentCharacterData)) {
+                if (!isset($characterData)) {
                     // Set first found character, will return it when leader not found
                     $characterData = $currentCharacterData;
                 }
@@ -811,7 +808,7 @@ function GetSocialPlayer($playerId, $targetPlayerId)
         $targetPlayerId
     ));
     $playerFriendDb = new PlayerFriend();
-    if ($player) {
+    if (isset($player)) {
         $isFriend = $playerFriendDb->count(array(
             'playerId = ? AND targetPlayerId = ?',
             $playerId,

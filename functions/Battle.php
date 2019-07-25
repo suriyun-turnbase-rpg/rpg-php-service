@@ -14,7 +14,7 @@ function StartStage($stageDataId)
     ));
 
     $stage = $gameData['stages'][$stageDataId];
-    if (!$stage) {
+    if (!isset($stage)) {
         $output['error'] = 'ERROR_INVALID_STAGE_DATA';
     } else if (!DecreasePlayerStamina($playerId, 'STAGE', $stage['requireStamina'])) {
         $output['error'] = 'ERROR_NOT_ENOUGH_STAGE_STAMINA';
@@ -47,11 +47,11 @@ function FinishStage($session, $battleResult, $deadCharacters)
         $session
     ));
 
-    if (!$playerBattle) {
+    if (!isset($playerBattle)) {
         $output['error'] = 'ERROR_INVALID_BATTLE_SESSION'.$session;
     } else {
         $stage = $gameData['stages'][$playerBattle->dataId];
-        if (!$stage) {
+        if (!isset($stage)) {
             $output['error'] = 'ERROR_INVALID_STAGE_DATA';
         } else {
             // Prepare results
@@ -97,7 +97,7 @@ function FinishStage($session, $battleResult, $deadCharacters)
                             'id = ?',
                             $characterId
                         ));
-                        if ($characterEntry) {
+                        if (isset($characterEntry)) {
                             $characterEntry->exp += $devivedExp;
                             $characterEntry->update();
                             $updateItems[] = $characterEntry;
