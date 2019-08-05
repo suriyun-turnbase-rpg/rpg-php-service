@@ -167,9 +167,15 @@ function GetOpponentList()
         'ORDER BY arenaScore DESC LIMIT ' . $limit);
     foreach ($rows as $row) {
         $socialPlayer = GetSocialPlayer($playerId, $row['id']);
-        if ($socialPlayer) {
-            $list[] = $socialPlayer;
+        if (!$socialPlayer) {
+            continue;
         }
+        $opponentCharacterIds = GetFormationCharacterIds($socialPlayer['id'], $socialPlayer['selectedArenaFormation']);
+        $count = count($opponentCharacterIds);
+        if ($count <= 0) {
+            continue;
+        }
+        $list[] = $socialPlayer;
     }
     // TODO: If opponents not enough, fill more (May be fake players)
     echo json_encode(array('list' => $list));

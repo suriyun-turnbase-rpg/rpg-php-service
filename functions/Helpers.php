@@ -829,6 +829,8 @@ function GetSocialPlayer($playerId, $targetPlayerId)
                 'exp' => $player->exp,
                 'mainCharacter' => $character->dataId,
                 'mainCharacterExp' => $character->exp,
+                'selectedFormation' => $player->selectedFormation,
+                'selectedArenaFormation' => $player->selectedArenaFormation,
                 'isFriend' => $isFriend
             );
         }
