@@ -11,7 +11,5 @@ final class EAchievementType extends BasicEnum
     const CountUseHelper = 7;
     const CountWinStage = 8;
     const CountWinDuel = 9;
-    const CountSellCharacter = 10;
-    const CountSellEquipment = 11;
 }
 ?>
