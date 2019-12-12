@@ -1,4 +1,18 @@
 <?php
+function GetAchievementList()
+{
+    $player = GetPlayer();
+    $playerId = $player->id;
+    $playerItemDb = new PlayerAchievement();
+    $list = $playerItemDb->find(array(
+        'playerId = ?',
+        $playerId
+    ), array(
+        'order' => 'updatedAt DESC'
+    ));
+    echo json_encode(array('list' => CursorsToArray($list)));
+}
+
 function GetItemList()
 {
     $player = GetPlayer();

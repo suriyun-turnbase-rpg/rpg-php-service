@@ -67,6 +67,9 @@ $f3->route('POST /set-profile-name', function($f3, $params) {
     SetProfileName($postBody['profileName']);
 });
 // Listing services
+$f3->route('GET /achievements', function($f3, $params) {
+    GetAchievementList();
+});
 $f3->route('GET /items', function($f3, $params) {
     GetItemList();
 });
