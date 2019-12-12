@@ -79,7 +79,6 @@ function FinishStage($session, $battleResult, $deadCharacters)
             $rewardCharacterExp = $output['rewardCharacterExp'];
             $rewardSoftCurrency = $output['rewardSoftCurrency'];
             $rating = $output['rating'];
-            $clearStage = $output['clearStage'];
             // Set battle session
             $playerBattle->battleResult = $battleResult;
             if ($battleResult == EBattleResult::Win)
