@@ -55,16 +55,31 @@ function FinishStage($session, $battleResult, $deadCharacters)
             $output['error'] = 'ERROR_INVALID_STAGE_DATA';
         } else {
             // Prepare results
-            $rewardItems = array();
-            $createItems = array();
-            $updateItems = array();
-            $deleteItemIds = array();
-            $updateCurrencies = array();
-            $rewardPlayerExp = 0;
-            $rewardCharacterExp = 0;
-            $rewardSoftCurrency = 0;
-            $rating = 0;
-            $clearedStage = array();
+            $output = array(
+                'rewardItems' => array(),
+                'createItems' => array(),
+                'updateItems' => array(),
+                'deleteItemIds' => array(),
+                'updateCurrencies' => array(),
+                'rewardPlayerExp' => 0,
+                'rewardCharacterExp' => 0,
+                'rating' => 0,
+                'clearStage' => array(),
+                'firstClearRewardPlayerExp' => 0,
+                'firstClearRewardSoftCurrency' => 0,
+                'firstClearRewardHardCurrency' => 0,
+                'firstClearRewardItems' => array()
+            );
+            $rewardItems = $output['rewardItems'];
+            $createItems = $output['createItems'];
+            $updateItems = $output['updateItems'];
+            $deleteItemIds = $output['deleteItemIds'];
+            $updateCurrencies = $output['updateCurrencies'];
+            $rewardPlayerExp = $output['rewardPlayerExp'];
+            $rewardCharacterExp = $output['rewardCharacterExp'];
+            $rewardSoftCurrency = $output['rewardSoftCurrency'];
+            $rating = $output['rating'];
+            $clearStage = $output['clearStage'];
             // Set battle session
             $playerBattle->battleResult = $battleResult;
             if ($battleResult == EBattleResult::Win)
@@ -79,8 +94,8 @@ function FinishStage($session, $battleResult, $deadCharacters)
             if ($battleResult == EBattleResult::Win)
             {
                 $playerSelectedFormation = $player->selectedFormation;
-                $rewardPlayerExp = $stage['rewardPlayerExp'];
                 // Player exp
+                $rewardPlayerExp = $stage['rewardPlayerExp'];
                 $player->exp += $rewardPlayerExp;
                 // Character exp
                 $characterIds = GetFormationCharacterIds($playerId, $playerSelectedFormation);
@@ -146,19 +161,18 @@ function FinishStage($session, $battleResult, $deadCharacters)
                     // End add item condition
                 }
                 // End reward items loop
-                $clearedStage = HelperClearStage($playerId, $stage['id'], $rating);
+                $output['rewardItems'] = CursorsToArray($rewardItems);
+                $output['createItems'] = CursorsToArray($createItems);
+                $output['updateItems'] = CursorsToArray($updateItems);
+                $output['deleteItemIds'] = $deleteItemIds;
+                $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
+                $output['rewardPlayerExp'] = $rewardPlayerExp;
+                $output['rewardCharacterExp'] = $rewardCharacterExp;
+                $output['rewardSoftCurrency'] = $rewardSoftCurrency;
+                $output['rating'] = $rating;
+                $output = HelperClearStage($createItems, $updateItems, $output, $player, $stage, $rating);
             }
             $player->update();
-            $output['rewardItems'] = CursorsToArray($rewardItems);
-            $output['createItems'] = CursorsToArray($createItems);
-            $output['updateItems'] = CursorsToArray($updateItems);
-            $output['deleteItemIds'] = $deleteItemIds;
-            $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
-            $output['rewardPlayerExp'] = $rewardPlayerExp;
-            $output['rewardCharacterExp'] = $rewardCharacterExp;
-            $output['rewardSoftCurrency'] = $rewardSoftCurrency;
-            $output['rating'] = $rating;
-            $output['clearStage'] = !empty($clearedStage) ? CursorToArray($clearedStage) : array('' => '');
             $output['player'] = CursorToArray($player);
         }
     }
