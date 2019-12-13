@@ -156,6 +156,8 @@ function FinishDuel($session, $battleResult, $deadCharacters)
                 }
                 // End reward items loop
             }
+            // Update achievement
+            QueryUpdateAchievement(UpdateCountWinDuel($player->id, GetAchievementListInternal($player->id)));
         }
         else
         {

@@ -3,87 +3,116 @@ function GetAchievementList()
 {
     $player = GetPlayer();
     $playerId = $player->id;
+    echo json_encode(array('list' => CursorsToArray(GetAchievementListInternal($playerId))));
+}
+
+function GetAchievementListInternal($playerId)
+{
     $playerItemDb = new PlayerAchievement();
-    $list = $playerItemDb->find(array(
+    return $playerItemDb->find(array(
         'playerId = ?',
         $playerId
     ), array(
         'order' => 'updatedAt DESC'
     ));
-    echo json_encode(array('list' => CursorsToArray($list)));
 }
 
 function GetItemList()
 {
     $player = GetPlayer();
     $playerId = $player->id;
+    echo json_encode(array('list' => CursorsToArray(GetItemListInternal($playerId))));
+}
+
+function GetItemListInternal($playerId)
+{
     $playerItemDb = new PlayerItem();
-    $list = $playerItemDb->find(array(
+    return $playerItemDb->find(array(
         'playerId = ?',
         $playerId
     ), array(
         'order' => 'updatedAt DESC'
     ));
-    echo json_encode(array('list' => CursorsToArray($list)));
 }
 
 function GetCurrencyList()
 {
     $player = GetPlayer();
     $playerId = $player->id;
+    echo json_encode(array('list' => CursorsToArray(GetCurrencyListInternal($playerId))));
+}
+
+function GetCurrencyListInternal($playerId)
+{
     $gameData = \Base::instance()->get('GameData');
-    echo json_encode(array('list' => CursorsToArray([
+    return CursorsToArray([
         GetCurrency($playerId, $gameData['currencies']['HARD_CURRENCY']['id']),
         GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id'])
-    ])));
+    ]);
 }
 
 function GetStaminaList()
 {
     $player = GetPlayer();
     $playerId = $player->id;
+    echo json_encode(array('list' => CursorsToArray(GetStaminaListInternal($playerId))));
+}
+
+function GetStaminaListInternal($playerId)
+{
     $playerStaminaDb = new PlayerStamina();
-    $list = $playerStaminaDb->find(array(
+    return $playerStaminaDb->find(array(
         'playerId = ?',
         $playerId
     ));
-    echo json_encode(array('list' => CursorsToArray($list)));
 }
 
 function GetFormationList()
 {
     $player = GetPlayer();
     $playerId = $player->id;
+    echo json_encode(array('list' => CursorsToArray(GetFormationListInternal($playerId))));
+}
+
+function GetFormationListInternal($playerId)
+{
     $playerFormationDb = new PlayerFormation();
-    $list = $playerFormationDb->find(array(
+    return $playerFormationDb->find(array(
         'playerId = ?',
         $playerId
     ));
-    echo json_encode(array('list' => CursorsToArray($list)));
 }
 
 function GetUnlockItemList()
 {
     $player = GetPlayer();
     $playerId = $player->id;
+    echo json_encode(array('list' => CursorsToArray(GetUnlockItemListInternal($playerId))));
+}
+
+function GetUnlockItemListInternal($playerId)
+{
     $playerUnlockItemDb = new PlayerUnlockItem();
-    $list = $playerUnlockItemDb->find(array(
+    return $playerUnlockItemDb->find(array(
         'playerId = ?',
         $playerId
     ));
-    echo json_encode(array('list' => CursorsToArray($list)));
 }
 
 function GetClearStageList()
 {
     $player = GetPlayer();
     $playerId = $player->id;
+    echo json_encode(array('list' => CursorsToArray(GetClearStageListInternal($playerId))));
+}
+
+function GetClearStageListInternal($playerId)
+{
     $playerClearStageDb = new PlayerClearStage();
-    $list = $playerClearStageDb->find(array(
+    return $playerClearStageDb->find(array(
         'playerId = ?',
         $playerId
     ));
-    echo json_encode(array('list' => CursorsToArray($list)));
 }
 
 function GetHelperList()

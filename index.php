@@ -33,6 +33,7 @@ require_once('jwt/SignatureInvalidException.php');
 require_once('jwt/JWT.php');
 require_once('functions/Helpers.php');
 require_once('functions/Listing.php');
+require_once('functions/Achievement.php');
 require_once('functions/Auth.php');
 require_once('functions/Item.php');
 require_once('functions/Social.php');

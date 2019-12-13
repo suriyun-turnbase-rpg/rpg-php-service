@@ -1,5 +1,5 @@
 <?php
-function StartStage($stageDataId)
+function StartStage($stageDataId, $helperPlayerId)
 {
     $gameData = \Base::instance()->get('GameData');
     $output = array('error' => '');
@@ -28,6 +28,13 @@ function StartStage($stageDataId)
 
         $staminaTable = $gameData['staminas']['STAGE'];
         $stamina = GetStamina($playerId, $staminaTable['id']);
+        
+        if (!empty($helperPlayerId))
+        {
+            // Update achievement
+            QueryUpdateAchievement(UpdateCountUseHelper($player->id, GetAchievementListInternal($player->id)));
+        }
+
         $output['stamina'] = CursorToArray($stamina);
         $output['session'] = $session;
     }
@@ -196,6 +203,9 @@ function ReviveCharacters()
         $updateCurrencies[] = $hardCurrency;
         $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
     }
+    // Update achievement
+    QueryUpdateAchievement(UpdateCountRevive($player->id, GetAchievementListInternal($player->id)));
+    
     echo json_encode($output);
 }
 

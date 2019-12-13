@@ -16,8 +16,8 @@ function FilterPlayerAchievements($achievements, $playerAchievements)
     $result = array();
     for ($i = 0; $i < count($playerAchievements); ++$i) {
         $playerAchievement = $playerAchievements[$i];
-        if (array_key_exists($playerAchievement['dataId'], $achievements))
-            $result[$playerAchievement['DataId']] = $playerAchievement;
+        if (array_key_exists($playerAchievement->dataId, $achievements))
+            $result[$playerAchievement->dataId] = $playerAchievement;
     }
     return $result;
 }
@@ -31,16 +31,16 @@ function UpdateTotalClearStage($playerId, $playerAchievements, $playerClearStage
     foreach ($achievements as $achievementId => $achievement) {
         if (!array_key_exists($achievementId, $playerAchievementDict))
         {
-            $newPlayerAchievement = array();
-            $newPlayerAchievement['playerId'] = $playerId;
-            $newPlayerAchievement['dataId'] = $achievementId;
-            $newPlayerAchievement['progress'] = count($playerClearStages);
+            $newPlayerAchievement = new PlayerAchievement();
+            $newPlayerAchievement->playerId = $playerId;
+            $newPlayerAchievement->dataId = $achievementId;
+            $newPlayerAchievement->progress = count($playerClearStages);
             $createPlayerAchievements[] = $newPlayerAchievement;
         }
         else
         {
             $oldPlayerAchievement = $playerAchievementDict[$achievementId];
-            $oldPlayerAchievement['progress'] = count($playerClearStages);
+            $oldPlayerAchievement->progress = count($playerClearStages);
             $updatePlayerAchievements[] = $oldPlayerAchievement;
         }
     }
@@ -61,16 +61,16 @@ function UpdateTotalClearStageRating($playerId, $playerAchievements, $playerClea
     foreach ($achievements as $achievementId => $achievement) {
         if (!array_key_exists($achievementId, $playerAchievementDict))
         {
-            $newPlayerAchievement = array();
-            $newPlayerAchievement['playerId'] = $playerId;
-            $newPlayerAchievement['dataId'] = $achievementId;
-            $newPlayerAchievement['progress'] = $countRating;
+            $newPlayerAchievement = new PlayerAchievement();
+            $newPlayerAchievement->playerId = $playerId;
+            $newPlayerAchievement->dataId = $achievementId;
+            $newPlayerAchievement->progress = $countRating;
             $createPlayerAchievements[] = $newPlayerAchievement;
         }
         else
         {
             $oldPlayerAchievement = $playerAchievementDict[$achievementId];
-            $oldPlayerAchievement['progress'] = $countRating;
+            $oldPlayerAchievement->progress = $countRating;
             $updatePlayerAchievements[] = $oldPlayerAchievement;
         }
     }
@@ -126,16 +126,16 @@ function UpdateCountingProgress($playerId, $playerAchievements, $type)
     foreach ($achievements as $achievementId => $achievement) {
         if (!array_key_exists($achievementId, $playerAchievementDict))
         {
-            $newPlayerAchievement = array();
-            $newPlayerAchievement['playerId'] = $playerId;
-            $newPlayerAchievement['dataId'] = $achievementId;
-            $newPlayerAchievement['progress'] = 1;
+            $newPlayerAchievement = new PlayerAchievement();
+            $newPlayerAchievement->playerId = $playerId;
+            $newPlayerAchievement->dataId = $achievementId;
+            $newPlayerAchievement->progress = 1;
             $createPlayerAchievements[] = $newPlayerAchievement;
         }
         else
         {
             $oldPlayerAchievement = $playerAchievementDict[$achievementId];
-            ++$oldPlayerAchievement['progress'];
+            ++$oldPlayerAchievement->progress;
             $updatePlayerAchievements[] = $oldPlayerAchievement;
         }
     }

@@ -80,6 +80,18 @@ function LevelUpItem($itemId, $materials)
             }
             $softCurrency->update();
             $updateCurrencies[] = $softCurrency;
+            // Update achievement
+            $itemData = $gameData['items'][$item->dataId];
+            if ($itemData)
+            {
+                if ($itemData['type'] == "CharacterItem") {
+                    QueryUpdateAchievement(UpdateCountLevelUpCharacter($player->id, GetAchievementListInternal($player->id)));
+                }
+                if ($itemData['type'] == "EquipmentItem") {
+                    QueryUpdateAchievement(UpdateCountLevelUpEquipment($player->id, GetAchievementListInternal($player->id)));
+                }
+            }
+
             $output['updateItems'] = CursorsToArray($updateItems);
             $output['deleteItemIds'] = $deleteItemIds;
             $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
@@ -191,6 +203,18 @@ function EvolveItem($itemId, $materials)
             }
             $softCurrency->update();
             $updateCurrencies[] = $softCurrency;
+            // Update achievement
+            $itemData = $gameData['items'][$item->dataId];
+            if ($itemData)
+            {
+                if ($itemData['type'] == "CharacterItem") {
+                    QueryUpdateAchievement(UpdateCountEvolveCharacter($player->id, GetAchievementListInternal($player->id)));
+                }
+                if ($itemData['type'] == "EquipmentItem") {
+                    QueryUpdateAchievement(UpdateCountEvolveEquipment($player->id, GetAchievementListInternal($player->id)));
+                }
+            }
+
             $output['updateItems'] = CursorsToArray($updateItems);
             $output['deleteItemIds'] = $deleteItemIds;
             $output['updateCurrencies'] = CursorsToArray($updateCurrencies);

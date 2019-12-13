@@ -772,7 +772,27 @@ function HelperClearStage($createItems, $updateItems, $output, $player, $stage, 
         }
     }
     $output['clearStage'] = !empty($playerClearStage) ? CursorToArray($playerClearStage) : array('' => '');
+    // Update achievement
+    $playerAchievements = GetAchievementListInternal($player->id);
+    $playerClearStages = GetClearStageListInternal($player->id);
+    QueryUpdateAchievement(UpdateTotalClearStage($player->id, $playerAchievements, $playerClearStages));
+    QueryUpdateAchievement(UpdateTotalClearStageRating($player->id, $playerAchievements, $playerClearStages));
+    QueryUpdateAchievement(UpdateCountWinStage($player->id, $playerAchievements));
     return $output;
+}
+
+function QueryUpdateAchievement($updateResult)
+{
+    for ($i = 0; $i < count($updateResult['createAchievements']); ++$i)
+    {
+        $createAchievement = $updateResult['createAchievements'][$i];
+        $createAchievement->save();
+    }
+    for ($i = 0; $i < count($updateResult['updateAchievements']); ++$i)
+    {
+        $updateAchievement = $updateResult['updateAchievements'][$i];
+        $updateAchievement->update();
+    }
 }
 
 function GetFormationCharacterIds($playerId, $playerSelectedFormation)
