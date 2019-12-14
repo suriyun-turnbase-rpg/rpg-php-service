@@ -757,6 +757,7 @@ function HelperClearStage($createItems, $updateItems, $output, $player, $stage, 
             // End add item condition
         }
         // End reward items loop
+        $output['isFirstClear'] = true;
         $output['createItems'] = CursorsToArray($createItems);
         $output['updateItems'] = CursorsToArray($updateItems);
         $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
