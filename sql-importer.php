@@ -79,10 +79,17 @@ $options = [
 
 // Start import
 try {
-    $pdo = new PDO($dsn, $f3->db_user, $f3->db_pass, $options);
-    if (importSqlFile($pdo, './sqls/mysql_main.sql', $f3->db_prefix)) {
-        echo 'Done ;)';
-    }
+	$pdo = new PDO($dsn, $f3->db_user, $f3->db_pass, $options);
+	if (!empty($_GET['update'])) {
+		$update_file = 'update-'.$_GET['update'];
+		if (importSqlFile($pdo, './sqls/'.$update_file.'.sql', $f3->db_prefix)) {
+			echo 'Update Done ;)';
+		}
+	} else {
+		if (importSqlFile($pdo, './sqls/mysql_main.sql', $f3->db_prefix)) {
+			echo 'Done ;)';
+		}
+	}
 } catch (Exception $e) {
     error_log($e->getMessage());
     exit('Cannot connect to database server, check your config in configs/config.ini');
