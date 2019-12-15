@@ -79,42 +79,42 @@ function UpdateTotalClearStageRating($playerId, $playerAchievements, $playerClea
 
 function UpdateCountLevelUpCharacter($playerId, $playerAchievements)
 {
-    UpdateCountingProgress($playerId, $playerAchievements, EAchievementType::CountLevelUpCharacter);
+    return UpdateCountingProgress($playerId, $playerAchievements, EAchievementType::CountLevelUpCharacter);
 }
 
 function UpdateCountLevelUpEquipment($playerId, $playerAchievements)
 {
-    UpdateCountingProgress($playerId, $playerAchievements, EAchievementType::CountLevelUpEquipment);
+    return UpdateCountingProgress($playerId, $playerAchievements, EAchievementType::CountLevelUpEquipment);
 }
 
 function UpdateCountEvolveCharacter($playerId, $playerAchievements)
 {
-    UpdateCountingProgress($playerId, $playerAchievements, EAchievementType::CountEvolveCharacter);
+    return UpdateCountingProgress($playerId, $playerAchievements, EAchievementType::CountEvolveCharacter);
 }
 
 function UpdateCountEvolveEquipment($playerId, $playerAchievements)
 {
-    UpdateCountingProgress($playerId, $playerAchievements, EAchievementType::CountEvolveEquipment);
+    return UpdateCountingProgress($playerId, $playerAchievements, EAchievementType::CountEvolveEquipment);
 }
 
 function UpdateCountRevive($playerId, $playerAchievements)
 {
-    UpdateCountingProgress($playerId, $playerAchievements, EAchievementType::CountRevive);
+    return UpdateCountingProgress($playerId, $playerAchievements, EAchievementType::CountRevive);
 }
 
 function UpdateCountUseHelper($playerId, $playerAchievements)
 {
-    UpdateCountingProgress($playerId, $playerAchievements, EAchievementType::CountUseHelper);
+    return UpdateCountingProgress($playerId, $playerAchievements, EAchievementType::CountUseHelper);
 }
 
 function UpdateCountWinStage($playerId, $playerAchievements)
 {
-    UpdateCountingProgress($playerId, $playerAchievements, EAchievementType::CountWinStage);
+    return UpdateCountingProgress($playerId, $playerAchievements, EAchievementType::CountWinStage);
 }
 
 function UpdateCountWinDuel($playerId, $playerAchievements)
 {
-    UpdateCountingProgress($playerId, $playerAchievements, EAchievementType::CountWinDuel);
+    return UpdateCountingProgress($playerId, $playerAchievements, EAchievementType::CountWinDuel);
 }
 
 function UpdateCountingProgress($playerId, $playerAchievements, $type)
