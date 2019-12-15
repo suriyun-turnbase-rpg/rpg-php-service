@@ -12,6 +12,9 @@ PHP web-service for RPG project
 * Then browse `sql-importer.php` from web-browser, if you see `Done ;)` with no errors, that is done the web-service is ready to use
 * You should remove `sql-importer.php` after imported
 
+## How to update
+* Browse `sql-importer.php?update={{version}}`, for example `sql-importer.php?update=1.10`
+
 ## Client-side implemented project
 * [rpg-web-service-client](https://github.com/insthync/rpg-web-service-client) - Client for project [Turnbase RPG Template](https://assetstore.unity.com/packages/templates/systems/turnbase-rpg-template-107578) which selling at Unity Asset Store
 
