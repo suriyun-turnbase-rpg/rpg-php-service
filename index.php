@@ -159,7 +159,7 @@ $f3->route('POST /find-player', function($f3, $params) {
 // Battle services
 $f3->route('POST /start-stage', function($f3, $params) {
     $postBody = json_decode(urldecode($f3->get('BODY')), true);
-    StartStage($postBody['stageDataId']);
+    StartStage($postBody['stageDataId'], $postBody['helperPlayerId']);
 });
 $f3->route('POST /finish-stage', function($f3, $params) {
     $postBody = json_decode(urldecode($f3->get('BODY')), true);
