@@ -8,8 +8,8 @@ function GetAchievementList()
 
 function GetAchievementListInternal($playerId)
 {
-    $playerItemDb = new PlayerAchievement();
-    return $playerItemDb->find(array(
+    $playerAchievementDb = new PlayerAchievement();
+    return $playerAchievementDb->find(array(
         'playerId = ?',
         $playerId
     ), array(
@@ -45,10 +45,10 @@ function GetCurrencyList()
 function GetCurrencyListInternal($playerId)
 {
     $gameData = \Base::instance()->get('GameData');
-    return CursorsToArray([
+    return [
         GetCurrency($playerId, $gameData['currencies']['HARD_CURRENCY']['id']),
         GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id'])
-    ]);
+    ];
 }
 
 function GetStaminaList()
