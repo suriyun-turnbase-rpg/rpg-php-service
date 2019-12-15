@@ -195,7 +195,7 @@ $f3->route('POST /google-play-buy-goods', function($f3, $params) {
     AndroidBuyGoods($postBody['iapPackageDataId'], $postBody['data'], $postBody['signature']);
 });
 // Achievement services
-$f3->route('POST /earn-achievement-rewards', function($f3, $params) {
+$f3->route('POST /earn-achievement-reward', function($f3, $params) {
     $postBody = json_decode(urldecode($f3->get('BODY')), true);
     EarnAchievementReward($postBody['achievementId']);
 });
