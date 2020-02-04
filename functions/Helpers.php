@@ -748,6 +748,7 @@ function GetItemRandomAttributes($dataId)
         $randomingAmounts[EAttributeType::ResistanceChance] = $tempFloatVal;
 
     $shufflingKeys = array_keys($randomingAmounts);
+    shuffle($shufflingKeys);
     $tempIntVal = rand($minType, $maxType);
     if (count($randomingAmounts) < $tempIntVal)
         $tempIntVal = count($randomingAmounts);
