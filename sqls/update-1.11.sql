@@ -1,0 +1,1 @@
+ALTER TABLE `<<__prefix__>>player_item` ADD `randomedAttributes` TEXT NOT NULL AFTER `equipPosition`;

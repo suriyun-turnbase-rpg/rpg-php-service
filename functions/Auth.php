@@ -44,7 +44,7 @@ function GuestLogin($deviceId)
     }  else if (IsPlayerWithUsernameFound(0, $deviceId)) {
         $playerAuthDb = new PlayerAuth();
         $playerAuth = $playerAuthDb->load(array(
-            'username = ? AND type = 1',
+            'username = ? AND type = 0',
             $deviceId
         ));
         $playerDb = new Player();

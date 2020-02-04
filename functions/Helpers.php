@@ -569,6 +569,237 @@ function GetStamina($playerId, $dataId)
     return $playerStamina;
 }
 
+function GetItemRandomAttributes($dataId)
+{
+    $gameData = \Base::instance()->get('GameData');
+    $item = $gameData['items'][$dataId];
+    
+    $randomAttributes = $item['randomAttributes'];
+    if (!$randomAttributes) {
+        return '{}';
+    }
+    $minType = 0;
+    if (!empty($randomAttributes['minType'])) {
+        $minType = $randomAttributes['minType'];
+    }
+    $maxType = 0;
+    if (!empty($randomAttributes['maxType'])) {
+        $maxType = $randomAttributes['maxType'];
+    }
+    $minHp = 0;
+    if (!empty($randomAttributes['minHp'])) {
+        $minHp = $randomAttributes['minHp'];
+    }
+    $maxHp = 0;
+    if (!empty($randomAttributes['maxHp'])) {
+        $maxHp = $randomAttributes['maxHp'];
+    }
+    $minPAtk = 0;
+    if (!empty($randomAttributes['minPAtk'])) {
+        $minPAtk = $randomAttributes['minPAtk'];
+    }
+    $maxPAtk = 0;
+    if (!empty($randomAttributes['maxPAtk'])) {
+        $maxPAtk = $randomAttributes['maxPAtk'];
+    }
+    $minPDef = 0;
+    if (!empty($randomAttributes['minPDef'])) {
+        $minPDef = $randomAttributes['minPDef'];
+    }
+    $maxPDef = 0;
+    if (!empty($randomAttributes['maxPDef'])) {
+        $maxPDef = $randomAttributes['maxPDef'];
+    }
+    $minMAtk = 0;
+    if (!empty($randomAttributes['minMAtk'])) {
+        $minMAtk = $randomAttributes['minMAtk'];
+    }
+    $maxMAtk = 0;
+    if (!empty($randomAttributes['maxMAtk'])) {
+        $maxMAtk = $randomAttributes['maxMAtk'];
+    }
+    $minMDef = 0;
+    if (!empty($randomAttributes['minMDef'])) {
+        $minMDef = $randomAttributes['minMDef'];
+    }
+    $maxMDef = 0;
+    if (!empty($randomAttributes['maxMDef'])) {
+        $maxMDef = $randomAttributes['maxMDef'];
+    }
+    $minSpd = 0;
+    if (!empty($randomAttributes['minSpd'])) {
+        $minSpd = $randomAttributes['minSpd'];
+    }
+    $maxSpd = 0;
+    if (!empty($randomAttributes['maxSpd'])) {
+        $maxSpd = $randomAttributes['maxSpd'];
+    }
+    $minEva = 0;
+    if (!empty($randomAttributes['minEva'])) {
+        $minEva = $randomAttributes['minEva'];
+    }
+    $maxEva = 0;
+    if (!empty($randomAttributes['maxEva'])) {
+        $maxEva = $randomAttributes['maxEva'];
+    }
+    $minAcc = 0;
+    if (!empty($randomAttributes['minAcc'])) {
+        $minAcc = $randomAttributes['minAcc'];
+    }
+    $maxAcc = 0;
+    if (!empty($randomAttributes['maxAcc'])) {
+        $maxAcc = $randomAttributes['maxAcc'];
+    }
+    $minCritChance = 0;
+    if (!empty($randomAttributes['minCritChance'])) {
+        $minCritChance = $randomAttributes['minCritChance'];
+    }
+    $maxCritChance = 0;
+    if (!empty($randomAttributes['maxCritChance'])) {
+        $maxCritChance = $randomAttributes['maxCritChance'];
+    }
+    $minCritDamageRate = 0;
+    if (!empty($randomAttributes['minCritDamageRate'])) {
+        $minCritDamageRate = $randomAttributes['minCritDamageRate'];
+    }
+    $maxCritDamageRate = 0;
+    if (!empty($randomAttributes['maxCritDamageRate'])) {
+        $maxCritDamageRate = $randomAttributes['maxCritDamageRate'];
+    }
+    $minBlockChance = 0;
+    if (!empty($randomAttributes['minBlockChance'])) {
+        $minBlockChance = $randomAttributes['minBlockChance'];
+    }
+    $maxBlockChance = 0;
+    if (!empty($randomAttributes['maxBlockChance'])) {
+        $maxBlockChance = $randomAttributes['maxBlockChance'];
+    }
+    $minBlockDamageRate = 0;
+    if (!empty($randomAttributes['minBlockDamageRate'])) {
+        $minBlockDamageRate = $randomAttributes['minBlockDamageRate'];
+    }
+    $maxBlockDamageRate = 0;
+    if (!empty($randomAttributes['maxBlockDamageRate'])) {
+        $maxBlockDamageRate = $randomAttributes['maxBlockDamageRate'];
+    }
+    $minResistanceChance = 0;
+    if (!empty($randomAttributes['minResistanceChance'])) {
+        $minResistanceChance = $randomAttributes['minResistanceChance'];
+    }
+    $maxResistanceChance = 0;
+    if (!empty($randomAttributes['maxResistanceChance'])) {
+        $maxResistanceChance = $randomAttributes['maxResistanceChance'];
+    }
+    
+    $result = array();
+    $randomingAmounts = array();
+
+    // Hp
+    $tempIntVal = rand($minHp, $maxHp);
+    if ($tempIntVal != 0)
+        $randomingAmounts[EAttributeType::Hp] = $tempIntVal;
+    // PAtk
+    $tempIntVal = rand($minPAtk, $maxPAtk);
+    if ($tempIntVal != 0)
+        $randomingAmounts[EAttributeType::PAtk] = $tempIntVal;
+    // PDef
+    $tempIntVal = rand($minPDef, $maxPDef);
+    if ($tempIntVal != 0)
+        $randomingAmounts[EAttributeType::PDef] = $tempIntVal;
+    // MAtk
+    $tempIntVal = rand($minMAtk, $maxMAtk);
+    if ($tempIntVal != 0)
+        $randomingAmounts[EAttributeType::MAtk] = $tempIntVal;
+    // MDef
+    $tempIntVal = rand($minMDef, $maxMDef);
+    if ($tempIntVal != 0)
+        $randomingAmounts[EAttributeType::MDef] = $tempIntVal;
+    // Spd
+    $tempIntVal = rand($minSpd, $maxSpd);
+    if ($tempIntVal != 0)
+        $randomingAmounts[EAttributeType::Spd] = $tempIntVal;
+    // Eva
+    $tempIntVal = rand($minEva, $maxEva);
+    if ($tempIntVal != 0)
+        $randomingAmounts[EAttributeType::Eva] = $tempIntVal;
+    // Acc
+    $tempIntVal = rand($minAcc, $maxAcc);
+    if ($tempIntVal != 0)
+        $randomingAmounts[EAttributeType::Acc] = $tempIntVal;
+    // Crit Chance
+    $tempFloatVal = rand($minCritChance, $maxCritChance);
+    if ($tempFloatVal != 0)
+        $randomingAmounts[EAttributeType::CritChance] = $tempFloatVal;
+    // Crit Damage Rate
+    $tempFloatVal = rand($minCritDamageRate, $maxCritDamageRate);
+    if ($tempFloatVal != 0)
+        $randomingAmounts[EAttributeType::CritDamageRate] = $tempFloatVal;
+    // Block Chance
+    $tempFloatVal = rand($minBlockChance, $maxBlockChance);
+    if ($tempFloatVal != 0)
+        $randomingAmounts[EAttributeType::BlockChance] = $tempFloatVal;
+    // Block Damage Rate
+    $tempFloatVal = rand($minBlockDamageRate, $maxBlockDamageRate);
+    if ($tempFloatVal != 0)
+        $randomingAmounts[EAttributeType::BlockDamageRate] = $tempFloatVal;
+    // Resistance
+    $tempFloatVal = rand($minResistanceChance, $maxResistanceChance);
+    if ($tempFloatVal != 0)
+        $randomingAmounts[EAttributeType::ResistanceChance] = $tempFloatVal;
+
+    $shufflingKeys = array_keys($randomingAmounts);
+    $tempIntVal = rand($minType, $maxType);
+    if (count($randomingAmounts) < $tempIntVal)
+        $tempIntVal = count($randomingAmounts);
+
+    for ($i = 0; $i < $tempIntVal; ++$i) {
+        switch ($shufflingKeys[$i])
+        {
+            case EAttributeType::Hp:
+                $result['hp'] = $randomingAmounts[$shufflingKeys[$i]];
+            break;
+            case EAttributeType::PAtk:
+                $result['pAtk'] = $randomingAmounts[$shufflingKeys[$i]];
+            break;
+            case EAttributeType::PDef:
+                $result['pDef'] = $randomingAmounts[$shufflingKeys[$i]];
+            break;
+            case EAttributeType::MAtk:
+                $result['mAtk'] = $randomingAmounts[$shufflingKeys[$i]];
+            break;
+            case EAttributeType::MDef:
+                $result['mDef'] = $randomingAmounts[$shufflingKeys[$i]];
+            break;
+            case EAttributeType::Spd:
+                $result['spd'] = $randomingAmounts[$shufflingKeys[$i]];
+            break;
+            case EAttributeType::Eva:
+                $result['eva'] = $randomingAmounts[$shufflingKeys[$i]];
+            break;
+            case EAttributeType::Acc:
+                $result['acc'] = $randomingAmounts[$shufflingKeys[$i]];
+            break;
+            case EAttributeType::CritChance:
+                $result['critChance'] = $randomingAmounts[$shufflingKeys[$i]];
+            break;
+            case EAttributeType::CritDamageRate:
+                $result['critDamageRate'] = $randomingAmounts[$shufflingKeys[$i]];
+            break;
+            case EAttributeType::BlockChance:
+                $result['blockChance'] = $randomingAmounts[$shufflingKeys[$i]];
+            break;
+            case EAttributeType::BlockDamageRate:
+                $result['blockDamageRate'] = $randomingAmounts[$shufflingKeys[$i]];
+            break;
+            case EAttributeType::ResistanceChance:
+                $result['resistanceChance'] = $randomingAmounts[$shufflingKeys[$i]];
+            break;
+        }
+    }
+
+    $result;
+}
+
 function AddItems($playerId, $dataId, $amount)
 {
     $gameData = \Base::instance()->get('GameData');
@@ -608,6 +839,7 @@ function AddItems($playerId, $dataId, $amount)
         $newEntry = new PlayerItem();
         $newEntry->playerId = $playerId;
         $newEntry->dataId = $dataId;
+        $newEntry->randomedAttributes = json_encode(GetItemRandomAttributes($dataId));
         if ($amount > $maxStack) {
             $newEntry->amount = $maxStack;
             $amount -= $maxStack;
