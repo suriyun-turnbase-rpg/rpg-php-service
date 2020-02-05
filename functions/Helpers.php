@@ -572,12 +572,17 @@ function GetStamina($playerId, $dataId)
 function GetItemRandomAttributes($dataId)
 {
     $gameData = \Base::instance()->get('GameData');
+    
     $item = $gameData['items'][$dataId];
+    if (empty($item)) {
+        return array();
+    }
     
     $randomAttributes = $item['randomAttributes'];
-    if (!$randomAttributes) {
-        return '{}';
+    if (empty($randomAttributes)) {
+        return array();
     }
+
     $minType = 0;
     if (!empty($randomAttributes['minType'])) {
         $minType = $randomAttributes['minType'];
@@ -798,7 +803,7 @@ function GetItemRandomAttributes($dataId)
         }
     }
 
-    $result;
+    return $result;
 }
 
 function AddItems($playerId, $dataId, $amount)
