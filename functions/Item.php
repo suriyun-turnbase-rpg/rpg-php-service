@@ -602,6 +602,32 @@ function OpenInGamePackage($inGamePackageDataId)
     echo json_encode($output);
 }
 
+function ConvertHardCurrency($requireHardCurrency)
+{
+    $gameData = \Base::instance()->get('GameData');
+    $output = array('error' => '');
+    $player = GetPlayer();
+    $playerId = $player->id;
+    
+    $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
+    $hardCurrency = GetCurrency($playerId, $gameData['currencies']['HARD_CURRENCY']['id']);
+    
+    if ($requireHardCurrency > $hardCurrency->amount) {
+        $output['error'] = 'ERROR_NOT_ENOUGH_HARD_CURRENCY';
+    } else {
+        $updateCurrencies = array();
+        $hardCurrency->amount -= $requireHardCurrency;
+        $receiveSoftCurrency = $gameData['hardToSoftCurrencyConversion'] * $requireHardCurrency;
+        $softCurrency->amount += $receiveSoftCurrency;
+        $hardCurrency->update();
+        $softCurrency->update();
+        $output['requireHardCurrency'] = $requireHardCurrency;
+        $output['receiveSoftCurrency'] = $receiveSoftCurrency;
+        $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
+    }
+    echo json_encode($output);
+}
+
 function EarnAchievementReward($achievementId)
 {
     $gameData = \Base::instance()->get('GameData');
