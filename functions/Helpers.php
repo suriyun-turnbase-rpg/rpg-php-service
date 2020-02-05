@@ -994,11 +994,7 @@ function HelperClearStage($createItems, $updateItems, $output, $player, $stage, 
             $addItemsResult = AddItems($playerId, $rewardItem['id'], $rewardItem['amount']);
             if ($addItemsResult['success'])
             {
-                $newRewardEntry = new PlayerItem();
-                $newRewardEntry->playerId = $playerId;
-                $newRewardEntry->dataId = $rewardItem['id'];
-                $newRewardEntry->amount = $rewardItem['amount'];
-                $firstClearRewardItems[] = $newRewardEntry;
+                $firstClearRewardItems[] = CreateEmptyItem($playerId, $rewardItem['id'], $rewardItem['amount']);
 
                 $resultCreateItems = $addItemsResult['createItems'];
                 $resultUpdateItems = $addItemsResult['updateItems'];
@@ -1022,13 +1018,13 @@ function HelperClearStage($createItems, $updateItems, $output, $player, $stage, 
         }
         // End reward items loop
         $output['isFirstClear'] = true;
-        $output['createItems'] = CursorsToArray($createItems);
-        $output['updateItems'] = CursorsToArray($updateItems);
+        $output['createItems'] = ItemCursorsToArray($createItems);
+        $output['updateItems'] = ItemCursorsToArray($updateItems);
         $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
         $output['firstClearRewardPlayerExp'] = $firstClearRewardPlayerExp;
         $output['firstClearRewardSoftCurrency'] = $firstClearRewardSoftCurrency;
         $output['firstClearRewardHardCurrency'] = $firstClearRewardHardCurrency;
-        $output['firstClearRewardItems'] = CursorsToArray($firstClearRewardItems);
+        $output['firstClearRewardItems'] = ItemCursorsToArray($firstClearRewardItems);
     } else {
         // If end stage with more rating, replace old rating
         if ($playerClearStage->bestRating < $rating) {
@@ -1183,5 +1179,21 @@ function GetSocialPlayer($playerId, $targetPlayerId)
         }
     }
     return false;
+}
+
+function CreateEmptyItem($playerId, $dataId, $amount)
+{
+    $newRewardEntry = new PlayerItem();
+    $newRewardEntry->id = 0;
+    $newRewardEntry->playerId = $playerId;
+    $newRewardEntry->dataId = $dataId;
+    $newRewardEntry->amount = $amount;
+    $newRewardEntry->exp = 0;
+    $newRewardEntry->equipItemId = '';
+    $newRewardEntry->equipPosition = '';
+    $newRewardEntry->randomedAttributes = '{}';
+    $newRewardEntry->createdAt = 0;
+    $newRewardEntry->updatedAt = 0;
+    return $newRewardEntry;
 }
 ?>

@@ -92,7 +92,7 @@ function LevelUpItem($itemId, $materials)
                 }
             }
 
-            $output['updateItems'] = CursorsToArray($updateItems);
+            $output['updateItems'] = ItemCursorsToArray($updateItems);
             $output['deleteItemIds'] = $deleteItemIds;
             $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
         }
@@ -215,7 +215,7 @@ function EvolveItem($itemId, $materials)
                 }
             }
 
-            $output['updateItems'] = CursorsToArray($updateItems);
+            $output['updateItems'] = ItemCursorsToArray($updateItems);
             $output['deleteItemIds'] = $deleteItemIds;
             $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
         }
@@ -288,7 +288,7 @@ function SellItems($items)
     }
     $softCurrency->update();
     $updateCurrencies[] = $softCurrency;
-    $output['updateItems'] = CursorsToArray($updateItems);
+    $output['updateItems'] = ItemCursorsToArray($updateItems);
     $output['deleteItemIds'] = $deleteItemIds;
     $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
     echo json_encode($output);
@@ -348,7 +348,7 @@ function EquipItem($characterId, $equipmentId, $equipPosition)
             ));
             $equipment->update();
             $updateItems[] = $equipment;
-            $output['updateItems'] = CursorsToArray($updateItems);
+            $output['updateItems'] = ItemCursorsToArray($updateItems);
         }
     }
     echo json_encode($output);
@@ -377,7 +377,7 @@ function UnEquipItem($equipmentId)
         $unEquipItem->equipPosition = '';
         $unEquipItem->update();
         $updateItems[] = $unEquipItem;
-        $output['updateItems'] = CursorsToArray($updateItems);
+        $output['updateItems'] = ItemCursorsToArray($updateItems);
     }
     echo json_encode($output);
 }
@@ -476,11 +476,7 @@ function OpenLootBox($lootBoxDataId, $packIndex)
                 $addItemsResult = AddItems($playerId, $rewardItem['id'], $rewardItem['amount']);
                 if ($addItemsResult['success'])
                 {
-                    $newRewardEntry = new PlayerItem();
-                    $newRewardEntry->playerId = $playerId;
-                    $newRewardEntry->dataId = $rewardItem['id'];
-                    $newRewardEntry->amount = $rewardItem['amount'];
-                    $rewardItems[] = $newRewardEntry;
+                    $rewardItems[] = CreateEmptyItem($playerId, $rewardItem['id'], $rewardItem['amount']);
 
                     $resultCreateItems = $addItemsResult['createItems'];
                     $resultUpdateItems = $addItemsResult['updateItems'];
@@ -504,9 +500,9 @@ function OpenLootBox($lootBoxDataId, $packIndex)
             }
             // End reward items loop
         }
-        $output['rewardItems'] = CursorsToArray($rewardItems);
-        $output['createItems'] = CursorsToArray($createItems);
-        $output['updateItems'] = CursorsToArray($updateItems);
+        $output['rewardItems'] = ItemCursorsToArray($rewardItems);
+        $output['createItems'] = ItemCursorsToArray($createItems);
+        $output['updateItems'] = ItemCursorsToArray($updateItems);
         $output['deleteItemIds'] = $deleteItemIds;
         $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
     }
@@ -568,11 +564,7 @@ function OpenInGamePackage($inGamePackageDataId)
                 $addItemsResult = AddItems($playerId, $rewardItem['id'], $rewardItem['amount']);
                 if ($addItemsResult['success'])
                 {
-                    $newRewardEntry = new PlayerItem();
-                    $newRewardEntry->playerId = $playerId;
-                    $newRewardEntry->dataId = $rewardItem['id'];
-                    $newRewardEntry->amount = $rewardItem['amount'];
-                    $rewardItems[] = $newRewardEntry;
+                    $rewardItems[] = CreateEmptyItem($playerId, $rewardItem['id'], $rewardItem['amount']);
 
                     $resultCreateItems = $addItemsResult['createItems'];
                     $resultUpdateItems = $addItemsResult['updateItems'];
@@ -593,9 +585,9 @@ function OpenInGamePackage($inGamePackageDataId)
                     }
                 }
             }
-            $output['rewardItems'] = CursorsToArray($rewardItems);
-            $output['createItems'] = CursorsToArray($createItems);
-            $output['updateItems'] =CursorsToArray($updateItems);
+            $output['rewardItems'] = ItemCursorsToArray($rewardItems);
+            $output['createItems'] = ItemCursorsToArray($createItems);
+            $output['updateItems'] =ItemCursorsToArray($updateItems);
             $output['deleteItemIds'] = $deleteItemIds;
             $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
             $output['rewardSoftCurrency'] = $rewardSoftCurrency;
@@ -691,11 +683,7 @@ function EarnAchievementReward($achievementId)
                 $addItemsResult = AddItems($player->id, $rewardItem['id'], $rewardItem['amount']);
                 if ($addItemsResult['success'])
                 {
-                    $newRewardEntry = new PlayerItem();
-                    $newRewardEntry->playerId = $playerId;
-                    $newRewardEntry->dataId = $rewardItem['id'];
-                    $newRewardEntry->amount = $rewardItem['amount'];
-                    $rewardItems[] = $newRewardEntry;
+                    $rewardItems[] = CreateEmptyItem($playerId, $rewardItem['id'], $rewardItem['amount']);
 
                     $resultCreateItems = $addItemsResult['createItems'];
                     $resultUpdateItems = $addItemsResult['updateItems'];
@@ -722,9 +710,9 @@ function EarnAchievementReward($achievementId)
             $output['rewardPlayerExp'] = $rewardPlayerExp;
             $output['rewardSoftCurrency'] = $rewardSoftCurrency;
             $output['rewardHardCurrency'] = $rewardHardCurrency;
-            $output['rewardItems'] = CursorsToArray($rewardItems);
-            $output['createItems'] = CursorsToArray($createItems);
-            $output['updateItems'] = CursorsToArray($updateItems);
+            $output['rewardItems'] = ItemCursorsToArray($rewardItems);
+            $output['createItems'] = ItemCursorsToArray($createItems);
+            $output['updateItems'] = ItemCursorsToArray($updateItems);
             $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
             $output['player'] = CursorToArray($player);
         }

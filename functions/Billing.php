@@ -169,11 +169,7 @@ function BuyGoods($playerId, $gameData, $packageData)
         $addItemsResult = AddItems($playerId, $rewardItem['id'], $rewardItem['amount']);
         if ($addItemsResult['success'])
         {
-            $newRewardEntry = new PlayerItem();
-            $newRewardEntry->playerId = $playerId;
-            $newRewardEntry->dataId = $rewardItem['id'];
-            $newRewardEntry->amount = $rewardItem['amount'];
-            $rewardItems[] = $newRewardEntry;
+            $rewardItems[] = CreateEmptyItem($playerId, $rewardItem['id'], $rewardItem['amount']);
 
             $resultCreateItems = $addItemsResult['createItems'];
             $resultUpdateItems = $addItemsResult['updateItems'];
@@ -194,9 +190,9 @@ function BuyGoods($playerId, $gameData, $packageData)
             }
         }
     }
-    $output['rewardItems'] = CursorsToArray($rewardItems);
-    $output['createItems'] = CursorsToArray($createItems);
-    $output['updateItems'] = CursorsToArray($updateItems);
+    $output['rewardItems'] = ItemCursorsToArray($rewardItems);
+    $output['createItems'] = ItemCursorsToArray($createItems);
+    $output['updateItems'] = ItemCursorsToArray($updateItems);
     $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
     $output['rewardSoftCurrency'] = $rewardSoftCurrency;
     $output['rewardHardCurrency'] = $rewardHardCurrency;
