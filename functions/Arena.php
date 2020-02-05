@@ -132,7 +132,7 @@ function FinishDuel($session, $battleResult, $deadCharacters)
                     $addItemsResult = AddItems($playerId, $rewardItem['id'], $rewardItem['amount']);
                     if ($addItemsResult['success'])
                     {
-                        $rewardItems[] = CreateEmptyItem($playerId, $rewardItem['id'], $rewardItem['amount']);
+                        $rewardItems[] = CreateEmptyItem($i, $playerId, $rewardItem['id'], $rewardItem['amount']);
                         
                         $resultCreateItems = $addItemsResult['createItems'];
                         $resultUpdateItems = $addItemsResult['updateItems'];

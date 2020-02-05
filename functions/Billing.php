@@ -161,15 +161,21 @@ function BuyGoods($playerId, $gameData, $packageData)
     $hardCurrency->update();
     $updateCurrencies[] = $hardCurrency;
     // Add items
-    $packageRewardItems = $packageData['rewardItems'];
     $rewardItems = array();
     $createItems = array();
     $updateItems = array();
-    foreach ($packageRewardItems as $rewardItem) {
+    $countRewardItems = count($packageData['rewardItems']);
+    for ($i = 0; $i < $countRewardItems; ++$i)
+    {
+        $rewardItem = $packageData['rewardItems'][$i];
+        if (empty($rewardItem) || empty($rewardItem['id'])) {
+            continue;
+        }
+        
         $addItemsResult = AddItems($playerId, $rewardItem['id'], $rewardItem['amount']);
         if ($addItemsResult['success'])
         {
-            $rewardItems[] = CreateEmptyItem($playerId, $rewardItem['id'], $rewardItem['amount']);
+            $rewardItems[] = CreateEmptyItem($i, $playerId, $rewardItem['id'], $rewardItem['amount']);
 
             $resultCreateItems = $addItemsResult['createItems'];
             $resultUpdateItems = $addItemsResult['updateItems'];

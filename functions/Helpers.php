@@ -994,7 +994,7 @@ function HelperClearStage($createItems, $updateItems, $output, $player, $stage, 
             $addItemsResult = AddItems($playerId, $rewardItem['id'], $rewardItem['amount']);
             if ($addItemsResult['success'])
             {
-                $firstClearRewardItems[] = CreateEmptyItem($playerId, $rewardItem['id'], $rewardItem['amount']);
+                $firstClearRewardItems[] = CreateEmptyItem($i, $playerId, $rewardItem['id'], $rewardItem['amount']);
 
                 $resultCreateItems = $addItemsResult['createItems'];
                 $resultUpdateItems = $addItemsResult['updateItems'];
@@ -1181,10 +1181,10 @@ function GetSocialPlayer($playerId, $targetPlayerId)
     return false;
 }
 
-function CreateEmptyItem($playerId, $dataId, $amount)
+function CreateEmptyItem($id, $playerId, $dataId, $amount)
 {
     $newRewardEntry = new PlayerItem();
-    $newRewardEntry->id = 0;
+    $newRewardEntry->id = $id;
     $newRewardEntry->playerId = $playerId;
     $newRewardEntry->dataId = $dataId;
     $newRewardEntry->amount = $amount;

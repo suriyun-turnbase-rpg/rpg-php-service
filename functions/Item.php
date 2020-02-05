@@ -476,7 +476,7 @@ function OpenLootBox($lootBoxDataId, $packIndex)
                 $addItemsResult = AddItems($playerId, $rewardItem['id'], $rewardItem['amount']);
                 if ($addItemsResult['success'])
                 {
-                    $rewardItems[] = CreateEmptyItem($playerId, $rewardItem['id'], $rewardItem['amount']);
+                    $rewardItems[] = CreateEmptyItem($i, $playerId, $rewardItem['id'], $rewardItem['amount']);
 
                     $resultCreateItems = $addItemsResult['createItems'];
                     $resultUpdateItems = $addItemsResult['updateItems'];
@@ -555,16 +555,18 @@ function OpenInGamePackage($inGamePackageDataId)
             $hardCurrency->update();
             $updateCurrencies[] = $hardCurrency;
                 
-            $packageRewardItems = $inGamePackage['rewardItems'];
-            foreach ($packageRewardItems as $rewardItem) {
-                if (!$rewardItem) {
+            $countRewardItems = count($inGamePackage['rewardItems']);
+            for ($i = 0; $i < $countRewardItems; ++$i)
+            {
+                $rewardItem = $inGamePackage['rewardItems'][$i];
+                if (empty($rewardItem) || empty($rewardItem['id'])) {
                     continue;
                 }
 
                 $addItemsResult = AddItems($playerId, $rewardItem['id'], $rewardItem['amount']);
                 if ($addItemsResult['success'])
                 {
-                    $rewardItems[] = CreateEmptyItem($playerId, $rewardItem['id'], $rewardItem['amount']);
+                    $rewardItems[] = CreateEmptyItem($i, $playerId, $rewardItem['id'], $rewardItem['amount']);
 
                     $resultCreateItems = $addItemsResult['createItems'];
                     $resultUpdateItems = $addItemsResult['updateItems'];
@@ -683,7 +685,7 @@ function EarnAchievementReward($achievementId)
                 $addItemsResult = AddItems($player->id, $rewardItem['id'], $rewardItem['amount']);
                 if ($addItemsResult['success'])
                 {
-                    $rewardItems[] = CreateEmptyItem($playerId, $rewardItem['id'], $rewardItem['amount']);
+                    $rewardItems[] = CreateEmptyItem($i, $playerId, $rewardItem['id'], $rewardItem['amount']);
 
                     $resultCreateItems = $addItemsResult['createItems'];
                     $resultUpdateItems = $addItemsResult['updateItems'];
