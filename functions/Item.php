@@ -412,8 +412,8 @@ function GetAvailableInGamePackageList()
 {
     $list = array();
     $gameData = \Base::instance()->get('GameData');
-    $iapPackages = $gameData['inGamePackages'];
-    foreach ($iapPackages as $key => $value) {
+    $inGamePackages = $gameData['inGamePackages'];
+    foreach ($inGamePackages as $key => $value) {
         $list[] = $key;
     }
     $output = array('error' => '');
