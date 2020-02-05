@@ -72,6 +72,26 @@ function CursorsToArray($cursors)
     return $arr;
 }
 
+function ItemCursorToArray($cursor)
+{
+    $arr = CursorToArray($cursor);
+    if (!empty($arr['randomedAttributes']))
+        $arr['randomedAttributes'] = json_decode($arr['randomedAttributes']);
+    return $arr;
+}
+
+function ItemCursorsToArray($cursors)
+{
+    $arr = array();
+    if (!empty($cursors)) {
+        foreach ($cursors as $cursor)
+        {
+            $arr[] = ItemCursorToArray($cursor);
+        }
+    }
+    return $arr;
+}
+
 function GetPlayer()
 {
     $player = \Base::instance()->get('PLAYER');
@@ -845,7 +865,8 @@ function AddItems($playerId, $dataId, $amount)
         $newEntry = new PlayerItem();
         $newEntry->playerId = $playerId;
         $newEntry->dataId = $dataId;
-        $newEntry->randomedAttributes = json_encode(GetItemRandomAttributes($dataId));
+        $randomAttributes = GetItemRandomAttributes($dataId);
+        $newEntry->randomedAttributes = empty($randomAttributes) ? '{}' : json_encode($randomAttributes);
         if ($amount > $maxStack) {
             $newEntry->amount = $maxStack;
             $amount -= $maxStack;

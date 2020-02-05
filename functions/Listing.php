@@ -21,7 +21,7 @@ function GetItemList()
 {
     $player = GetPlayer();
     $playerId = $player->id;
-    echo json_encode(array('list' => CursorsToArray(GetItemListInternal($playerId))));
+    echo json_encode(array('list' => ItemCursorsToArray(GetItemListInternal($playerId))));
 }
 
 function GetItemListInternal($playerId)
