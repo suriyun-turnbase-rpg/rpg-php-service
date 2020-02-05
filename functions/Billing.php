@@ -169,6 +169,12 @@ function BuyGoods($playerId, $gameData, $packageData)
         $addItemsResult = AddItems($playerId, $rewardItem['id'], $rewardItem['amount']);
         if ($addItemsResult['success'])
         {
+            $newRewardEntry = new PlayerItem();
+            $newRewardEntry->playerId = $playerId;
+            $newRewardEntry->dataId = $rewardItem['id'];
+            $newRewardEntry->amount = $rewardItem['amount'];
+            $rewardItems[] = $newRewardEntry;
+
             $resultCreateItems = $addItemsResult['createItems'];
             $resultUpdateItems = $addItemsResult['updateItems'];
             $countCreateItems = count($resultCreateItems);
@@ -178,14 +184,12 @@ function BuyGoods($playerId, $gameData, $packageData)
                 $createItem = $resultCreateItems[$j];
                 $createItem->save();
                 HelperUnlockItem($playerId, $createItem->dataId);
-                $rewardItems[] = $createItem;
                 $createItems[] = $createItem;
             }
             for ($j = 0; $j < $countUpdateItems; ++$j)
             {
                 $updateItem = $resultUpdateItems[$j];
                 $updateItem->update();
-                $rewardItems[] = $updateItem;
                 $updateItems[] = $updateItem;
             }
         }

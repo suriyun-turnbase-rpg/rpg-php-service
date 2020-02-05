@@ -131,9 +131,20 @@ $f3->route('GET /available-lootboxes', function($f3, $params) {
 $f3->route('GET /available-iap-packages', function($f3, $params) {
     GetAvailableIapPackageList();
 });
+$f3->route('GET /available-ingame-packages', function($f3, $params) {
+    GetAvailableInGamePackageList();
+});
 $f3->route('POST /open-lootbox', function($f3, $params) {
     $postBody = json_decode(urldecode($f3->get('BODY')), true);
     OpenLootBox($postBody['lootBoxDataId'], $postBody['packIndex']);
+});
+$f3->route('POST /open-ingame-package', function($f3, $params) {
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
+    OpenInGamePackage($postBody['inGamePackageDataId']);
+});
+$f3->route('POST /convert-hard-currency', function($f3, $params) {
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
+    ConvertHardCurrency($postBody['requireHardCurrency']);
 });
 // Social services
 $f3->route('POST /friend-request', function($f3, $params) {

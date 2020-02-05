@@ -408,6 +408,19 @@ function GetAvailableIapPackageList()
     echo json_encode($output);
 }
 
+function GetAvailableInGamePackageList()
+{
+    $list = array();
+    $gameData = \Base::instance()->get('GameData');
+    $iapPackages = $gameData['inGamePackages'];
+    foreach ($iapPackages as $key => $value) {
+        $list[] = $key;
+    }
+    $output = array('error' => '');
+    $output['list'] = $list;
+    echo json_encode($output);
+}
+
 function OpenLootBox($lootBoxDataId, $packIndex)
 {
     $gameData = \Base::instance()->get('GameData');
@@ -422,6 +435,7 @@ function OpenLootBox($lootBoxDataId, $packIndex)
         $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
         $hardCurrency = GetCurrency($playerId, $gameData['currencies']['HARD_CURRENCY']['id']);
         
+        $rewardItems = array();
         $createItems = array();
         $updateItems = array();
         $deleteItemIds = array();
@@ -463,6 +477,12 @@ function OpenLootBox($lootBoxDataId, $packIndex)
                 $addItemsResult = AddItems($playerId, $rewardItem['id'], $rewardItem['amount']);
                 if ($addItemsResult['success'])
                 {
+                    $newRewardEntry = new PlayerItem();
+                    $newRewardEntry->playerId = $playerId;
+                    $newRewardEntry->dataId = $rewardItem['id'];
+                    $newRewardEntry->amount = $rewardItem['amount'];
+                    $rewardItems[] = $newRewardEntry;
+
                     $resultCreateItems = $addItemsResult['createItems'];
                     $resultUpdateItems = $addItemsResult['updateItems'];
                     $countCreateItems = count($resultCreateItems);
@@ -485,10 +505,99 @@ function OpenLootBox($lootBoxDataId, $packIndex)
             }
             // End reward items loop
         }
+        $output['rewardItems'] = CursorsToArray($rewardItems);
         $output['createItems'] = CursorsToArray($createItems);
-        $output['updateItems'] =CursorsToArray($updateItems);
+        $output['updateItems'] = CursorsToArray($updateItems);
         $output['deleteItemIds'] = $deleteItemIds;
         $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
+    }
+    echo json_encode($output);
+}
+
+function OpenInGamePackage($inGamePackageDataId)
+{
+    $gameData = \Base::instance()->get('GameData');
+    $output = array('error' => '');
+    $player = GetPlayer();
+    $playerId = $player->id;
+
+    $inGamePackage = $gameData['inGamePackages'][$inGamePackageDataId];
+    if (!$inGamePackage) {
+        $output['error'] = 'ERROR_INVALID_IN_GAME_PACKAGE_DATA';
+    } else {
+        $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
+        $hardCurrency = GetCurrency($playerId, $gameData['currencies']['HARD_CURRENCY']['id']);
+        
+        $rewardItems = array();
+        $createItems = array();
+        $updateItems = array();
+        $deleteItemIds = array();
+        $updateCurrencies = array();
+        $requirementType = $inGamePackage['requirementType'];
+        $price = $inGamePackage['price'];
+        if ($requirementType == EInGamePackageRequirementType::SoftCurrency && $price > $softCurrency->amount) {
+            $output['error'] = 'ERROR_NOT_ENOUGH_SOFT_CURRENCY';
+        } else if ($requirementType == EInGamePackageRequirementType::HardCurrency && $price > $hardCurrency->amount) {
+            $output['error'] = 'ERROR_NOT_ENOUGH_HARD_CURRENCY';
+        } else {
+            $rewardSoftCurrency = $inGamePackage['rewardSoftCurrency'];
+            $rewardHardCurrency = $inGamePackage['rewardHardCurrency'];
+            switch ($requirementType)
+            {
+                case EInGamePackageRequirementType::SoftCurrency:
+                    $softCurrency->amount -= $price;
+                    break;
+                case EInGamePackageRequirementType::HardCurrency:
+                    $hardCurrency->amount -= $price;
+                    break;
+            }
+            // Increase soft currency
+            $softCurrency->amount += $rewardSoftCurrency;
+            $softCurrency->update();
+            $updateCurrencies[] = $softCurrency;
+            // Increase hard currency
+            $hardCurrency->amount += $rewardHardCurrency;
+            $hardCurrency->update();
+            $updateCurrencies[] = $hardCurrency;
+                
+            $packageRewardItems = $inGamePackage['rewardItems'];
+            foreach ($packageRewardItems as $rewardItem) {
+                $addItemsResult = AddItems($playerId, $rewardItem['id'], $rewardItem['amount']);
+                if ($addItemsResult['success'])
+                {
+                    $newRewardEntry = new PlayerItem();
+                    $newRewardEntry->playerId = $playerId;
+                    $newRewardEntry->dataId = $rewardItem['id'];
+                    $newRewardEntry->amount = $rewardItem['amount'];
+                    $rewardItems[] = $newRewardEntry;
+
+                    $resultCreateItems = $addItemsResult['createItems'];
+                    $resultUpdateItems = $addItemsResult['updateItems'];
+                    $countCreateItems = count($resultCreateItems);
+                    $countUpdateItems = count($resultUpdateItems);
+                    for ($j = 0; $j < $countCreateItems; ++$j)
+                    {
+                        $createItem = $resultCreateItems[$j];
+                        $createItem->save();
+                        HelperUnlockItem($playerId, $createItem->dataId);
+                        $createItems[] = $createItem;
+                    }
+                    for ($j = 0; $j < $countUpdateItems; ++$j)
+                    {
+                        $updateItem = $resultUpdateItems[$j];
+                        $updateItem->update();
+                        $updateItems[] = $updateItem;
+                    }
+                }
+            }
+            $output['rewardItems'] = CursorsToArray($rewardItems);
+            $output['createItems'] = CursorsToArray($createItems);
+            $output['updateItems'] =CursorsToArray($updateItems);
+            $output['deleteItemIds'] = $deleteItemIds;
+            $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
+            $output['rewardSoftCurrency'] = $rewardSoftCurrency;
+            $output['rewardHardCurrency'] = $rewardHardCurrency;
+        }
     }
     echo json_encode($output);
 }
@@ -524,10 +633,10 @@ function EarnAchievementReward($achievementId)
             $updateCurrencies = array();
             $createItems = array();
             $updateItems = array();
+            $rewardItems = array();
             $rewardPlayerExp = $achievement['rewardPlayerExp'];
             $rewardSoftCurrency = $achievement['rewardSoftCurrency'];
             $rewardHardCurrency = $achievement['rewardHardCurrency'];
-            $rewardItems = array();
             // Player exp
             $player->exp += $rewardPlayerExp;
             $player->update();
@@ -553,6 +662,12 @@ function EarnAchievementReward($achievementId)
                 $addItemsResult = AddItems($player->id, $rewardItem['id'], $rewardItem['amount']);
                 if ($addItemsResult['success'])
                 {
+                    $newRewardEntry = new PlayerItem();
+                    $newRewardEntry->playerId = $playerId;
+                    $newRewardEntry->dataId = $rewardItem['id'];
+                    $newRewardEntry->amount = $rewardItem['amount'];
+                    $rewardItems[] = $newRewardEntry;
+
                     $resultCreateItems = $addItemsResult['createItems'];
                     $resultUpdateItems = $addItemsResult['updateItems'];
                     $countCreateItems = count($resultCreateItems);
@@ -562,14 +677,12 @@ function EarnAchievementReward($achievementId)
                         $createItem = $resultCreateItems[$j];
                         $createItem->save();
                         HelperUnlockItem($player->id, $createItem->dataId);
-                        $rewardItems[] = $createItem;
                         $createItems[] = $createItem;
                     }
                     for ($j = 0; $j < $countUpdateItems; ++$j)
                     {
                         $updateItem = $resultUpdateItems[$j];
                         $updateItem->update();
-                        $rewardItems[] = $updateItem;
                         $updateItems[] = $updateItem;
                     }
                 }

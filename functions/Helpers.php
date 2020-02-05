@@ -395,10 +395,10 @@ function SetNewPlayerData($player)
         }
     }
     
-    $hardCurrency = GetCurrency($player->id, $gameData['currencies']['HARD_CURRENCY']['id']);
+    $hardCurrency = GetCurrency($playerId, $gameData['currencies']['HARD_CURRENCY']['id']);
     $hardCurrency->amount = $gameData['currencies']['HARD_CURRENCY']['startAmount'];
     $hardCurrency->update();
-    $softCurrency = GetCurrency($player->id, $gameData['currencies']['SOFT_CURRENCY']['id']);
+    $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
     $softCurrency->amount = $gameData['currencies']['SOFT_CURRENCY']['startAmount'];
     $softCurrency->update();
     return $player;
@@ -924,16 +924,17 @@ function HelperUnlockItem($playerId, $dataId)
 function HelperClearStage($createItems, $updateItems, $output, $player, $stage, $rating)
 {
     $gameData = \Base::instance()->get('GameData');
+    $playerId = $player->id;
     $playerClearStageDb = new PlayerClearStage();
     $playerClearStage = $playerClearStageDb->load(array(
         'playerId = ? AND dataId = ?',
-        $player->id,
+        $playerId,
         $stage['id']
     ));
     
     if (!$playerClearStage) {
         $playerClearStage = new PlayerClearStage();
-        $playerClearStage->playerId = $player->id;
+        $playerClearStage->playerId = $playerId;
         $playerClearStage->dataId = $stage['id'];
         $playerClearStage->bestRating = $rating;
         $playerClearStage->save();
@@ -946,12 +947,12 @@ function HelperClearStage($createItems, $updateItems, $output, $player, $stage, 
         // Player exp
         $player->exp += $firstClearRewardPlayerExp;
         // Soft currency
-        $softCurrency = GetCurrency($player->id, $gameData['currencies']['SOFT_CURRENCY']['id']);
+        $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
         $softCurrency->amount += $firstClearRewardSoftCurrency;
         $softCurrency->update();
         $updateCurrencies[] = $softCurrency;
         // Hard currency
-        $hardCurrency = GetCurrency($player->id, $gameData['currencies']['HARD_CURRENCY']['id']);
+        $hardCurrency = GetCurrency($playerId, $gameData['currencies']['HARD_CURRENCY']['id']);
         $hardCurrency->amount += $firstClearRewardHardCurrency;
         $hardCurrency->update();
         $updateCurrencies[] = $hardCurrency;
@@ -964,9 +965,15 @@ function HelperClearStage($createItems, $updateItems, $output, $player, $stage, 
                 continue;
             }
             
-            $addItemsResult = AddItems($player->id, $rewardItem['id'], $rewardItem['amount']);
+            $addItemsResult = AddItems($playerId, $rewardItem['id'], $rewardItem['amount']);
             if ($addItemsResult['success'])
             {
+                $newRewardEntry = new PlayerItem();
+                $newRewardEntry->playerId = $playerId;
+                $newRewardEntry->dataId = $rewardItem['id'];
+                $newRewardEntry->amount = $rewardItem['amount'];
+                $firstClearRewardItems[] = $newRewardEntry;
+
                 $resultCreateItems = $addItemsResult['createItems'];
                 $resultUpdateItems = $addItemsResult['updateItems'];
                 $countCreateItems = count($resultCreateItems);
@@ -975,15 +982,13 @@ function HelperClearStage($createItems, $updateItems, $output, $player, $stage, 
                 {
                     $createItem = $resultCreateItems[$j];
                     $createItem->save();
-                    HelperUnlockItem($player->id, $createItem->dataId);
-                    $firstClearRewardItems[] = $createItem;
+                    HelperUnlockItem($playerId, $createItem->dataId);
                     $createItems[] = $createItem;
                 }
                 for ($j = 0; $j < $countUpdateItems; ++$j)
                 {
                     $updateItem = $resultUpdateItems[$j];
                     $updateItem->update();
-                    $firstClearRewardItems[] = $updateItem;
                     $updateItems[] = $updateItem;
                 }
             }
@@ -1007,11 +1012,11 @@ function HelperClearStage($createItems, $updateItems, $output, $player, $stage, 
     }
     $output['clearStage'] = !empty($playerClearStage) ? CursorToArray($playerClearStage) : array('' => '');
     // Update achievement
-    $playerAchievements = GetAchievementListInternal($player->id);
-    $playerClearStages = GetClearStageListInternal($player->id);
-    QueryUpdateAchievement(UpdateTotalClearStage($player->id, $playerAchievements, $playerClearStages));
-    QueryUpdateAchievement(UpdateTotalClearStageRating($player->id, $playerAchievements, $playerClearStages));
-    QueryUpdateAchievement(UpdateCountWinStage($player->id, $playerAchievements));
+    $playerAchievements = GetAchievementListInternal($playerId);
+    $playerClearStages = GetClearStageListInternal($playerId);
+    QueryUpdateAchievement(UpdateTotalClearStage($playerId, $playerAchievements, $playerClearStages));
+    QueryUpdateAchievement(UpdateTotalClearStageRating($playerId, $playerAchievements, $playerClearStages));
+    QueryUpdateAchievement(UpdateCountWinStage($playerId, $playerAchievements));
     return $output;
 }
 
