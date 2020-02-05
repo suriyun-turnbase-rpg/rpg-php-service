@@ -61,6 +61,7 @@ function GuestLogin($deviceId)
         }
     } else {
         $player = InsertNewPlayer(0, $deviceId, $deviceId);
+        $player = UpdatePlayerLoginToken($player);
         $output['player'] = CursorToArray($player);
     }
     echo json_encode($output);
