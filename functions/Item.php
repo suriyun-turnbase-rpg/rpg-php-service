@@ -469,7 +469,6 @@ function OpenLootBox($lootBoxDataId, $packIndex)
             for ($i = 0; $i < $openAmount; ++$i)
             {
                 $rewardItem = RandomLootBoxReward($lootBox);
-
                 if (!$rewardItem) {
                     continue;
                 }
@@ -535,13 +534,13 @@ function OpenInGamePackage($inGamePackageDataId)
         $updateCurrencies = array();
         $requirementType = $inGamePackage['requirementType'];
         $price = $inGamePackage['price'];
+        $rewardSoftCurrency = $inGamePackage['rewardSoftCurrency'];
+        $rewardHardCurrency = $inGamePackage['rewardHardCurrency'];
         if ($requirementType == EInGamePackageRequirementType::SoftCurrency && $price > $softCurrency->amount) {
             $output['error'] = 'ERROR_NOT_ENOUGH_SOFT_CURRENCY';
         } else if ($requirementType == EInGamePackageRequirementType::HardCurrency && $price > $hardCurrency->amount) {
             $output['error'] = 'ERROR_NOT_ENOUGH_HARD_CURRENCY';
         } else {
-            $rewardSoftCurrency = $inGamePackage['rewardSoftCurrency'];
-            $rewardHardCurrency = $inGamePackage['rewardHardCurrency'];
             switch ($requirementType)
             {
                 case EInGamePackageRequirementType::SoftCurrency:
@@ -562,6 +561,10 @@ function OpenInGamePackage($inGamePackageDataId)
                 
             $packageRewardItems = $inGamePackage['rewardItems'];
             foreach ($packageRewardItems as $rewardItem) {
+                if (!$rewardItem) {
+                    continue;
+                }
+
                 $addItemsResult = AddItems($playerId, $rewardItem['id'], $rewardItem['amount']);
                 if ($addItemsResult['success'])
                 {
