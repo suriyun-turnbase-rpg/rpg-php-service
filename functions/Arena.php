@@ -46,7 +46,7 @@ function StartDuel($targetPlayerId)
                 $opponentCharacters[] = $characterEntry;
             }
         }
-        $output['opponentCharacters'] = CursorsToArray($opponentCharacters);
+        $output['opponentCharacters'] = ItemCursorsToArray($opponentCharacters);
     }
     echo json_encode($output);
 }

@@ -360,7 +360,9 @@ function GetItemEvolve($item)
 function SetNewPlayerData($player)
 {
     $gameData = \Base::instance()->get('GameData');
-    $firstFormation = $gameData['formations'][0];
+    $gameFormations = $gameData['formations'];
+    $firstFormation = $gameFormations[0];
+    $lastFormation = $gameFormations[count($gameFormations) - 1];
     $playerId = $player->id;
     
     $startItems = $gameData['startItems'];
@@ -406,6 +408,7 @@ function SetNewPlayerData($player)
                 $createItem->save();
                 HelperUnlockItem($playerId, $createItem->dataId);
                 HelperSetFormation($playerId, $createItem->id, $firstFormation, $i);
+                HelperSetFormation($playerId, $createItem->id, $lastFormation, $i);
             }
             for ($j = 0; $j < $countUpdateItems; ++$j)
             {
@@ -427,11 +430,13 @@ function SetNewPlayerData($player)
 function InsertNewPlayer($type, $username, $password)
 {
     $gameData = \Base::instance()->get('GameData');
-    $firstFormation = $gameData['formations'][0];
+    $gameFormations = $gameData['formations'];
+    $firstFormation = $gameFormations[0];
+    $lastFormation = $gameFormations[count($gameFormations) - 1];
     $player = new Player();
     $player->exp = 0;
     $player->selectedFormation = $firstFormation;
-    $player->selectedArenaFormation = $firstFormation;
+    $player->selectedArenaFormation = $lastFormation;
     $player->save();
     $player = SetNewPlayerData($player);
     $player->update();
