@@ -62,30 +62,27 @@ function FinishStage($session, $battleResult, $deadCharacters)
             $output['error'] = 'ERROR_INVALID_STAGE_DATA';
         } else {
             // Prepare results
-            $output = array(
-                'rewardItems' => array(),
-                'createItems' => array(),
-                'updateItems' => array(),
-                'deleteItemIds' => array(),
-                'updateCurrencies' => array(),
-                'rewardPlayerExp' => 0,
-                'rewardCharacterExp' => 0,
-                'rating' => 0,
-                'clearStage' => array(),
-                'firstClearRewardPlayerExp' => 0,
-                'firstClearRewardSoftCurrency' => 0,
-                'firstClearRewardHardCurrency' => 0,
-                'firstClearRewardItems' => array()
-            );
-            $rewardItems = $output['rewardItems'];
-            $createItems = $output['createItems'];
-            $updateItems = $output['updateItems'];
-            $deleteItemIds = $output['deleteItemIds'];
-            $updateCurrencies = $output['updateCurrencies'];
-            $rewardPlayerExp = $output['rewardPlayerExp'];
-            $rewardCharacterExp = $output['rewardCharacterExp'];
-            $rewardSoftCurrency = $output['rewardSoftCurrency'];
-            $rating = $output['rating'];
+            $output['rewardItems'] = array();
+            $output['createItems'] = array();
+            $output['updateItems'] = array();
+            $output['deleteItemIds'] = array();
+            $output['updateCurrencies'] = array();
+            $output['rewardPlayerExp'] = 0;
+            $output['rewardCharacterExp'] = 0;
+            $output['rating'] = 0;
+            $output['firstClearRewardPlayerExp'] = 0;
+            $output['firstClearRewardSoftCurrency'] = 0;
+            $output['firstClearRewardHardCurrency'] = 0;
+            $output['firstClearRewardItems'] = array();
+            $rewardItems = array();
+            $createItems = array();
+            $updateItems = array();
+            $deleteItemIds = array();
+            $updateCurrencies = array();
+            $rewardPlayerExp = 0;
+            $rewardCharacterExp = 0;
+            $rewardSoftCurrency = 0;
+            $rating = 0;
             // Set battle session
             $playerBattle->battleResult = $battleResult;
             if ($battleResult == EBattleResult::Win)
