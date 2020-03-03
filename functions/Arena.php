@@ -24,7 +24,10 @@ function StartDuel($targetPlayerId)
         $newData->save();
         
         $opponent = new Player();
-        $opponent = $opponent->load($targetPlayerId);
+        $opponent = $opponent->load(array(
+            'id = ?',
+            $targetPlayerId,
+        ));
         
         $staminaTable = $gameData['staminas']['ARENA'];
         $stamina = GetStamina($playerId, $staminaTable['id']);
