@@ -614,10 +614,12 @@ function ConvertHardCurrency($requireHardCurrency)
     } else {
         $updateCurrencies = array();
         $hardCurrency->amount -= $requireHardCurrency;
+        $hardCurrency->update();
+        $updateCurrencies[] = $hardCurrency;
         $receiveSoftCurrency = $gameData['hardToSoftCurrencyConversion'] * $requireHardCurrency;
         $softCurrency->amount += $receiveSoftCurrency;
-        $hardCurrency->update();
         $softCurrency->update();
+        $updateCurrencies[] = $softCurrency;
         $output['requireHardCurrency'] = $requireHardCurrency;
         $output['receiveSoftCurrency'] = $receiveSoftCurrency;
         $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
