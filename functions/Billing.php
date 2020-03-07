@@ -146,16 +146,15 @@ function BuyGoods($playerId, $gameData, $packageData)
     $output = array();
 
     // Update currencies
+    $updateCurrencies = array();
     // Soft currency
     $rewardSoftCurrency = $packageData['rewardSoftCurrency'];
-    $updateCurrencies = array();
     $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
     $softCurrency->amount += $rewardSoftCurrency;
     $softCurrency->update();
     $updateCurrencies[] = $softCurrency;
     // Hard currency
     $rewardHardCurrency = $packageData['rewardHardCurrency'];
-    $updateCurrencies = array();
     $hardCurrency = GetCurrency($playerId, $gameData['currencies']['HARD_CURRENCY']['id']);
     $hardCurrency->amount += $rewardHardCurrency;
     $hardCurrency->update();
