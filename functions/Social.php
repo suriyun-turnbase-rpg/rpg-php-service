@@ -108,6 +108,22 @@ function FriendDelete($targetPlayerId)
 
 function FindPlayer($profileName)
 {
-    
+    $player = GetPlayer();
+    $playerId = $player->id;
+    $list = array();
+    // TODO: Improve this
+    $playerDb = new Player();
+    $foundPlayers = $playerDb->find(array(
+        'profileName = ?',
+        '%'.$profileName.'%'
+    ));
+    // Add list
+    foreach ($foundPlayers as $foundPlayer) {
+        $socialPlayer = GetSocialPlayer($playerId, $foundPlayer->targetPlayerId);
+        if ($socialPlayer) {
+            $list[] = $socialPlayer;
+        }
+    }
+    echo json_encode(array('list' => $list));
 }
 ?>
