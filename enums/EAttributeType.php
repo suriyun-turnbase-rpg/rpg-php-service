@@ -14,5 +14,7 @@ final class EAttributeType extends BasicEnum
     const BlockChance = 10;
     const BlockDamageRate = 11;
     const ResistanceChance = 12;
+    const BloodStealRateByPAtk = 13;
+    const BloodStealRateByMAtk = 14;
 }
 ?>

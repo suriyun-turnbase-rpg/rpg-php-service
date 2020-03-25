@@ -720,62 +720,101 @@ function GetItemRandomAttributes($dataId)
     if (!empty($randomAttributes['maxResistanceChance'])) {
         $maxResistanceChance = $randomAttributes['maxResistanceChance'];
     }
+    $minBloodStealRateByPAtk = 0;
+    if (!empty($randomAttributes['minBloodStealRateByPAtk'])) {
+        $minBloodStealRateByPAtk = $randomAttributes['minBloodStealRateByPAtk'];
+    }
+    $maxBloodStealRateByPAtk = 0;
+    if (!empty($randomAttributes['maxBloodStealRateByPAtk'])) {
+        $maxBloodStealRateByPAtk = $randomAttributes['maxBloodStealRateByPAtk'];
+    }
+    $minBloodStealRateByMAtk = 0;
+    if (!empty($randomAttributes['minBloodStealRateByMAtk'])) {
+        $minBloodStealRateByMAtk = $randomAttributes['minBloodStealRateByMAtk'];
+    }
+    $maxBloodStealRateByMAtk = 0;
+    if (!empty($randomAttributes['maxBloodStealRateByMAtk'])) {
+        $maxBloodStealRateByMAtk = $randomAttributes['maxBloodStealRateByMAtk'];
+    }
     
     $result = array();
     $randomingAmounts = array();
 
     // Hp
     $tempIntVal = rand($minHp, $maxHp);
-    if ($tempIntVal != 0)
+    if ($tempIntVal != 0) {
         $randomingAmounts[EAttributeType::Hp] = $tempIntVal;
+    }
     // PAtk
     $tempIntVal = rand($minPAtk, $maxPAtk);
-    if ($tempIntVal != 0)
+    if ($tempIntVal != 0) {
         $randomingAmounts[EAttributeType::PAtk] = $tempIntVal;
+    }
     // PDef
     $tempIntVal = rand($minPDef, $maxPDef);
-    if ($tempIntVal != 0)
+    if ($tempIntVal != 0) {
         $randomingAmounts[EAttributeType::PDef] = $tempIntVal;
+    }
     // MAtk
     $tempIntVal = rand($minMAtk, $maxMAtk);
-    if ($tempIntVal != 0)
+    if ($tempIntVal != 0) {
         $randomingAmounts[EAttributeType::MAtk] = $tempIntVal;
+    }
     // MDef
     $tempIntVal = rand($minMDef, $maxMDef);
-    if ($tempIntVal != 0)
+    if ($tempIntVal != 0) {
         $randomingAmounts[EAttributeType::MDef] = $tempIntVal;
+    }
     // Spd
     $tempIntVal = rand($minSpd, $maxSpd);
-    if ($tempIntVal != 0)
+    if ($tempIntVal != 0) {
         $randomingAmounts[EAttributeType::Spd] = $tempIntVal;
+    }
     // Eva
     $tempIntVal = rand($minEva, $maxEva);
-    if ($tempIntVal != 0)
+    if ($tempIntVal != 0) {
         $randomingAmounts[EAttributeType::Eva] = $tempIntVal;
+    }
     // Acc
     $tempIntVal = rand($minAcc, $maxAcc);
-    if ($tempIntVal != 0)
+    if ($tempIntVal != 0) {
         $randomingAmounts[EAttributeType::Acc] = $tempIntVal;
+    }
     // Crit Chance
     $tempFloatVal = rand($minCritChance, $maxCritChance);
-    if ($tempFloatVal != 0)
+    if ($tempFloatVal != 0) {
         $randomingAmounts[EAttributeType::CritChance] = $tempFloatVal;
+    }
     // Crit Damage Rate
     $tempFloatVal = rand($minCritDamageRate, $maxCritDamageRate);
-    if ($tempFloatVal != 0)
+    if ($tempFloatVal != 0) {
         $randomingAmounts[EAttributeType::CritDamageRate] = $tempFloatVal;
+    }
     // Block Chance
     $tempFloatVal = rand($minBlockChance, $maxBlockChance);
-    if ($tempFloatVal != 0)
+    if ($tempFloatVal != 0) {
         $randomingAmounts[EAttributeType::BlockChance] = $tempFloatVal;
+    }
     // Block Damage Rate
     $tempFloatVal = rand($minBlockDamageRate, $maxBlockDamageRate);
-    if ($tempFloatVal != 0)
+    if ($tempFloatVal != 0) {
         $randomingAmounts[EAttributeType::BlockDamageRate] = $tempFloatVal;
+    }
     // Resistance
     $tempFloatVal = rand($minResistanceChance, $maxResistanceChance);
-    if ($tempFloatVal != 0)
+    if ($tempFloatVal != 0) {
         $randomingAmounts[EAttributeType::ResistanceChance] = $tempFloatVal;
+    }
+    // Blood Steal PATK
+    $tempFloatVal = rand($minBloodStealRateByPAtk, $maxBloodStealRateByPAtk);
+    if ($tempFloatVal != 0) {
+        $randomingAmounts[EAttributeType::BloodStealRateByPAtk] = $tempFloatVal;
+    }
+    // Blood Steal MATK
+    $tempFloatVal = rand($minBloodStealRateByMAtk, $maxBloodStealRateByMAtk);
+    if ($tempFloatVal != 0) {
+        $randomingAmounts[EAttributeType::BloodStealRateByMAtk] = $tempFloatVal;
+    }
 
     $shufflingKeys = array_keys($randomingAmounts);
     shuffle($shufflingKeys);
@@ -824,6 +863,12 @@ function GetItemRandomAttributes($dataId)
             break;
             case EAttributeType::ResistanceChance:
                 $result['resistanceChance'] = $randomingAmounts[$shufflingKeys[$i]];
+            break;
+            case EAttributeType::BloodStealRateByPAtk:
+                $result['bloodStealRateByPAtk'] = $randomingAmounts[$shufflingKeys[$i]];
+            break;
+            case EAttributeType::BloodStealRateByMAtk:
+                $result['bloodStealRateByMAtk'] = $randomingAmounts[$shufflingKeys[$i]];
             break;
         }
     }
