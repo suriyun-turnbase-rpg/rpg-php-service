@@ -192,6 +192,27 @@ function GetFriendRequestList()
     echo json_encode(array('list' => $list));
 }
 
+function GetPendingRequestList()
+{
+    $player = GetPlayer();
+    $playerId = $player->id;
+    $list = array();
+    // TODO: Improve this
+    $playerFriendRequestDb = new PlayerFriendRequest();
+    $playerFriendRequests = $playerFriendRequestDb->find(array(
+        'playerId = ?',
+        $playerId
+    ));
+    // Add list
+    foreach ($playerFriendRequests as $playerFriendRequest) {
+        $socialPlayer = GetSocialPlayer($playerId, $playerFriendRequest->targetPlayerId);
+        if ($socialPlayer) {
+            $list[] = $socialPlayer;
+        }
+    }
+    echo json_encode(array('list' => $list));
+}
+
 function GetOpponentList()
 {
     $player = GetPlayer();

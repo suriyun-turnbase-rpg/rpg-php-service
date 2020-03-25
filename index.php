@@ -98,6 +98,9 @@ $f3->route('GET /friends', function($f3, $params) {
 $f3->route('GET /friend-requests', function($f3, $params) {
     GetFriendRequestList();
 });
+$f3->route('GET /pending-requests', function($f3, $params) {
+    GetPendingRequestList();
+});
 $f3->route('GET /opponents', function($f3, $params) {
     GetOpponentList();
 });
