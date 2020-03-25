@@ -106,6 +106,22 @@ function FriendDelete($targetPlayerId)
     echo json_encode($output);
 }
 
+function FriendRequestDelete($targetPlayerId)
+{
+    $output = array('error' => '');
+    $player = GetPlayer();
+    $playerId = $player->id;
+    $playerFriendRequestDb = new PlayerFriendRequest();
+    $playerFriendRequestDb->erase(array(
+        '(playerId = ? AND targetPlayerId = ?) OR (playerId = ? AND targetPlayerId = ?)',
+        $playerId,
+        $targetPlayerId,
+        $targetPlayerId,
+        $playerId
+    ));
+    echo json_encode($output);
+}
+
 function FindPlayer($profileName)
 {
     $player = GetPlayer();
@@ -115,7 +131,7 @@ function FindPlayer($profileName)
     $playerDb = new Player();
     $foundPlayers = $playerDb->find(array(
         'profileName = ?',
-        '%'.$profileName.'%'
+        $profileName.'%'
     ));
     // Add list
     foreach ($foundPlayers as $foundPlayer) {

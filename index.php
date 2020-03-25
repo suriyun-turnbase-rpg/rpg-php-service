@@ -166,6 +166,10 @@ $f3->route('POST /friend-delete', function($f3, $params) {
     $postBody = json_decode(urldecode($f3->get('BODY')), true);
     FriendDelete($postBody['targetPlayerId']);
 });
+$f3->route('POST /friend-request-delete', function($f3, $params) {
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
+    FriendRequestDelete($postBody['targetPlayerId']);
+});
 $f3->route('POST /find-player', function($f3, $params) {
     $postBody = json_decode(urldecode($f3->get('BODY')), true);
     FindPlayer($postBody['profileName']);
