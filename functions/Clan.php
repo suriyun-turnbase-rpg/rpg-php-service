@@ -277,4 +277,66 @@ function GetClan()
     }
     echo json_encode($output);
 }
+
+function ClanJoinRequests()
+{
+    $player = GetPlayer();
+    $playerId = $player->id;
+    $clanId = $player->clanId;
+    $list = array();
+    if (!empty($clanId)) {
+        $joinRequestDb = new ClanJoinRequest();
+        $foundRequests = $joinRequestDb->find(array('clanId = ?', $clanId));
+        // Add list
+        foreach ($foundRequests as $foundRequest) {
+            $socialPlayer = GetSocialPlayer($playerId, $foundRequest->playerId);
+            if ($socialPlayer) {
+                $list[] = $socialPlayer;
+            }
+        }
+    }
+    echo json_encode(array('list' => $list));
+}
+
+function ClanJoinPendingRequests()
+{
+    $player = GetPlayer();
+    $playerId = $player->id;
+    $clanId = $player->clanId;
+    $list = array();
+    if (empty($clanId)) {
+        $joinRequestDb = new ClanJoinRequest();
+        $foundRequests = $joinRequestDb->find(array('clanId = ?', $clanId));
+        // Add list
+        foreach ($foundRequests as $foundRequest) {
+            $clanDb = new Clan();
+            $foundClan = $clanDb->load(array('id = ?', $foundRequest->clanId));
+            if ($foundClan) {
+                $list[] = array(
+                    'id' => $foundClan->id,
+                    'ownerId' => $foundClan->ownerId,
+                    'name' => $foundClan->name,
+                    'owner' => GetSocialPlayer($playerId, $foundClan->ownerId)
+                );
+            }
+        }
+    }
+    echo json_encode(array('list' => $list));
+}
+
+function ClanExit()
+{
+    $output = array('error' => '');
+    $player = GetPlayer();
+    $playerId = $player->id;
+    $clanDb = new Clan();
+    $countClan = $clanDb->count(array('ownerId = ?', $playerId));
+    if ($countClan > 0) {
+        $output['error'] = 'ERROR_CLAN_OWNER_CANNOT_EXIT';
+    } else {
+        $player->clanId = 0;
+        $player->update();
+    }
+    echo json_encode($output);
+}
 ?>

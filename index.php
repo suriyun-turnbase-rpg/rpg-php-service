@@ -260,5 +260,14 @@ $f3->route('POST /clan-terminate', function($f3, $params) {
 $f3->route('POST /clan', function($f3, $params) {
     GetClan();
 });
+$f3->route('POST /clan-join-requests', function($f3, $params) {
+    ClanJoinRequests();
+});
+$f3->route('POST /clan-join-pending-requests', function($f3, $params) {
+    ClanJoinPendingRequests();
+});
+$f3->route('POST /clan-exit', function($f3, $params) {
+    ClanExit();
+});
 $f3->run();
 ?>
