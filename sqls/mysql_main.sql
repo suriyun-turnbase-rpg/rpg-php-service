@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 26, 2020 at 08:57 PM
+-- Generation Time: Mar 26, 2020 at 09:26 PM
 -- Server version: 10.1.40-MariaDB
 -- PHP Version: 7.3.5
 
@@ -48,20 +48,6 @@ CREATE TABLE `<<__prefix__>>clan_join_request` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `<<__prefix__>>clan_member`
---
-
-CREATE TABLE `<<__prefix__>>clan_member` (
-  `id` bigint(20) NOT NULL,
-  `playerId` bigint(20) NOT NULL,
-  `clanId` bigint(20) NOT NULL,
-  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `<<__prefix__>>player`
 --
 
@@ -77,6 +63,7 @@ CREATE TABLE `<<__prefix__>>player` (
   `arenaScore` int(11) NOT NULL DEFAULT '0',
   `highestArenaRank` int(11) NOT NULL DEFAULT '0',
   `highestArenaRankCurrentSeason` int(11) NOT NULL DEFAULT '0',
+  `clanId` bigint(20) NOT NULL,
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -274,12 +261,6 @@ ALTER TABLE `<<__prefix__>>clan_join_request`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `<<__prefix__>>clan_member`
---
-ALTER TABLE `<<__prefix__>>clan_member`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `<<__prefix__>>player`
 --
 ALTER TABLE `<<__prefix__>>player`
@@ -366,12 +347,6 @@ ALTER TABLE `<<__prefix__>>clan`
 -- AUTO_INCREMENT for table `<<__prefix__>>clan_join_request`
 --
 ALTER TABLE `<<__prefix__>>clan_join_request`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `<<__prefix__>>clan_member`
---
-ALTER TABLE `<<__prefix__>>clan_member`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
