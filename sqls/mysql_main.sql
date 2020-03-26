@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 26, 2020 at 08:48 PM
+-- Generation Time: Mar 26, 2020 at 08:57 PM
 -- Server version: 10.1.40-MariaDB
 -- PHP Version: 7.3.5
 
@@ -27,6 +27,34 @@ CREATE TABLE `<<__prefix__>>clan` (
   `ownerId` bigint(20) NOT NULL,
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `description` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `<<__prefix__>>clan_join_request`
+--
+
+CREATE TABLE `<<__prefix__>>clan_join_request` (
+  `id` bigint(20) NOT NULL,
+  `playerId` bigint(20) NOT NULL,
+  `clanId` bigint(20) NOT NULL,
+  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `<<__prefix__>>clan_member`
+--
+
+CREATE TABLE `<<__prefix__>>clan_member` (
+  `id` bigint(20) NOT NULL,
+  `playerId` bigint(20) NOT NULL,
+  `clanId` bigint(20) NOT NULL,
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -240,6 +268,18 @@ ALTER TABLE `<<__prefix__>>clan`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `<<__prefix__>>clan_join_request`
+--
+ALTER TABLE `<<__prefix__>>clan_join_request`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `<<__prefix__>>clan_member`
+--
+ALTER TABLE `<<__prefix__>>clan_member`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `<<__prefix__>>player`
 --
 ALTER TABLE `<<__prefix__>>player`
@@ -320,6 +360,18 @@ ALTER TABLE `<<__prefix__>>player_unlock_item`
 -- AUTO_INCREMENT for table `<<__prefix__>>clan`
 --
 ALTER TABLE `<<__prefix__>>clan`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `<<__prefix__>>clan_join_request`
+--
+ALTER TABLE `<<__prefix__>>clan_join_request`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `<<__prefix__>>clan_member`
+--
+ALTER TABLE `<<__prefix__>>clan_member`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
