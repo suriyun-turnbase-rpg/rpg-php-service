@@ -40,6 +40,7 @@ require_once('functions/Social.php');
 require_once('functions/Battle.php');
 require_once('functions/Arena.php');
 require_once('functions/Billing.php');
+require_once('functions/Clan.php');
 
 // Services
 $f3->route('GET /', function() {
@@ -217,6 +218,47 @@ $f3->route('POST /earn-achievement-reward', function($f3, $params) {
     $postBody = json_decode(urldecode($f3->get('BODY')), true);
     EarnAchievementReward($postBody['achievementId']);
 });
-
+// Clan services
+$f3->route('POST /create-clan', function($f3, $params) {
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
+    CreateClan($postBody['clanName']);
+});
+$f3->route('POST /find-clan', function($f3, $params) {
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
+    FindClan($postBody['clanName']);
+});
+$f3->route('POST /clan-join-request', function($f3, $params) {
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
+    ClanJoinRequest($postBody['clanId']);
+});
+$f3->route('POST /clan-join-accept', function($f3, $params) {
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
+    ClanJoinAccept($postBody['targetPlayerId']);
+});
+$f3->route('POST /clan-join-decline', function($f3, $params) {
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
+    ClanJoinDecline($postBody['targetPlayerId']);
+});
+$f3->route('POST /clan-member-delete', function($f3, $params) {
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
+    ClanMemberDelete($postBody['targetPlayerId']);
+});
+$f3->route('POST /clan-join-request-delete', function($f3, $params) {
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
+    ClanJoinRequestDelete($postBody['clanId']);
+});
+$f3->route('POST /clan-members', function($f3, $params) {
+    ClanMembers();
+});
+$f3->route('POST /clan-owner-transfer', function($f3, $params) {
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
+    ClanOwnerTransfer($postBody['targetPlayerId']);
+});
+$f3->route('POST /clan-terminate', function($f3, $params) {
+    ClanTerminate();
+});
+$f3->route('POST /clan', function($f3, $params) {
+    GetClan();
+});
 $f3->run();
 ?>
