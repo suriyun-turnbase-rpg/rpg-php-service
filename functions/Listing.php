@@ -120,9 +120,6 @@ function GetHelperList()
     $player = GetPlayer();
     $playerId = $player->id;
     $list = array();
-    // TODO: Improve this
-    $db = \Base::instance()->get('DB');
-    $prefix = \Base::instance()->get('db_prefix');
     $playerFriendDb = new PlayerFriend();
     $playerFriends = $playerFriendDb->find(array(
         'playerId = ?',
@@ -139,9 +136,13 @@ function GetHelperList()
     $countRows = count($list);
     $limit = 25 - $countRows;
     if ($limit > 0) {
-        $rows = $db->exec('SELECT id FROM ' . $prefix . 'player WHERE profileName != "" AND id != "' . $playerId . '" ORDER BY rand() LIMIT ' . $limit);
+        $playerDb = new Player();
+        $rows = $playerDb->find(
+            array('profileName != "" AND id != ?', $playerId),
+            array('order' => 'rand() ', 'limit' => $limit)
+        );
         foreach ($rows as $row) {
-            $socialPlayer = GetSocialPlayer($playerId, $row['id']);
+            $socialPlayer = GetSocialPlayer($playerId, $row->id);
             if ($socialPlayer) {
                 $list[] = $socialPlayer;
             }
@@ -219,18 +220,15 @@ function GetOpponentList()
     $playerId = $player->id;
     $arenaScore = $player->arenaScore;
     $list = array();
-    // TODO: Improve this
-    $db = \Base::instance()->get('DB');
-    $prefix = \Base::instance()->get('db_prefix');
     $arenaScoreCap = $arenaScore + 100;
     $limit = 25;
-    $rows = $db->exec('SELECT id FROM ' . $prefix . 'player WHERE ' .
-        'id != "' . $playerId . '" AND ' .
-        'profileName != "" AND ' .
-        'arenaScore < ' . $arenaScoreCap . ' ' .
-        'ORDER BY arenaScore DESC LIMIT ' . $limit);
+    $playerDb = new Player();
+    $rows = $playerDb->find(
+        array('profileName != "" AND id != ? AND arenaScore < ?', $playerId, $arenaScoreCap),
+        array('order' => 'arenaScore DESC', 'limit' => $limit)
+    );
     foreach ($rows as $row) {
-        $socialPlayer = GetSocialPlayer($playerId, $row['id']);
+        $socialPlayer = GetSocialPlayer($playerId, $row->id);
         if (!$socialPlayer) {
             continue;
         }
