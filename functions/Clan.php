@@ -215,7 +215,7 @@ function ClanOwnerTransfer($targetPlayerId)
         $output['error'] = 'ERROR_NOT_HAVE_PERMISSION';
     } else {
         $memberDb = new Player();
-        $member = $memberDb->find(array('id = ? AND clanId = ?', $targetPlayerId, $clanId));
+        $member = $memberDb->load(array('id = ? AND clanId = ?', $targetPlayerId, $clanId));
         if ($member)
         {
             $clanDb->update();
@@ -340,10 +340,9 @@ function ClanSetRole($targetPlayerId, $targetClanRole)
         $output['error'] = 'ERROR_NOT_HAVE_PERMISSION';
     } else {
         $memberDb = new Player();
-        $member = $memberDb->find(array('id = ? AND clanId = ?', $targetPlayerId, $clanId));
+        $member = $memberDb->load(array('id = ? AND clanId = ?', $targetPlayerId, $clanId));
         if ($member)
         {
-            $clanDb->update();
             $member->clanRole = $targetClanRole;
             $member->update();
         }
