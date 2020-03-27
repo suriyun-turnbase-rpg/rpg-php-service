@@ -127,16 +127,18 @@ function FindPlayer($profileName)
     $player = GetPlayer();
     $playerId = $player->id;
     $list = array();
-    $playerDb = new Player();
-    $foundPlayers = $playerDb->find(array(
-        'profileName = ?',
-        $profileName.'%'
-    ), array('limit' => 25));
-    // Add list
-    foreach ($foundPlayers as $foundPlayer) {
-        $socialPlayer = GetSocialPlayer($playerId, $foundPlayer->id);
-        if ($socialPlayer) {
-            $list[] = $socialPlayer;
+    if (!empty($profileName)) {
+        $playerDb = new Player();
+        $foundPlayers = $playerDb->find(array(
+            'profileName = ?',
+            $profileName.'%'
+        ), array('limit' => 25));
+        // Add list
+        foreach ($foundPlayers as $foundPlayer) {
+            $socialPlayer = GetSocialPlayer($playerId, $foundPlayer->id);
+            if ($socialPlayer) {
+                $list[] = $socialPlayer;
+            }
         }
     }
     echo json_encode(array('list' => $list));
