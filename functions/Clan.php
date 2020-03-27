@@ -243,7 +243,7 @@ function ClanTerminate()
         $clanDb->erase(array('id = ?', $clanId));
         $db = \Base::instance()->get('DB');
         $prefix = \Base::instance()->get('db_prefix');
-        $db->exec('UPDATE ' . $prefix . 'player SET clanId=0 AND clanRole=0 WHERE clanId="' . $clanId . '"');
+        $db->exec('UPDATE ' . $prefix . 'player SET clanId=0, clanRole=0 WHERE clanId="' . $clanId . '"');
     }
     echo json_encode($output);
 }
