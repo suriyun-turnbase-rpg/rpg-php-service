@@ -218,7 +218,8 @@ function ClanOwnerTransfer($targetPlayerId)
         $member = $memberDb->load(array('id = ? AND clanId = ?', $targetPlayerId, $clanId));
         if ($member)
         {
-            $clanDb->update();
+            $player->clanRole = 1;
+            $player->update();
             $member->clanRole = 2;
             $member->update();
         }
