@@ -80,7 +80,7 @@ function FindClan($clanName)
     echo json_encode(array('list' => $list));
 }
 
-function ClanJoinRequest($clanId)
+function ClanJoinRequest($joinClanId)
 {
     $output = array('error' => '');
     $player = GetPlayer();
@@ -92,11 +92,11 @@ function ClanJoinRequest($clanId)
     } else {
         // Delete request to this clan (if found)
         $clanJoinRequest = new ClanJoinRequest();
-        $clanJoinRequest->erase(array('playerId = ? AND clanId = ?'), $playerId, $clanId);
+        $clanJoinRequest->erase(array('playerId = ? AND clanId = ?', $playerId, $joinClanId));
         // Create new request record
         $clanJoinRequest = new ClanJoinRequest();
         $clanJoinRequest->playerId = $playerId;
-        $clanJoinRequest->clanId = $clanId;
+        $clanJoinRequest->clanId = $joinClanId;
         $clanJoinRequest->save();
     }
     echo json_encode($output);
@@ -115,11 +115,11 @@ function ClanJoinAccept($targetPlayerId)
         $output['error'] = 'ERROR_NOT_CLAN_OWNER';
     } else {
         $clanJoinRequest = new ClanJoinRequest();
-        $countRequest = $clanJoinRequest->count(array('playerId = ? AND clanId = ?'), $targetPlayerId, $clanId);
+        $countRequest = $clanJoinRequest->count(array('playerId = ? AND clanId = ?', $targetPlayerId, $clanId));
         if ($countRequest > 0) {
             // Delete request record
             $clanJoinRequest = new ClanJoinRequest();
-            $clanJoinRequest->erase(array('playerId = ?'), $targetPlayerId);
+            $clanJoinRequest->erase(array('playerId = ?', $targetPlayerId));
             // Update clan ID
             $memberDb = new Player();
             $member = $memberDb->load(array(
@@ -148,11 +148,11 @@ function ClanJoinDecline($targetPlayerId)
         $output['error'] = 'ERROR_NOT_CLAN_OWNER';
     } else {
         $clanJoinRequest = new ClanJoinRequest();
-        $countRequest = $clanJoinRequest->count(array('playerId = ? AND clanId = ?'), $targetPlayerId);
+        $countRequest = $clanJoinRequest->count(array('playerId = ? AND clanId = ?', $targetPlayerId));
         if ($countRequest > 0) {
             // Delete request record
             $clanJoinRequest = new ClanJoinRequest();
-            $clanJoinRequest->erase(array('playerId = ? AND clanId = ?'), $targetPlayerId, $clanId);
+            $clanJoinRequest->erase(array('playerId = ? AND clanId = ?', $targetPlayerId, $clanId));
         }
     }
     echo json_encode($output);
@@ -191,7 +191,7 @@ function ClanJoinRequestDelete($clanId)
     $playerId = $player->id;
     // Delete request record
     $clanJoinRequest = new ClanJoinRequest();
-    $clanJoinRequest->erase(array('playerId = ? AND clanId = ?'), $playerId, $clanId);
+    $clanJoinRequest->erase(array('playerId = ? AND clanId = ?', $playerId, $clanId));
     echo json_encode($output);
 }
 
@@ -306,7 +306,7 @@ function ClanJoinPendingRequests()
     $list = array();
     if (empty($clanId)) {
         $joinRequestDb = new ClanJoinRequest();
-        $foundRequests = $joinRequestDb->find(array('clanId = ?', $clanId));
+        $foundRequests = $joinRequestDb->find(array('playerId = ?', $playerId));
         // Add list
         foreach ($foundRequests as $foundRequest) {
             $clanDb = new Clan();
