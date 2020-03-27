@@ -1199,6 +1199,40 @@ function GetArenaRank($arenaScore)
     return $level >= 0 ? $gameData['arenaRanks']['level'] : NULL;
 }
 
+function GetClanOwner($playerId, $clanId)
+{
+    $playerDb = new Player();
+    $player = $playerDb->load(array(
+        'clanId = ? AND clanRole = 2',
+        $clanId
+    ));
+    if ($player) {
+        $playerFriendDb = new PlayerFriend();
+        $isFriend = $playerFriendDb->count(array(
+            'playerId = ? AND targetPlayerId = ?',
+            $playerId,
+            $player->id
+        )) > 0;
+        // Show leader character
+        $character = GetLeaderCharacter($player->id, $player->selectedFormation);
+        if (!empty($player->profileName) && $character) {
+            return array(
+                'id' => $player->id,
+                'profileName' => $player->profileName,
+                'exp' => $player->exp,
+                'mainCharacter' => $character->dataId,
+                'mainCharacterExp' => $character->exp,
+                'selectedFormation' => $player->selectedFormation,
+                'selectedArenaFormation' => $player->selectedArenaFormation,
+                'clanId' => $player->clanId,
+                'clanRole' => $player->clanRole,
+                'isFriend' => $isFriend
+            );
+        }
+    }
+    return false;
+}
+
 function GetSocialPlayer($playerId, $targetPlayerId)
 {
     $playerDb = new Player();
@@ -1206,13 +1240,16 @@ function GetSocialPlayer($playerId, $targetPlayerId)
         'id = ?',
         $targetPlayerId
     ));
-    $playerFriendDb = new PlayerFriend();
     if ($player) {
+        $playerFriendDb = new PlayerFriend();
         $isFriend = $playerFriendDb->count(array(
             'playerId = ? AND targetPlayerId = ?',
             $playerId,
             $targetPlayerId
         )) > 0;
+        if (empty($player->clanId)) {
+            $player->clanId = '';
+        }
         // Show leader character
         $character = GetLeaderCharacter($targetPlayerId, $player->selectedFormation);
         if (!empty($player->profileName) && $character) {
@@ -1224,6 +1261,8 @@ function GetSocialPlayer($playerId, $targetPlayerId)
                 'mainCharacterExp' => $character->exp,
                 'selectedFormation' => $player->selectedFormation,
                 'selectedArenaFormation' => $player->selectedArenaFormation,
+                'clanId' => $player->clanId,
+                'clanRole' => $player->clanRole,
                 'isFriend' => $isFriend
             );
         }

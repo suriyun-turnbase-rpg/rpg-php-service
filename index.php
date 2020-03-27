@@ -269,5 +269,9 @@ $f3->route('POST /clan-join-pending-requests', function($f3, $params) {
 $f3->route('POST /clan-exit', function($f3, $params) {
     ClanExit();
 });
+$f3->route('POST /clan-set-role', function($f3, $params) {
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
+    ClanSetRole($postBody['targetPlayerId'], $postBody['clanRole']);
+});
 $f3->run();
 ?>

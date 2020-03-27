@@ -33,17 +33,16 @@ function CreateClan($clanName)
                     break;
             }
             $clan = new Clan();
-            $clan->ownerId = $playerId;
             $clan->name = $clanName;
             $clan->save();
             $player->clanId = $clan->id;
+            $player->clanRole = 2;
             $player->update();
 
             $output['clan'] = array(
                 'id' => $clan->id,
-                'ownerId' => $clan->ownerId,
                 'name' => $clan->name,
-                'owner' => GetSocialPlayer($playerId, $clan->ownerId)
+                'owner' => GetClanOwner($playerId, $clan->id)
             );
             $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
         }
@@ -72,9 +71,8 @@ function FindClan($clanName)
     foreach ($foundClans as $foundClan) {
         $list[] = array(
             'id' => $foundClan->id,
-            'ownerId' => $foundClan->ownerId,
             'name' => $foundClan->name,
-            'owner' => GetSocialPlayer($playerId, $foundClan->ownerId)
+            'owner' => GetClanOwner($playerId, $foundClan->id)
         );
     }
     echo json_encode(array('list' => $list));
@@ -86,7 +84,6 @@ function ClanJoinRequest($joinClanId)
     $player = GetPlayer();
     $playerId = $player->id;
     $clanId = $player->clanId;
-
     if (!empty($clanId)) {
         $output['error'] = 'ERROR_JOINED_CLAN';
     } else {
@@ -106,13 +103,12 @@ function ClanJoinAccept($targetPlayerId)
 {
     $output = array('error' => '');
     $player = GetPlayer();
-    $playerId = $player->id;
     $clanId = $player->clanId;
-
+    $clanRole = $player->clanRole;
     $clanDb = new Clan();
-    $countClan = $clanDb->count(array('ownerId = ?', $playerId));
-    if ($countClan <= 0) {
-        $output['error'] = 'ERROR_NOT_CLAN_OWNER';
+    $countClan = $clanDb->count(array('id = ?', $clanId));
+    if ($countClan <= 0 || $clanRole < 1) {
+        $output['error'] = 'ERROR_NOT_HAVE_PERMISSION';
     } else {
         $clanJoinRequest = new ClanJoinRequest();
         $countRequest = $clanJoinRequest->count(array('playerId = ? AND clanId = ?', $targetPlayerId, $clanId));
@@ -128,6 +124,7 @@ function ClanJoinAccept($targetPlayerId)
             ));
             if (empty($member->clanId)) {
                 $member->clanId = $clanId;
+                $member->clanRole = 0;
                 $member->update();
             }
         }
@@ -139,16 +136,15 @@ function ClanJoinDecline($targetPlayerId)
 {
     $output = array('error' => '');
     $player = GetPlayer();
-    $playerId = $player->id;
     $clanId = $player->clanId;
-
+    $clanRole = $player->clanRole;
     $clanDb = new Clan();
-    $countClan = $clanDb->count(array('ownerId = ?', $playerId));
-    if ($countClan <= 0) {
-        $output['error'] = 'ERROR_NOT_CLAN_OWNER';
+    $countClan = $clanDb->count(array('id = ?', $clanId));
+    if ($countClan <= 0 || $clanRole < 1) {
+        $output['error'] = 'ERROR_NOT_HAVE_PERMISSION';
     } else {
         $clanJoinRequest = new ClanJoinRequest();
-        $countRequest = $clanJoinRequest->count(array('playerId = ? AND clanId = ?', $targetPlayerId));
+        $countRequest = $clanJoinRequest->count(array('playerId = ? AND clanId = ?', $targetPlayerId, $clanId));
         if ($countRequest > 0) {
             // Delete request record
             $clanJoinRequest = new ClanJoinRequest();
@@ -162,24 +158,16 @@ function ClanMemberDelete($targetPlayerId)
 {
     $output = array('error' => '');
     $player = GetPlayer();
-    $playerId = $player->id;
     $clanId = $player->clanId;
-
-    $clanDb = new Clan();
-    $clan = $clanDb->load(array('ownerId = ?', $playerId));
-    if (!$clan) {
-        $output['error'] = 'ERROR_NOT_CLAN_OWNER';
-    } else if ($clan->ownerId == $targetPlayerId) {
-        $output['error'] = 'ERROR_CANNOT_DELETE_CLAN_OWNER';
+    $clanRole = $player->clanRole;
+    $memberDb = new Player();
+    $member = $memberDb->load(array('id = ?', $targetPlayerId));
+    if (!$member || $member->clanId != $clanId || $member->clanRole >= $clanRole) {
+        $output['error'] = 'ERROR_NOT_HAVE_PERMISSION';
     } else {
-        $memberDb = new Player();
-        $member = $memberDb->load(array('id = ?', $targetPlayerId));
-        if ($member->clanId == $clanId) {
-            $member->clanId = 0;
-            $member->update();
-        } else {
-            $output['error'] = 'ERROR_NOT_CLAN_MEMBER';
-        }
+        $member->clanId = 0;
+        $member->clanRole = 0;
+        $member->update();
     }
     echo json_encode($output);
 }
@@ -219,20 +207,20 @@ function ClanOwnerTransfer($targetPlayerId)
 {
     $output = array('error' => '');
     $player = GetPlayer();
-    $playerId = $player->id;
     $clanId = $player->clanId;
+    $clanRole = $player->clanRole;
     $clanDb = new Clan();
-    $countClan = $clanDb->count(array('ownerId = ?', $playerId));
-    if ($countClan <= 0) {
-        $output['error'] = 'ERROR_NOT_CLAN_OWNER';
+    $countClan = $clanDb->count(array('id = ?', $clanId));
+    if ($countClan <= 0 || $clanRole < 2) {
+        $output['error'] = 'ERROR_NOT_HAVE_PERMISSION';
     } else {
         $memberDb = new Player();
-        $member = $memberDb->find(array('id = ?', $targetPlayerId));
-        if ($member && $member->clanId == $clanId)
+        $member = $memberDb->find(array('id = ? AND clanId = ?', $targetPlayerId, $clanId));
+        if ($member)
         {
-            $clanDb = new Clan();
-            $clanDb->ownerId = $member->id;
             $clanDb->update();
+            $member->clanRole = 2;
+            $member->update();
         }
     }
     echo json_encode($output);
@@ -244,16 +232,17 @@ function ClanTerminate()
     $player = GetPlayer();
     $playerId = $player->id;
     $clanId = $player->clanId;
+    $clanRole = $player->clanRole;
     $clanDb = new Clan();
-    $countClan = $clanDb->count(array('ownerId = ?', $playerId));
-    if ($countClan <= 0) {
-        $output['error'] = 'ERROR_NOT_CLAN_OWNER';
+    $countClan = $clanDb->count(array('id = ?', $clanId));
+    if ($countClan <= 0 || $clanRole < 2) {
+        $output['error'] = 'ERROR_NOT_HAVE_PERMISSION';
     } else {
         $clanDb = new Clan();
-        $clanDb->erase(array('ownerId = ?', $playerId));
+        $clanDb->erase(array('id = ?', $clanId));
         $db = \Base::instance()->get('DB');
         $prefix = \Base::instance()->get('db_prefix');
-        $db->exec('UPDATE ' . $prefix . 'player SET clanId=0 WHERE clanId="' . $clanId . '"');
+        $db->exec('UPDATE ' . $prefix . 'player SET clanId=0 AND clanRole=0 WHERE clanId="' . $clanId . '"');
     }
     echo json_encode($output);
 }
@@ -264,15 +253,13 @@ function GetClan()
     $player = GetPlayer();
     $playerId = $player->id;
     $clanId = $player->clanId;
-
     $clanDb = new Clan();
     $clan = $clanDb->load(array('id = ?', $clanId));
     if ($clan) {
         $output['clan'] = array(
             'id' => $clan->id,
-            'ownerId' => $clan->ownerId,
             'name' => $clan->name,
-            'owner' => GetSocialPlayer($playerId, $clan->ownerId)
+            'owner' => GetClanOwner($playerId, $clanId)
         );
     }
     echo json_encode($output);
@@ -314,9 +301,8 @@ function ClanJoinPendingRequests()
             if ($foundClan) {
                 $list[] = array(
                     'id' => $foundClan->id,
-                    'ownerId' => $foundClan->ownerId,
                     'name' => $foundClan->name,
-                    'owner' => GetSocialPlayer($playerId, $foundClan->ownerId)
+                    'owner' => GetClanOwner($playerId, $foundClan->id)
                 );
             }
         }
@@ -328,14 +314,39 @@ function ClanExit()
 {
     $output = array('error' => '');
     $player = GetPlayer();
-    $playerId = $player->id;
+    $clanId = $player->clanId;
+    $clanRole = $player->clanRole;
     $clanDb = new Clan();
-    $countClan = $clanDb->count(array('ownerId = ?', $playerId));
-    if ($countClan > 0) {
+    $countClan = $clanDb->count(array('id = ?', $clanId));
+    if ($countClan > 0 && $clanRole == 2) {
         $output['error'] = 'ERROR_CLAN_OWNER_CANNOT_EXIT';
     } else {
         $player->clanId = 0;
+        $player->clanRole = 0;
         $player->update();
+    }
+    echo json_encode($output);
+}
+
+function ClanSetRole($targetPlayerId, $targetClanRole)
+{
+    $output = array('error' => '');
+    $player = GetPlayer();
+    $clanId = $player->clanId;
+    $clanRole = $player->clanRole;
+    $clanDb = new Clan();
+    $countClan = $clanDb->count(array('id = ?', $clanId));
+    if ($countClan <= 0 || $clanRole < 2 || $targetClanRole >= 2) {
+        $output['error'] = 'ERROR_NOT_HAVE_PERMISSION';
+    } else {
+        $memberDb = new Player();
+        $member = $memberDb->find(array('id = ? AND clanId = ?', $targetPlayerId, $clanId));
+        if ($member)
+        {
+            $clanDb->update();
+            $member->clanRole = $targetClanRole;
+            $member->update();
+        }
     }
     echo json_encode($output);
 }

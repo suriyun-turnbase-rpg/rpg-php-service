@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 26, 2020 at 09:26 PM
+-- Generation Time: Mar 27, 2020 at 12:04 PM
 -- Server version: 10.1.40-MariaDB
 -- PHP Version: 7.3.5
 
@@ -24,7 +24,6 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `<<__prefix__>>clan` (
   `id` bigint(20) NOT NULL,
-  `ownerId` bigint(20) NOT NULL,
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `description` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -64,6 +63,7 @@ CREATE TABLE `<<__prefix__>>player` (
   `highestArenaRank` int(11) NOT NULL DEFAULT '0',
   `highestArenaRankCurrentSeason` int(11) NOT NULL DEFAULT '0',
   `clanId` bigint(20) NOT NULL,
+  `clanRole` tinyint(4) NOT NULL,
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
