@@ -63,8 +63,8 @@ function FindClan($clanName)
     else
     {
         $foundClans = $clanDb->find(array(
-            'name = ?',
-            $clanName.'%'
+            'name LIKE ?',
+            '%'.$clanName.'%'
         ), array('limit' => 25));
     }
     // Add list

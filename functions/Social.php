@@ -130,15 +130,12 @@ function FindPlayer($profileName)
     if (!empty($profileName)) {
         $playerDb = new Player();
         $foundPlayers = $playerDb->find(array(
-            'profileName = ?',
-            $profileName.'%'
+            'profileName LIKE ?',
+            '%'.$profileName.'%'
         ), array('limit' => 25));
         // Add list
         foreach ($foundPlayers as $foundPlayer) {
-            $socialPlayer = GetSocialPlayer($playerId, $foundPlayer->id);
-            if ($socialPlayer) {
-                $list[] = $socialPlayer;
-            }
+            $list[] = GetSocialPlayer($playerId, $foundPlayer->id);
         }
     }
     echo json_encode(array('list' => $list));
