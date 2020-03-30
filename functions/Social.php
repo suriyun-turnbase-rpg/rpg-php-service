@@ -135,6 +135,10 @@ function FindPlayer($profileName)
         ), array('limit' => 25));
         // Add list
         foreach ($foundPlayers as $foundPlayer) {
+            if ($playerId == $foundPlayer->id) {
+                // Don't add finder to the list
+                continue;
+            }
             $list[] = GetSocialPlayer($playerId, $foundPlayer->id);
         }
     }
