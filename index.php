@@ -44,13 +44,15 @@ require_once('functions/Clan.php');
 
 // Services
 $f3->route('GET /', function() {
-    echo ';)';
+    echo ";)";
 });
 
 // Other services
-foreach (glob("extensions/*.php") as $filename)
-{
-    include $filename;
+$it = new RecursiveDirectoryIterator(".\\extensions");
+foreach(new RecursiveIteratorIterator($it) as $file) {
+    if (in_array(strtolower(array_pop(explode('.', $file))), array('php'))) {
+        include $file;
+    }
 }
 
 // Auth services
