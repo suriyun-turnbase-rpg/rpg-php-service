@@ -47,6 +47,12 @@ $f3->route('GET /', function() {
     echo ';)';
 });
 
+// Other services
+foreach (glob("extensions/*.php") as $filename)
+{
+    include $filename;
+}
+
 // Auth services
 $f3->route('POST /login', function($f3, $params) {
     $postBody = json_decode(urldecode($f3->get('BODY')), true);
