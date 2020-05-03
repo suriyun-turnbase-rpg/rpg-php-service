@@ -85,6 +85,12 @@ try {
 		if (importSqlFile($pdo, './sqls/'.$update_file.'.sql', $f3->db_prefix)) {
 			echo 'Update Done ;)';
 		}
+	} else if (!empty($_GET['extension']) && !empty($_GET['version'])) {
+		$extension = $_GET['extension'];
+		$version = $_GET['version'];
+		if (importSqlFile($pdo, './extensions/'.$extension.'/sqls/'.$version.'.sql', $f3->db_prefix)) {
+			echo 'Imported Extension: '.$extension.' Version: '.$version.' ;)';
+		}
 	} else {
 		if (importSqlFile($pdo, './sqls/mysql_main.sql', $f3->db_prefix)) {
 			echo 'Done ;)';
