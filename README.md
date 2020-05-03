@@ -15,6 +15,10 @@ PHP web-service for RPG project
 ## How to update
 * Browse `sql-importer.php?update={{version}}`, for example `sql-importer.php?update=1.10`
 
+## Extension system
+You can extract an extension to `./extensions` folder
+If extension is required extra database table, you can browse `sql-importer.php?extension={{extension-name}}&version={{version}}` to import.
+
 ## Client-side implemented project
 * [rpg-web-service-client](https://github.com/insthync/rpg-web-service-client) - Client for project [Turnbase RPG Template](https://assetstore.unity.com/packages/templates/systems/turnbase-rpg-template-107578) which selling at Unity Asset Store
 
