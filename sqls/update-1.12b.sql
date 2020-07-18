@@ -1,0 +1,2 @@
+ALTER TABLE `<<__prefix__>>player` CHANGE `clanId` `clanId` BIGINT NOT NULL DEFAULT '0', CHANGE `clanRole` `clanRole` TINYINT NOT NULL DEFAULT '0';
+ALTER TABLE `<<__prefix__>>clan_join_request` CHANGE `playerId` `playerId` BIGINT NOT NULL DEFAULT '0', CHANGE `clanId` `clanId` BIGINT NOT NULL DEFAULT '0';

@@ -1,17 +1,3 @@
--- phpMyAdmin SQL Dump
--- version 4.8.5
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Generation Time: Mar 27, 2020 at 12:04 PM
--- Server version: 10.1.40-MariaDB
--- PHP Version: 7.3.5
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
-SET time_zone = "+00:00";
-
 --
 -- Database: `tbrpg`
 --
@@ -38,8 +24,8 @@ CREATE TABLE `<<__prefix__>>clan` (
 
 CREATE TABLE `<<__prefix__>>clan_join_request` (
   `id` bigint(20) NOT NULL,
-  `playerId` bigint(20) NOT NULL,
-  `clanId` bigint(20) NOT NULL,
+  `playerId` bigint(20) NOT NULL DEFAULT '0',
+  `clanId` bigint(20) NOT NULL DEFAULT '0',
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -62,8 +48,8 @@ CREATE TABLE `<<__prefix__>>player` (
   `arenaScore` int(11) NOT NULL DEFAULT '0',
   `highestArenaRank` int(11) NOT NULL DEFAULT '0',
   `highestArenaRankCurrentSeason` int(11) NOT NULL DEFAULT '0',
-  `clanId` bigint(20) NOT NULL,
-  `clanRole` tinyint(4) NOT NULL,
+  `clanId` bigint(20) NOT NULL DEFAULT '0',
+  `clanRole` tinyint(4) NOT NULL DEFAULT '0',
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
