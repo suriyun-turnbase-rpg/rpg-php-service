@@ -48,7 +48,7 @@ $f3->route('GET /', function() {
 });
 
 // Other services
-$it = new RecursiveDirectoryIterator(".\\extensions");
+$it = new RecursiveDirectoryIterator("./extensions");
 foreach(new RecursiveIteratorIterator($it) as $file) {
     if (in_array(strtolower(array_pop(explode('.', $file))), array('php'))) {
         include $file;
