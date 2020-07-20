@@ -9,6 +9,8 @@ function CreateClan($clanName)
 
     if (!empty($clanId)) {
         $output['error'] = 'ERROR_JOINED_CLAN';
+    } else if (empty($clanName)) {
+        $output['error'] = 'ERROR_EMPTY_CLAN_NAME';
     } else {
         $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
         $hardCurrency = GetCurrency($playerId, $gameData['currencies']['HARD_CURRENCY']['id']);
