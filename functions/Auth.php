@@ -109,8 +109,7 @@ function Register($username, $password)
         $output['error'] = 'ERROR_EXISTED_USERNAME';
     } else {
         $bcrypt = \Bcrypt::instance();
-        $salt = \Base::instance()->get('password_salt');
-        $player = InsertNewPlayer(1, $username, $bcrypt->hash($password, $salt));
+        $player = InsertNewPlayer(1, $username, $bcrypt->hash($password));
         $output['player'] = CursorToArray($player);
     }
     echo json_encode($output);
