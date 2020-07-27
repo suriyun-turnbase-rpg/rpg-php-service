@@ -20,6 +20,12 @@ You can extract an extension to `./extensions` folder
 If extension is required extra database table, you can browse `sql-importer.php?extension={{extension-name}}&version={{version}}` to import.
 
 ## Client-side implemented project
-* [rpg-web-service-client](https://github.com/insthync/rpg-web-service-client) - Client for project [Turnbase RPG Template](https://assetstore.unity.com/packages/templates/systems/turnbase-rpg-template-107578) which selling at Unity Asset Store
+* [rpg-web-service-client](https://github.com/insthync/rpg-web-service-client) - Client for project [Turnbase RPG Template](https://assetstore.unity.com/packages/templates/systems/turnbase-rpg-template-107578) which selling at Unity Asset Store.
+
+### How to export game data from Unity project
+
+![](screenshots/unity-export-game-data-01.png)
+
+![](screenshots/unity-export-game-data-02.png)
 
 **I might make implement for UNREAL blueprint project later :)**
