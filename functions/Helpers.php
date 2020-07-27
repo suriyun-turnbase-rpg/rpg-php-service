@@ -1,6 +1,7 @@
 <?php
 function EncodeJwt($payload)
 {
+    // JWT will be used as access token, no expiration date, regenerate everytime when player login.
     return \Firebase\JWT\JWT::encode($payload, \Base::instance()->get('jwt_secret'));
 }
 
