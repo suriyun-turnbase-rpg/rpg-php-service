@@ -338,7 +338,7 @@ function CraftItem($itemCraftId, $materials)
     $playerItemDb = new PlayerItem();
     $itemCraft = $gameData['itemCrafts'][$itemCraftId];
     if (!$itemCraft) {
-        $output['error'] = 'ERROR_INVALID_IN_GAME_PACKAGE_DATA';
+        $output['error'] = 'ERROR_INVALID_ITEM_CRAFT_FORMULA_DATA';
     } else {
         $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
         $hardCurrency = GetCurrency($playerId, $gameData['currencies']['HARD_CURRENCY']['id']);
@@ -357,7 +357,7 @@ function CraftItem($itemCraftId, $materials)
         } else if ($requirementType == ECraftRequirementType::HardCurrency && $price > $hardCurrency->amount) {
             $output['error'] = 'ERROR_NOT_ENOUGH_HARD_CURRENCY';
         } else if (!$enoughMaterialsResult['success']) {
-            $output['error'] = 'NOT_ENOUGH_ITEMS';
+            $output['error'] = 'ERROR_NOT_ENOUGH_ITEMS';
         } else {
             // Query items
             $updateItems = $enoughMaterialsResult['updateItems'];
