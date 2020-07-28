@@ -1,4 +1,5 @@
 <?php
+error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Headers: Authorization, Origin, Cache-Control, X-Requested-With, Content-Type, Access-Control-Allow-Origin');
 header('Access-Control-Allow-Methods: *');
