@@ -48,7 +48,7 @@ function FinishStage($session, $battleResult, $deadCharacters)
     $player = GetPlayer();
     $playerId = $player->id;
     $playerBattleDb = new PlayerBattle();
-    $playerBattle = $playerBattleDb->load(array(
+    $playerBattle = $playerBattleDb->findone(array(
         'playerId = ? AND session = ?',
         $playerId,
         $session
@@ -111,7 +111,7 @@ function FinishStage($session, $battleResult, $deadCharacters)
                     for ($i = 0; $i < $countCharacterIds; ++$i)
                     {
                         $characterId = $characterIds[$i];
-                        $characterEntry = $playerItemDb->load(array(
+                        $characterEntry = $playerItemDb->findone(array(
                             'id = ?',
                             $characterId
                         ));

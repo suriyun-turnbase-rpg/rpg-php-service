@@ -120,7 +120,7 @@ function ClanJoinAccept($targetPlayerId)
             $clanJoinRequest->erase(array('playerId = ?', $targetPlayerId));
             // Update clan ID
             $memberDb = new Player();
-            $member = $memberDb->load(array(
+            $member = $memberDb->findone(array(
                 'id = ?',
                 $targetPlayerId,
             ));
@@ -163,7 +163,7 @@ function ClanMemberDelete($targetPlayerId)
     $clanId = $player->clanId;
     $clanRole = $player->clanRole;
     $memberDb = new Player();
-    $member = $memberDb->load(array('id = ?', $targetPlayerId));
+    $member = $memberDb->findone(array('id = ?', $targetPlayerId));
     if (!$member || $member->clanId != $clanId || $member->clanRole >= $clanRole) {
         $output['error'] = 'ERROR_NOT_HAVE_PERMISSION';
     } else {
@@ -217,7 +217,7 @@ function ClanOwnerTransfer($targetPlayerId)
         $output['error'] = 'ERROR_NOT_HAVE_PERMISSION';
     } else {
         $memberDb = new Player();
-        $member = $memberDb->load(array('id = ? AND clanId = ?', $targetPlayerId, $clanId));
+        $member = $memberDb->findone(array('id = ? AND clanId = ?', $targetPlayerId, $clanId));
         if ($member)
         {
             $player->clanRole = 1;
@@ -257,7 +257,7 @@ function GetClan()
     $playerId = $player->id;
     $clanId = $player->clanId;
     $clanDb = new Clan();
-    $clan = $clanDb->load(array('id = ?', $clanId));
+    $clan = $clanDb->findone(array('id = ?', $clanId));
     if ($clan) {
         $output['clan'] = array(
             'id' => $clan->id,
@@ -300,7 +300,7 @@ function ClanJoinPendingRequests()
         // Add list
         foreach ($foundRequests as $foundRequest) {
             $clanDb = new Clan();
-            $foundClan = $clanDb->load(array('id = ?', $foundRequest->clanId));
+            $foundClan = $clanDb->findone(array('id = ?', $foundRequest->clanId));
             if ($foundClan) {
                 $list[] = array(
                     'id' => $foundClan->id,
@@ -343,7 +343,7 @@ function ClanSetRole($targetPlayerId, $targetClanRole)
         $output['error'] = 'ERROR_NOT_HAVE_PERMISSION';
     } else {
         $memberDb = new Player();
-        $member = $memberDb->load(array('id = ? AND clanId = ?', $targetPlayerId, $clanId));
+        $member = $memberDb->findone(array('id = ? AND clanId = ?', $targetPlayerId, $clanId));
         if ($member)
         {
             $member->clanRole = $targetClanRole;

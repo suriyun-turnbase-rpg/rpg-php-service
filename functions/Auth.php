@@ -7,7 +7,7 @@ function Login($username, $password)
         $output['error'] = 'ERROR_EMPTY_USERNAME_OR_PASSWORD';
     } else {
         $playerAuthDb = new PlayerAuth();
-        $playerAuth = $playerAuthDb->load(array(
+        $playerAuth = $playerAuthDb->findone(array(
             'username = ? AND type = 1',
             $username
         ));
@@ -43,7 +43,7 @@ function GuestLogin($deviceId)
         $output['error'] = 'ERROR_EMPTY_USERNAME_OR_PASSWORD';
     }  else if (IsPlayerWithUsernameFound(0, $deviceId)) {
         $playerAuthDb = new PlayerAuth();
-        $playerAuth = $playerAuthDb->load(array(
+        $playerAuth = $playerAuthDb->findone(array(
             'username = ? AND type = 0',
             $deviceId
         ));

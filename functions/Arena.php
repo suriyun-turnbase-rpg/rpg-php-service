@@ -24,7 +24,7 @@ function StartDuel($targetPlayerId)
         $newData->save();
         
         $opponent = new Player();
-        $opponent = $opponent->load(array(
+        $opponent = $opponent->findone(array(
             'id = ?',
             $targetPlayerId,
         ));
@@ -61,7 +61,7 @@ function FinishDuel($session, $battleResult, $deadCharacters)
     $player = GetPlayer();
     $playerId = $player->id;
     $playerBattleDb = new PlayerBattle();
-    $playerBattle = $playerBattleDb->load(array(
+    $playerBattle = $playerBattleDb->findone(array(
         'playerId = ? AND session = ?',
         $playerId,
         $session
