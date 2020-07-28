@@ -481,7 +481,7 @@ function DecreasePlayerStamina($playerId, $staminaType, $decreaseAmount)
     }
 
     $playerDb = new Player();
-    $player = $playerDb->load(array(
+    $player = $playerDb->findone(array(
         'id = ?',
         $playerId
     ));
@@ -512,7 +512,7 @@ function UpdatePlayerStamina($playerId, $staminaType)
     }
     
     $playerDb = new Player();
-    $player = $playerDb->load(array(
+    $player = $playerDb->findone(array(
         'id = ?',
         $playerId
     ));
@@ -936,7 +936,7 @@ function HelperSetFormation($playerId, $characterId, $formationName, $position)
     if (!empty($characterId))
     {
         $oldFormation = new PlayerFormation();
-        $oldFormation = $oldFormation->load(array(
+        $oldFormation = $oldFormation->findone(array(
             'playerId = ? AND itemId = ? AND dataId = ?',
             $playerId,
             $characterId,
@@ -951,7 +951,7 @@ function HelperSetFormation($playerId, $characterId, $formationName, $position)
     }
 
     $formation = new PlayerFormation();
-    $formation = $formation->load(array(
+    $formation = $formation->findone(array(
         'playerId = ? AND dataId = ? AND position = ?',
         $playerId,
         $formationName,
@@ -978,7 +978,7 @@ function HelperSetFormation($playerId, $characterId, $formationName, $position)
 function HelperUnlockItem($playerId, $dataId)
 {
     $playerUnlockItemDb = new PlayerUnlockItem();
-    $playerUnlockItem = $playerUnlockItemDb->load(array(
+    $playerUnlockItem = $playerUnlockItemDb->findone(array(
         'playerId = ? AND dataId = ?',
         $playerId,
         $dataId
@@ -1003,7 +1003,7 @@ function HelperClearStage($createItems, $updateItems, $output, $player, $stage, 
     $gameData = \Base::instance()->get('GameData');
     $playerId = $player->id;
     $playerClearStageDb = new PlayerClearStage();
-    $playerClearStage = $playerClearStageDb->load(array(
+    $playerClearStage = $playerClearStageDb->findone(array(
         'playerId = ? AND dataId = ?',
         $playerId,
         $stage['id']
@@ -1156,7 +1156,7 @@ function GetLeaderCharacter($playerId, $playerSelectedFormation)
     foreach ($formations as $formation) {
         if ($formation->dataId == $playerSelectedFormation && !empty($formation->itemId))
         {
-            $currentCharacterData = $playerItemDb->load(array(
+            $currentCharacterData = $playerItemDb->findone(array(
                 'id = ?',
                 $formation->itemId
             ));
@@ -1203,7 +1203,7 @@ function GetArenaRank($arenaScore)
 function GetClanOwner($playerId, $clanId)
 {
     $playerDb = new Player();
-    $player = $playerDb->load(array(
+    $player = $playerDb->findone(array(
         'clanId = ? AND clanRole = 2',
         $clanId
     ));
@@ -1237,7 +1237,7 @@ function GetClanOwner($playerId, $clanId)
 function GetSocialPlayer($playerId, $targetPlayerId)
 {
     $playerDb = new Player();
-    $player = $playerDb->load(array(
+    $player = $playerDb->findone(array(
         'id = ?',
         $targetPlayerId
     ));
@@ -1285,5 +1285,68 @@ function CreateEmptyItem($id, $playerId, $dataId, $amount)
     $newRewardEntry->createdAt = 0;
     $newRewardEntry->updatedAt = 0;
     return $newRewardEntry;
+}
+
+function HaveEnoughMaterials($playerId, $materials, $requiredMaterials)
+{
+    $enoughMaterials = true;
+    $playerItemDb = new PlayerItem();
+    $updateItems = array();
+    $deleteItemIds = array();
+    $materialItems = array();
+    foreach ($materials as $materialItemId => $amount) {
+        $foundItem = $playerItemDb->load(array(
+            'playerId = ? AND id = ?',
+            $playerId,
+            $materialItemId
+        ));
+        
+        if (!$foundItem) {
+            continue;
+        }
+
+        if (CanItemBeMaterial($foundItem)) {
+            $materialItems[] = $foundItem;
+        }
+    }
+    $countRequiredMaterials = count($requiredMaterials);
+    for ($i = 0; $i < $countRequiredMaterials; ++$i) {
+        $requiredMaterial = $requiredMaterials[$i];
+        $dataId = $requiredMaterial['id'];
+        $amount = $requiredMaterial['amount'];
+        $countMaterialItems = count($materialItems);
+        for ($j = 0; $j < $countMaterialItems; ++$j) {
+            $materialItem = $materialItems[$j];
+            if ($materialItem->dataId != $dataId) {
+                continue;
+            }
+            $usingAmount = $materials[$materialItem->id];
+            if ($usingAmount > $materialItem->amount) {
+                $usingAmount = $materialItem->amount;
+            }
+            if ($usingAmount > $amount) {
+                $usingAmount = $amount;
+            }
+            $materialItem->amount -= $usingAmount;
+            $amount -= $usingAmount;
+            if ($materialItem->amount > 0) {
+                $updateItems[] = $materialItem;
+            } else {
+                $deleteItemIds[] = $materialItem->id;
+            }
+            if ($amount == 0) {
+                break;
+            }
+        }
+        if ($amount > 0) {
+            $enoughMaterials = false;
+            break;
+        }
+    }
+    return array(
+        "success" => $enoughMaterials,
+        "updateItems" => $updateItems,
+        "deleteItemIds" => $deleteItemIds
+    );
 }
 ?>

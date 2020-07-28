@@ -7,7 +7,7 @@ function LevelUpItem($itemId, $materials)
     $playerId = $player->id;
 
     $playerItemDb = new PlayerItem();
-    $item = $playerItemDb->load(array(
+    $item = $playerItemDb->findone(array(
         'playerId = ? AND id = ?',
         $playerId,
         $itemId
@@ -70,7 +70,7 @@ function LevelUpItem($itemId, $materials)
             $countDeleteItemIds = count($deleteItemIds);
             for ($i = 0; $i < $countDeleteItemIds; ++$i) {
                 $deleteItemId = $deleteItemIds[$i];
-                $deletingItem = $playerItemDb->load(array(
+                $deletingItem = $playerItemDb->findone(array(
                     'id = ?',
                     $deleteItemId
                 ));
@@ -119,69 +119,15 @@ function EvolveItem($itemId, $materials)
     } else {
         $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
         $requireCurrency = CalculateItemEvolvePrice($item);
-        $enoughMaterials = true;
-        $updateItems = array();
-        $deleteItemIds = array();
         $updateCurrencies = array();
-        $materialItems = array();
-        foreach ($materials as $materialItemId => $amount) {
-            $foundItem = $playerItemDb->load(array(
-                'playerId = ? AND id = ?',
-                $playerId,
-                $materialItemId
-            ));
-            
-            if (!$foundItem) {
-                continue;
-            }
-    
-            if (CanItemBeMaterial($foundItem)) {
-                $materialItems[] = $foundItem;
-            }
-        }
-        $requiredMaterials = GetItemEvolveMaterials($item);   // This is Key-Value Pair for `playerItem.DataId`, `Required Amount`
-        $countRequiredMaterials = count($requiredMaterials);
-        for ($i = 0; $i < $countRequiredMaterials; ++$i) {
-            $requiredMaterial = $requiredMaterials[$i];
-            $dataId = $requiredMaterial['id'];
-            $amount = $requiredMaterial['amount'];
-            $countMaterialItems = count($materialItems);
-            for ($j = 0; $j < $countMaterialItems; ++$j) {
-                $materialItem = $materialItems[$j];
-                if ($materialItem->dataId != $dataId) {
-                    continue;
-                }
-                $usingAmount = $materials[$materialItem->id];
-                if ($usingAmount > $materialItem->amount) {
-                    $usingAmount = $materialItem->amount;
-                }
-                if ($usingAmount > $amount) {
-                    $usingAmount = $amount;
-                }
-                $materialItem->amount -= $usingAmount;
-                $amount -= $usingAmount;
-                if ($materialItem->amount > 0) {
-                    $updateItems[] = $materialItem;
-                } else {
-                    $deleteItemIds[] = $materialItem->id;
-                }
-                if ($amount == 0) {
-                    break;
-                }
-            }
-            if ($amount > 0) {
-                $enoughMaterials = false;
-                break;
-            }
-        }
-        
+        $enoughMaterialsResult = HaveEnoughMaterials($playerId, $materials, GetItemEvolveMaterials($item));
         if ($requireCurrency > $softCurrency->amount) {
             $output['error'] = 'ERROR_NOT_ENOUGH_SOFT_CURRENCY';
-        } else if (!$enoughMaterials) {
+        } else if (!$enoughMaterialsResult['success']) {
             $output['error'] = 'ERROR_NOT_ENOUGH_ITEMS';
-        }
-        else
-        {
+        } else {
+            $updateItems = $enoughMaterialsResult['updateItems'];
+            $deleteItemIds = $enoughMaterialsResult['deleteItemIds'];
             $softCurrency->amount -= $requireCurrency;
             $item = GetItemEvolve($item);
             $updateItems[] = $item;
@@ -193,7 +139,7 @@ function EvolveItem($itemId, $materials)
             $countDeleteItemIds = count($deleteItemIds);
             for ($i = 0; $i < $countDeleteItemIds; ++$i) {
                 $deleteItemId = $deleteItemIds[$i];
-                $deletingItem = $playerItemDb->load(array(
+                $deletingItem = $playerItemDb->findone(array(
                     'id = ?',
                     $deleteItemId
                 ));
@@ -278,7 +224,7 @@ function SellItems($items)
     $countDeleteItemIds = count($deleteItemIds);
     for ($i = 0; $i < $countDeleteItemIds; ++$i) {
         $deleteItemId = $deleteItemIds[$i];
-        $deletingItem = $playerItemDb->load(array(
+        $deletingItem = $playerItemDb->findone(array(
             'id = ?',
             $deleteItemId
         ));
@@ -303,13 +249,13 @@ function EquipItem($characterId, $equipmentId, $equipPosition)
 
     $playerItemDb = new PlayerItem();
 
-    $character = $playerItemDb->load(array(
+    $character = $playerItemDb->findone(array(
         'playerId = ? AND id = ?',
         $playerId,
         $characterId
     ));
 
-    $equipment = $playerItemDb->load(array(
+    $equipment = $playerItemDb->findone(array(
         'playerId = ? AND id = ?',
         $playerId,
         $equipmentId
@@ -363,7 +309,7 @@ function UnEquipItem($equipmentId)
     
     $playerItemDb = new PlayerItem();
 
-    $unEquipItem = $playerItemDb->load(array(
+    $unEquipItem = $playerItemDb->findone(array(
         'playerId = ? AND id = ?',
         $playerId,
         $equipmentId
@@ -378,6 +324,107 @@ function UnEquipItem($equipmentId)
         $unEquipItem->update();
         $updateItems[] = $unEquipItem;
         $output['updateItems'] = ItemCursorsToArray($updateItems);
+    }
+    echo json_encode($output);
+}
+
+function CraftItem($itemCraftId, $materials)
+{
+    $gameData = \Base::instance()->get('GameData');
+    $output = array('error' => '');
+    $player = GetPlayer();
+    $playerId = $player->id;
+
+    $playerItemDb = new PlayerItem();
+    $itemCraft = $gameData['itemCrafts'][$itemCraftId];
+    if (!$itemCraft) {
+        $output['error'] = 'ERROR_INVALID_IN_GAME_PACKAGE_DATA';
+    } else {
+        $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
+        $hardCurrency = GetCurrency($playerId, $gameData['currencies']['HARD_CURRENCY']['id']);
+
+        $rewardItems = array();
+        $createItems = array();
+        $updateItems = array();
+        $deleteItemIds = array();
+        $updateCurrencies = array();
+        $requirementType = $itemCraft['requirementType'];
+        $resultItem = $itemCraft['resultItem'];
+        $price = $itemCraft['price'];
+        $enoughMaterialsResult = HaveEnoughMaterials($playerId, $materials, $itemCraft['materials']);
+        if ($requirementType == ECraftRequirementType::SoftCurrency && $price > $softCurrency->amount) {
+            $output['error'] = 'ERROR_NOT_ENOUGH_SOFT_CURRENCY';
+        } else if ($requirementType == ECraftRequirementType::HardCurrency && $price > $hardCurrency->amount) {
+            $output['error'] = 'ERROR_NOT_ENOUGH_HARD_CURRENCY';
+        } else if (!$enoughMaterialsResult['success']) {
+            $output['error'] = 'NOT_ENOUGH_ITEMS';
+        } else {
+            // Query items
+            $updateItems = $enoughMaterialsResult['updateItems'];
+            $deleteItemIds = $enoughMaterialsResult['deleteItemIds'];
+            $countUpdateItems = count($updateItems);
+            for ($i = 0; $i < $countUpdateItems; ++$i) {
+                $updateItem = $updateItems[$i];
+                $updateItem->update();
+            }
+            $countDeleteItemIds = count($deleteItemIds);
+            for ($i = 0; $i < $countDeleteItemIds; ++$i) {
+                $deleteItemId = $deleteItemIds[$i];
+                $deletingItem = $playerItemDb->findone(array(
+                    'id = ?',
+                    $deleteItemId
+                ));
+                if ($deletingItem) {
+                    $deletingItem->erase();
+                }
+            }
+            // Update currencies
+            switch ($requirementType)
+            {
+                case ECraftRequirementType::SoftCurrency:
+                    $softCurrency->amount -= $price;
+                    break;
+                case ECraftRequirementType::HardCurrency:
+                    $hardCurrency->amount -= $price;
+                    break;
+            }
+            // Update soft currency
+            $softCurrency->update();
+            $updateCurrencies[] = $softCurrency;
+            // Update hard currency
+            $hardCurrency->update();
+            $updateCurrencies[] = $hardCurrency;
+            // Add items
+            $addItemsResult = AddItems($playerId, $resultItem['id'], $resultItem['amount']);
+            if ($addItemsResult['success'])
+            {
+                $rewardItems[] = CreateEmptyItem("Result", $playerId, $resultItem['id'], $resultItem['amount']);
+
+                $resultCreateItems = $addItemsResult['createItems'];
+                $resultUpdateItems = $addItemsResult['updateItems'];
+                $countCreateItems = count($resultCreateItems);
+                $countUpdateItems = count($resultUpdateItems);
+                for ($j = 0; $j < $countCreateItems; ++$j)
+                {
+                    $createItem = $resultCreateItems[$j];
+                    $createItem->save();
+                    HelperUnlockItem($playerId, $createItem->dataId);
+                    $createItems[] = $createItem;
+                }
+                for ($j = 0; $j < $countUpdateItems; ++$j)
+                {
+                    $updateItem = $resultUpdateItems[$j];
+                    $updateItem->update();
+                    $updateItems[] = $updateItem;
+                }
+            }
+
+            $output['rewardItems'] = ItemCursorsToArray($rewardItems);
+            $output['createItems'] = ItemCursorsToArray($createItems);
+            $output['updateItems'] =ItemCursorsToArray($updateItems);
+            $output['deleteItemIds'] = $deleteItemIds;
+            $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
+        }
     }
     echo json_encode($output);
 }
@@ -639,7 +686,7 @@ function EarnAchievementReward($achievementId)
     } else {
         
         $playerAchievementDb = new PlayerAchievement();
-        $playerAchievement = $playerAchievementDb->load(array(
+        $playerAchievement = $playerAchievementDb->findone(array(
             'playerId = ? AND dataId = ?',
             $playerId,
             $achievementId,
