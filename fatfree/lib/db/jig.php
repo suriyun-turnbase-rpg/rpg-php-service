@@ -2,7 +2,7 @@
 
 /*
 
-	Copyright (c) 2009-2017 F3::Factory/Bong Cosca, All rights reserved.
+	Copyright (c) 2009-2019 F3::Factory/Bong Cosca, All rights reserved.
 
 	This file is part of the Fat-Free Framework (http://fatfreeframework.com).
 
@@ -90,7 +90,7 @@ class Jig {
 				$out=$fw->serialize($data);
 				break;
 		}
-		return $fw->write($this->dir.'/'.$file,$out);
+		return $fw->write($this->dir.$file,$out);
 	}
 
 	/**

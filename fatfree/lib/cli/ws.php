@@ -2,7 +2,7 @@
 
 /*
 
-	Copyright (c) 2009-2017 F3::Factory/Bong Cosca, All rights reserved.
+	Copyright (c) 2009-2019 F3::Factory/Bong Cosca, All rights reserved.
 
 	This file is part of the Fat-Free Framework (http://fatfreeframework.com).
 
@@ -70,7 +70,7 @@ class WS {
 		$verb=NULL;
 		$uri=NULL;
 		foreach (explode($EOL,trim($buf)) as $line)
-			if (preg_match('/^(\w+)\s(.+)\sHTTP\/1\.\d$/',
+			if (preg_match('/^(\w+)\s(.+)\sHTTP\/[\d.]{1,3}$/',
 				trim($line),$match)) {
 				$verb=$match[1];
 				$uri=$match[2];
@@ -138,11 +138,13 @@ class WS {
 	*	Read from stream socket
 	*	@return string|FALSE
 	*	@param $socket resource
+	*	@param $len int
 	**/
-	function read($socket) {
-		if (is_string($buf=@fread($socket,WS::Packet)) &&
-			strlen($buf) &&
-			strlen($buf)<WS::Packet)
+	function read($socket,$len=0) {
+		if (!$len)
+			$len=WS::Packet;
+		if (is_string($buf=@fread($socket,$len)) &&
+			strlen($buf) && strlen($buf)<$len)
 			return $buf;
 		if (isset($this->events['error']) &&
 			is_callable($func=$this->events['error']))
@@ -179,6 +181,10 @@ class WS {
 	function agents($uri=NULL) {
 		return array_filter(
 			$this->agents,
+			/**
+			 * @var $val Agent
+			 * @return bool
+			 */
 			function($val) use($uri) {
 				return $uri?($val->uri()==$uri):TRUE;
 			}
@@ -206,19 +212,15 @@ class WS {
 
 	/**
 	*	Terminate server
-	*	@return NULL
-	*	@param $signal int
 	**/
-	function kill($signal) {
+	function kill() {
 		die;
 	}
 
 	/**
 	*	Execute the server process
-	*	@return object
 	**/
 	function run() {
-		$fw=\Base::instance();
 		// Assign signal handlers
 		declare(ticks=1);
 		pcntl_signal(SIGINT,[$this,'kill']);
@@ -303,8 +305,6 @@ class WS {
 	}
 
 	/**
-	*	Instantiate object
-	*	@return object
 	*	@param $addr string
 	*	@param $ctx resource
 	*	@param $wait int
@@ -328,12 +328,11 @@ class Agent {
 		$flag,
 		$verb,
 		$uri,
-		$headers,
-		$events;
+		$headers;
 
 	/**
 	*	Return server instance
-	*	@return object
+	*	@return WS
 	**/
 	function server() {
 		return $this->server;
@@ -349,7 +348,7 @@ class Agent {
 
 	/**
 	*	Return socket
-	*	@return object
+	*	@return resource
 	**/
 	function socket() {
 		return $this->socket;
@@ -373,7 +372,7 @@ class Agent {
 
 	/**
 	*	Return socket headers
-	*	@return string
+	*	@return array
 	**/
 	function headers() {
 		return $this->headers;
@@ -382,9 +381,8 @@ class Agent {
 	/**
 	*	Frame and transmit payload
 	*	@return string|FALSE
-	*	@param $socket resource
 	*	@param $op int
-	*	@param $payload string
+	*	@param $data string
 	**/
 	function send($op,$data='') {
 		$server=$this->server;
@@ -393,8 +391,7 @@ class Agent {
 		$buf='';
 		if ($len>0xffff)
 			$buf=pack('CCNN',$mask,0x7f,$len);
-		else
-		if ($len>0x7d)
+		elseif ($len>0x7d)
 			$buf=pack('CCn',$mask,0x7e,$len);
 		else
 			$buf=pack('CC',$mask,$len);
@@ -402,74 +399,73 @@ class Agent {
 		if (is_bool($server->write($this->socket,$buf)))
 			return FALSE;
 		if (!in_array($op,[WS::Pong,WS::Close]) &&
-			isset($this->events['send']) &&
-			is_callable($func=$this->events['send']))
+			isset($this->server->events['send']) &&
+			is_callable($func=$this->server->events['send']))
 			$func($this,$op,$data);
 		return $data;
 	}
 
 	/**
 	*	Retrieve and unmask payload
-	*	@return array|FALSE
+	*	@return bool|NULL
 	**/
 	function fetch() {
 		// Unmask payload
 		$server=$this->server;
 		if (is_bool($buf=$server->read($this->socket)))
 			return FALSE;
-		$op=ord($buf[0]) & WS::OpCode;
-		$len=ord($buf[1]) & WS::Length;
-		$pos=2;
-		if ($len==0x7e) {
-			$len=ord($buf[2])*256+ord($buf[3]);
-			$pos+=2;
+		while($buf) {
+			$op=ord($buf[0]) & WS::OpCode;
+			$len=ord($buf[1]) & WS::Length;
+			$pos=2;
+			if ($len==0x7e) {
+				$len=ord($buf[2])*256+ord($buf[3]);
+				$pos+=2;
+			}
+			else
+			if ($len==0x7f) {
+				for ($i=0,$len=0;$i<8;$i++)
+					$len=$len*256+ord($buf[$i+2]);
+				$pos+=8;
+			}
+			for ($i=0,$mask=[];$i<4;$i++)
+				$mask[$i]=ord($buf[$pos+$i]);
+			$pos+=4;
+			if (strlen($buf)<$len+$pos)
+				return FALSE;
+			for ($i=0,$data='';$i<$len;$i++)
+				$data.=chr(ord($buf[$pos+$i])^$mask[$i%4]);
+			// Dispatch
+			switch ($op & WS::OpCode) {
+			case WS::Ping:
+				$this->send(WS::Pong);
+				break;
+			case WS::Close:
+				$server->close($this->socket);
+				break;
+			case WS::Text:
+				$data=trim($data);
+			case WS::Binary:
+				if (isset($this->server->events['receive']) &&
+					is_callable($func=$this->server->events['receive']))
+					$func($this,$op,$data);
+				break;
+			}
+			$buf = substr($buf, $len+$pos);
 		}
-		else
-		if ($len==0x7f) {
-			for ($i=0,$len=0;$i<8;$i++)
-				$len=$len*256+ord($buf[$i+2]);
-			$pos+=8;
-		}
-		for ($i=0,$mask=[];$i<4;$i++)
-			$mask[$i]=ord($buf[$pos+$i]);
-		$pos+=4;
-		if (strlen($buf)<$len+$pos)
-			return FALSE;
-		for ($i=0,$data='';$i<$len;$i++)
-			$data.=chr(ord($buf[$pos+$i])^$mask[$i%4]);
-		// Dispatch
-		switch ($op & WS::OpCode) {
-		case WS::Ping:
-			$this->send(WS::Pong);
-			break;
-		case WS::Close:
-			$server->close($this->socket);
-			break;
-		case WS::Text:
-			$data=trim($data);
-		case WS::Binary:
-			if (isset($this->events['receive']) &&
-				is_callable($func=$this->events['receive']))
-				$func($this,$op,$data);
-			break;
-		}
-		return [$op,$data];
 	}
 
 	/**
 	*	Destroy object
-	*	@return NULL
 	**/
 	function __destruct() {
-		if (isset($this->events['disconnect']) &&
-			is_callable($func=$this->events['disconnect']))
+		if (isset($this->server->events['disconnect']) &&
+			is_callable($func=$this->server->events['disconnect']))
 			$func($this);
 	}
 
 	/**
-	*	Instantiate object
-	*	@return object
-	*	@param $server object
+	*	@param $server WS
 	*	@param $socket resource
 	*	@param $verb string
 	*	@param $uri string
@@ -482,9 +478,9 @@ class Agent {
 		$this->verb=$verb;
 		$this->uri=$uri;
 		$this->headers=$hdrs;
-		$this->events=$server->events();
-		if (isset($this->events['connect']) &&
-			is_callable($func=$this->events['connect']))
+
+		if (isset($server->events['connect']) &&
+			is_callable($func=$server->events['connect']))
 			$func($this);
 	}
 
