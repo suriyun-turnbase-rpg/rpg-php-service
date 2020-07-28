@@ -398,7 +398,7 @@ function CraftItem($itemCraftId, $materials)
             $addItemsResult = AddItems($playerId, $resultItem['id'], $resultItem['amount']);
             if ($addItemsResult['success'])
             {
-                $rewardItems[] = CreateEmptyItem("Result", $playerId, $resultItem['id'], $resultItem['amount']);
+                $rewardItems[] = CreateEmptyItem(0, $playerId, $resultItem['id'], $resultItem['amount']);
 
                 $resultCreateItems = $addItemsResult['createItems'];
                 $resultUpdateItems = $addItemsResult['updateItems'];
