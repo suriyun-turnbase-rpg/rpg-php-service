@@ -1305,9 +1305,7 @@ function HaveEnoughMaterials($playerId, $materials, $requiredMaterials)
             continue;
         }
 
-        if (CanItemBeMaterial($foundItem)) {
-            $materialItems[] = $foundItem;
-        }
+        $materialItems[] = $foundItem;
     }
     $countRequiredMaterials = count($requiredMaterials);
     for ($i = 0; $i < $countRequiredMaterials; ++$i) {
