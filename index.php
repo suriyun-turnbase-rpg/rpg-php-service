@@ -137,6 +137,10 @@ $f3->route('POST /unequip-item', function($f3, $params) {
     $postBody = json_decode(urldecode($f3->get('BODY')), true);
     UnEquipItem($postBody['equipmentId']);
 });
+$f3->route('POST /craft-item', function($f3, $params) {
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
+    CraftItem($postBody['itemCraftId'], $postBody['materials']);
+});
 $f3->route('GET /available-lootboxes', function($f3, $params) {
     GetAvailableLootBoxList();
 });
