@@ -296,7 +296,7 @@ $f3->route('GET /chat-messages/@lastTime', function($f3, $params) {
 });
 $f3->route('POST /enter-chat-message', function($f3, $params) {
     $postBody = json_decode(urldecode($f3->get('BODY')), true);
-    EnterChatMessage($postBody['clanId'], $postBody['message']);
+    EnterChatMessage($postBody['isClanChat'], $postBody['message']);
 });
 $f3->run();
 ?>

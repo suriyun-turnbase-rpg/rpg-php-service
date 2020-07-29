@@ -8,14 +8,14 @@ function GetChatMessages($lastTime)
                 'createdAt > ?',
                 $lastTime
             ), array(
-                'order' => 'id DESC',
+                'order' => 'id ASC',
                 'LIMIT' => 25
             ))
         )
     ));
 }
 
-function EnterChatMessage($targetClanId, $message)
+function EnterChatMessage($isClanChat, $message)
 {
     $output = array('error' => '');
     $player = GetPlayer();
@@ -23,10 +23,10 @@ function EnterChatMessage($targetClanId, $message)
     $profileName = $player->profileName;
     $clanId = $player->clanId;
     $clanName = '';
-    if (!empty($targetClanId)) {
+    if ($isClanChat) {
         $clanDb = new Clan();
         $clan = $clanDb->findone(array('id = ?', $clanId));
-        if (!$clan || $targetClanId != $clanId) {
+        if (!$clan) {
             $output['error'] = 'ERROR_NOT_HAVE_PERMISSION';
         } else {
             $clanName = $clan->name;
