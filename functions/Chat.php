@@ -5,7 +5,7 @@ function GetChatMessages($lastTime)
     echo json_encode(array(
         'list' => CursorsToArray(
             $chatDb->find(array(
-                'timestamp > ?',
+                'createdAt > ?',
                 $lastTime
             ), array(
                 'order' => 'id ASC',
