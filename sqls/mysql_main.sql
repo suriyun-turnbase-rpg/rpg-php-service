@@ -5,6 +5,23 @@
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `<<__prefix__>>chat`
+--
+
+CREATE TABLE `<<__prefix__>>chat` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `playerId` BIGINT NOT NULL,
+  `clanId` BIGINT NOT NULL,
+  `profileName` VARCHAR(50) NOT NULL,
+  `clanName` VARCHAR(50) NOT NULL,
+  `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` DATETIME on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `<<__prefix__>>clan`
 --
 
