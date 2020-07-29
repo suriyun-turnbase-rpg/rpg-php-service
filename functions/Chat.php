@@ -5,10 +5,10 @@ function GetChatMessages($lastTime)
     echo json_encode(array(
         'list' => CursorsToArray(
             $chatDb->find(array(
-                'createdAt > ?',
+                'chatTime > ?',
                 $lastTime
             ), array(
-                'order' => 'id ASC',
+                'order' => 'id DESC',
                 'LIMIT' => 25
             ))
         )
@@ -36,6 +36,7 @@ function EnterChatMessage($isClanChat, $message)
             $chat->clanId = $clanId;
             $chat->clanName = $clanName;
             $chat->message = $message;
+            $chat->chatTime = time();
             $chat->save();
         }
     } else {
@@ -45,6 +46,7 @@ function EnterChatMessage($isClanChat, $message)
         $chat->clanId = $clanId;
         $chat->clanName = $clanName;
         $chat->message = $message;
+        $chat->chatTime = time();
         $chat->save();
     }
     echo json_encode($output);
