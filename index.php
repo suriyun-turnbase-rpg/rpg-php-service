@@ -16,15 +16,19 @@ $f3->config('configs/config.ini');
 
 // Read game data
 $gameDataJson = file_get_contents('./GameData.json');
-$f3->set('GameData', json_decode($gameDataJson, true));
+if (!$f3->exists('GameData')) {
+    $f3->set('GameData', json_decode($gameDataJson, true));
+}
 
 // Prepare database
-$f3->set('DB', new DB\SQL('mysql:'.
-    'host='.$f3->get('db_host').';'.
-    'port='.$f3->get('db_port').';'.
-    'dbname='.$f3->get('db_name'), 
-    $f3->get('db_user'), 
-    $f3->get('db_pass')));
+if (!$f3->exists('DB')) {
+    $f3->set('DB', new DB\SQL('mysql:'.
+        'host='.$f3->get('db_host').';'.
+        'port='.$f3->get('db_port').';'.
+        'dbname='.$f3->get('db_name'), 
+        $f3->get('db_user'), 
+        $f3->get('db_pass')));
+}
 
 // Prepare functions
 $f3->set('AUTOLOAD', 'databases/|enums/');
@@ -42,6 +46,7 @@ require_once('functions/Battle.php');
 require_once('functions/Arena.php');
 require_once('functions/Billing.php');
 require_once('functions/Clan.php');
+require_once('functions/Chat.php');
 
 // Services
 $f3->route('GET /', function() {
@@ -285,6 +290,13 @@ $f3->route('POST /clan-exit', function($f3, $params) {
 $f3->route('POST /clan-set-role', function($f3, $params) {
     $postBody = json_decode(urldecode($f3->get('BODY')), true);
     ClanSetRole($postBody['targetPlayerId'], $postBody['clanRole']);
+});
+$f3->route('GET /chat-messages/@lastTime', function($f3, $params) {
+    GetChatMessages($params['lastTime']);
+});
+$f3->route('POST /enter-chat-message', function($f3, $params) {
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
+    EnterChatMessage($postBody['clanId'], $postBody['message']);
 });
 $f3->run();
 ?>
