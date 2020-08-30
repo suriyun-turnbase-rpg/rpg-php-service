@@ -1197,7 +1197,7 @@ function GetArenaRank($arenaScore)
     if ($level >= count($gameData['arenaRanks'])) {
         $level = count($gameData['arenaRanks']) - 1;
     }
-    return $level >= 0 ? $gameData['arenaRanks']['level'] : NULL;
+    return $level >= 0 ? $gameData['arenaRanks'][$level] : NULL;
 }
 
 function GetClanOwner($playerId, $clanId)
