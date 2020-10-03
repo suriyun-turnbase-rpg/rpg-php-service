@@ -419,11 +419,11 @@ function SetNewPlayerData($player)
         }
     }
     
-    $hardCurrency = GetCurrency($playerId, $gameData['currencies']['HARD_CURRENCY']['id']);
-    $hardCurrency->amount = $gameData['currencies']['HARD_CURRENCY']['startAmount'];
+    $hardCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['hardCurrencyId']]['id']);
+    $hardCurrency->amount = $gameData['currencies'][$gameData['hardCurrencyId']]['startAmount'];
     $hardCurrency->update();
-    $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
-    $softCurrency->amount = $gameData['currencies']['SOFT_CURRENCY']['startAmount'];
+    $softCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['softCurrencyId']]['id']);
+    $softCurrency->amount = $gameData['currencies'][$gameData['softCurrencyId']]['startAmount'];
     $softCurrency->update();
     return $player;
 }
@@ -556,8 +556,9 @@ function UpdatePlayerStamina($playerId, $staminaType)
 
 function UpdateAllPlayerStamina($playerId)
 {
-    UpdatePlayerStamina($playerId, 'STAGE');
-    UpdatePlayerStamina($playerId, 'ARENA');
+    $gameData = \Base::instance()->get('GameData');
+    UpdatePlayerStamina($playerId, $gameData['stageStaminaId']);
+    UpdatePlayerStamina($playerId, $gameData['arenaStaminaId']);
 }
 
 function GetCurrency($playerId, $dataId)
@@ -1024,12 +1025,12 @@ function HelperClearStage($createItems, $updateItems, $output, $player, $stage, 
         // Player exp
         $player->exp += $firstClearRewardPlayerExp;
         // Soft currency
-        $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
+        $softCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['softCurrencyId']]['id']);
         $softCurrency->amount += $firstClearRewardSoftCurrency;
         $softCurrency->update();
         $updateCurrencies[] = $softCurrency;
         // Hard currency
-        $hardCurrency = GetCurrency($playerId, $gameData['currencies']['HARD_CURRENCY']['id']);
+        $hardCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['hardCurrencyId']]['id']);
         $hardCurrency->amount += $firstClearRewardHardCurrency;
         $hardCurrency->update();
         $updateCurrencies[] = $hardCurrency;

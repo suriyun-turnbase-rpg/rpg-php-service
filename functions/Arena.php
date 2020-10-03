@@ -13,7 +13,7 @@ function StartDuel($targetPlayerId)
         EBattleType::Arena
     ));
 
-    if (!DecreasePlayerStamina($playerId, 'ARENA', 1)) {
+    if (!DecreasePlayerStamina($playerId, $gameData['arenaStaminaId'], 1)) {
         $output['error'] = 'ERROR_NOT_ENOUGH_ARENA_STAMINA';
     } else {
         $session = md5($playerId . '_' . $targetPlayerId . '_' . time());
@@ -29,7 +29,7 @@ function StartDuel($targetPlayerId)
             $targetPlayerId,
         ));
         
-        $staminaTable = $gameData['staminas']['ARENA'];
+        $staminaTable = $gameData['staminas'][$gameData['arenaStaminaId']];
         $stamina = GetStamina($playerId, $staminaTable['id']);
         $output['stamina'] = CursorToArray($stamina);
         $output['session'] = $session;
@@ -113,13 +113,13 @@ function FinishDuel($session, $battleResult, $deadCharacters)
                     
                 // Soft currency
                 $rewardSoftCurrency = $arenaRank['rewardSoftCurrency'];
-                $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
+                $softCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['softCurrencyId']]['id']);
                 $softCurrency->amount += $rewardSoftCurrency;
                 $softCurrency->update();
                 $updateCurrencies[] = $softCurrency;
                 // Hard currency
                 $rewardHardCurrency = $arenaRank['rewardHardCurrency'];
-                $hardCurrency = GetCurrency($playerId, $gameData['currencies']['HARD_CURRENCY']['id']);
+                $hardCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['hardCurrencyId']]['id']);
                 $hardCurrency->amount += $rewardHardCurrency;
                 $hardCurrency->update();
                 $updateCurrencies[] = $hardCurrency;

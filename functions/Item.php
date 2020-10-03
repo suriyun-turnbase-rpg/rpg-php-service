@@ -16,7 +16,7 @@ function LevelUpItem($itemId, $materials)
     if (!$item) {
         $output['error'] = 'ERROR_INVALID_PLAYER_ITEM_DATA';
     } else {
-        $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
+        $softCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['softCurrencyId']]['id']);
         $levelUpPrice = CalculateItemLevelUpPrice($item);
         $requireCurrency = 0;
         $increasingExp = 0;
@@ -117,7 +117,7 @@ function EvolveItem($itemId, $materials)
     if (!$item) {
         $output['error'] = 'ERROR_INVALID_PLAYER_ITEM_DATA';
     } else {
-        $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
+        $softCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['softCurrencyId']]['id']);
         $requireCurrency = CalculateItemEvolvePrice($item);
         $updateCurrencies = array();
         $enoughMaterialsResult = HaveEnoughMaterials($playerId, $materials, GetItemEvolveMaterials($item));
@@ -176,7 +176,7 @@ function SellItems($items)
     $player = GetPlayer();
     $playerId = $player->id;
     
-    $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
+    $softCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['softCurrencyId']]['id']);
     $returnCurrency = 0;
     $updateItems = array();
     $deleteItemIds = array();
@@ -340,8 +340,8 @@ function CraftItem($itemCraftId, $materials)
     if (!$itemCraft) {
         $output['error'] = 'ERROR_INVALID_ITEM_CRAFT_FORMULA_DATA';
     } else {
-        $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
-        $hardCurrency = GetCurrency($playerId, $gameData['currencies']['HARD_CURRENCY']['id']);
+        $softCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['softCurrencyId']]['id']);
+        $hardCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['hardCurrencyId']]['id']);
 
         $rewardItems = array();
         $createItems = array();
@@ -479,8 +479,8 @@ function OpenLootBox($lootBoxDataId, $packIndex)
     if (!$lootBox) {
         $output['error'] = 'ERROR_INVALID_LOOT_BOX_DATA';
     } else {
-        $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
-        $hardCurrency = GetCurrency($playerId, $gameData['currencies']['HARD_CURRENCY']['id']);
+        $softCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['softCurrencyId']]['id']);
+        $hardCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['hardCurrencyId']]['id']);
         
         $rewardItems = array();
         $createItems = array();
@@ -567,8 +567,8 @@ function OpenInGamePackage($inGamePackageDataId)
     if (!$inGamePackage) {
         $output['error'] = 'ERROR_INVALID_IN_GAME_PACKAGE_DATA';
     } else {
-        $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
-        $hardCurrency = GetCurrency($playerId, $gameData['currencies']['HARD_CURRENCY']['id']);
+        $softCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['softCurrencyId']]['id']);
+        $hardCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['hardCurrencyId']]['id']);
         
         $rewardItems = array();
         $createItems = array();
@@ -653,8 +653,8 @@ function ConvertHardCurrency($requireHardCurrency)
     $player = GetPlayer();
     $playerId = $player->id;
     
-    $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
-    $hardCurrency = GetCurrency($playerId, $gameData['currencies']['HARD_CURRENCY']['id']);
+    $softCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['softCurrencyId']]['id']);
+    $hardCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['hardCurrencyId']]['id']);
     
     if ($requireHardCurrency > $hardCurrency->amount) {
         $output['error'] = 'ERROR_NOT_ENOUGH_HARD_CURRENCY';
@@ -713,12 +713,12 @@ function EarnAchievementReward($achievementId)
             $player->exp += $rewardPlayerExp;
             $player->update();
             // Soft currency
-            $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
+            $softCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['softCurrencyId']]['id']);
             $softCurrency->amount += $rewardSoftCurrency;
             $softCurrency->update();
             $updateCurrencies[] = $softCurrency;
             // Hard currency
-            $hardCurrency = GetCurrency($playerId, $gameData['currencies']['HARD_CURRENCY']['id']);
+            $hardCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['hardCurrencyId']]['id']);
             $hardCurrency->amount += $rewardHardCurrency;
             $hardCurrency->update();
             $updateCurrencies[] = $hardCurrency;

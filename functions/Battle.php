@@ -16,7 +16,7 @@ function StartStage($stageDataId, $helperPlayerId)
     $stage = $gameData['stages'][$stageDataId];
     if (!$stage) {
         $output['error'] = 'ERROR_INVALID_STAGE_DATA';
-    } else if (!DecreasePlayerStamina($playerId, 'STAGE', $stage['requireStamina'])) {
+    } else if (!DecreasePlayerStamina($playerId, $gameData['stageStaminaId'], $stage['requireStamina'])) {
         $output['error'] = 'ERROR_NOT_ENOUGH_STAGE_STAMINA';
     } else {
         $session = md5($playerId . '_' . $stageDataId . '_' . time());
@@ -26,7 +26,7 @@ function StartStage($stageDataId, $helperPlayerId)
         $newData->session = $session;
         $newData->save();
 
-        $staminaTable = $gameData['staminas']['STAGE'];
+        $staminaTable = $gameData['staminas'][$gameData['stageStaminaId']];
         $stamina = GetStamina($playerId, $staminaTable['id']);
         
         if (!empty($helperPlayerId))
@@ -124,7 +124,7 @@ function FinishStage($session, $battleResult, $deadCharacters)
                 }
                 // Soft currency
                 $rewardSoftCurrency = rand($stage['randomSoftCurrencyMinAmount'], $stage['randomSoftCurrencyMaxAmount']);
-                $softCurrency = GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id']);
+                $softCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['softCurrencyId']]['id']);
                 $softCurrency->amount += $rewardSoftCurrency;
                 $softCurrency->update();
                 $updateCurrencies[] = $softCurrency;
@@ -187,7 +187,7 @@ function ReviveCharacters()
     $gameData = \Base::instance()->get('GameData');
     $output = array('error' => '');
     $player = GetPlayer();
-    $hardCurrency = GetCurrency($player->id, $gameData['currencies']['HARD_CURRENCY']['id']);
+    $hardCurrency = GetCurrency($player->id, $gameData['currencies'][$gameData['hardCurrencyId']]['id']);
     $revivePrice = $gameData['revivePrice'];
     if ($revivePrice > $hardCurrency->amount) {
         $output['error'] = 'ERROR_NOT_ENOUGH_HARD_CURRENCY';

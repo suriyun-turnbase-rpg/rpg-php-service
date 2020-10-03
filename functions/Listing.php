@@ -46,8 +46,8 @@ function GetCurrencyListInternal($playerId)
 {
     $gameData = \Base::instance()->get('GameData');
     return [
-        GetCurrency($playerId, $gameData['currencies']['HARD_CURRENCY']['id']),
-        GetCurrency($playerId, $gameData['currencies']['SOFT_CURRENCY']['id'])
+        GetCurrency($playerId, $gameData['currencies'][$gameData['hardCurrencyId']]['id']),
+        GetCurrency($playerId, $gameData['currencies'][$gameData['softCurrencyId']]['id'])
     ];
 }
 
