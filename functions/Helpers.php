@@ -542,17 +542,14 @@ function UpdatePlayerStamina($playerId, $staminaType)
                 break;
         }
         $recoveryAmount = floor(($diffTimeInSeconds / $devideAmount) / $staminaTable['recoverDuration']);
-        if ($recoveryAmount > 0)
+        if ($recoveryAmount > 0 && $stamina->amount < $maxStamina)
         {
-            if ($stamina->amount < $maxStamina)
-            {
-                $stamina->amount += $recoveryAmount;
-                if ($stamina->amount > $maxStamina) {
-                    $stamina->amount = $maxStamina;
-                }
-                $stamina->recoveredTime = $currentTimeInSeconds;
-                $stamina->update();
+            $stamina->amount += $recoveryAmount;
+            if ($stamina->amount > $maxStamina) {
+                $stamina->amount = $maxStamina;
             }
+            $stamina->recoveredTime = $currentTimeInSeconds;
+            $stamina->update();
         }
     }
 }
