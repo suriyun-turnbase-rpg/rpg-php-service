@@ -168,6 +168,10 @@ $f3->route('POST /convert-hard-currency', function($f3, $params) {
     $postBody = json_decode(urldecode($f3->get('BODY')), true);
     ConvertHardCurrency($postBody['requireHardCurrency']);
 });
+$f3->route('POST /refill-stamina', function($f3, $params) {
+    $postBody = json_decode(urldecode($f3->get('BODY')), true);
+    RefillStamina($postBody['staminaDataId']);
+});
 $f3->route('POST /available-stages', function($f3, $params) {
     GetAvailableStageList();
 });
