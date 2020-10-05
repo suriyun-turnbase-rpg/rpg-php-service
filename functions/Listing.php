@@ -45,10 +45,12 @@ function GetCurrencyList()
 function GetCurrencyListInternal($playerId)
 {
     $gameData = \Base::instance()->get('GameData');
-    return [
-        GetCurrency($playerId, $gameData['currencies'][$gameData['hardCurrencyId']]['id']),
-        GetCurrency($playerId, $gameData['currencies'][$gameData['softCurrencyId']]['id'])
-    ];
+    $list = array();
+    $currencies = $gameData['currencies'];
+    foreach ($currencies as $key => $value) {
+        $list[] = GetCurrency($playerId, $key);
+    }
+    return $list;
 }
 
 function GetStaminaList()
@@ -60,11 +62,12 @@ function GetStaminaList()
 
 function GetStaminaListInternal($playerId)
 {
-    $playerStaminaDb = new PlayerStamina();
-    return $playerStaminaDb->find(array(
-        'playerId = ?',
-        $playerId
-    ));
+    $list = array();
+    $staminas = $gameData['staminas'];
+    foreach ($staminas as $key => $value) {
+        $list[] = GetStamina($playerId, $key);
+    }
+    return $list;
 }
 
 function GetFormationList()

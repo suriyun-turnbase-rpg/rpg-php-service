@@ -139,7 +139,6 @@ function WeightedRandom($weights, $noResultWeight)
         return NULL;
     }
 
-    // TODO: This may invalid, will check later
     $roll = rand(0, $sum + $noResultWeight);
     $selected = $keys[count($keys) - 1];
     foreach ($weights as $key => $weight) {
@@ -418,13 +417,13 @@ function SetNewPlayerData($player)
             }
         }
     }
-    
-    $hardCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['hardCurrencyId']]['id']);
-    $hardCurrency->amount = $gameData['currencies'][$gameData['hardCurrencyId']]['startAmount'];
-    $hardCurrency->update();
-    $softCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['softCurrencyId']]['id']);
-    $softCurrency->amount = $gameData['currencies'][$gameData['softCurrencyId']]['startAmount'];
-    $softCurrency->update();
+    // Currencies
+    $currencies = $gameData['currencies'];
+    foreach ($currencies as $key => $value) {
+        $data = GetCurrency($playerId, $key);
+        $data->amount = $value['startAmount'];
+        $ata->update();
+    }
     return $player;
 }
 
@@ -557,8 +556,10 @@ function UpdatePlayerStamina($playerId, $staminaType)
 function UpdateAllPlayerStamina($playerId)
 {
     $gameData = \Base::instance()->get('GameData');
-    UpdatePlayerStamina($playerId, $gameData['stageStaminaId']);
-    UpdatePlayerStamina($playerId, $gameData['arenaStaminaId']);
+    $staminas = $gameData['staminas'];
+    foreach ($staminas as $key => $value) {
+        UpdatePlayerStamina($playerId, $key);
+    }
 }
 
 function GetCurrency($playerId, $dataId)

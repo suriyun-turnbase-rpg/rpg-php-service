@@ -33,16 +33,7 @@ function StartStage($stageDataId, $helperPlayerId)
         $output['error'] = 'ERROR_INVALID_STAGE_DATA';
     } else if (!IsStageAvailable($stage)) {
         $output['error'] = 'ERROR_INVALID_STAGE_NOT_AVAILABLE';
-    } else if (!DecreasePlayerStamina($playerId, $gameData['stageStaminaId'], $stage['requireStamina'])) {
-        $output['error'] = 'ERROR_NOT_ENOUGH_STAGE_STAMINA';
     } else {
-        $session = md5($playerId . '_' . $stageDataId . '_' . time());
-        $newData = new PlayerBattle();
-        $newData->playerId = $playerId;
-        $newData->dataId = $stageDataId;
-        $newData->session = $session;
-        $newData->save();
-
         $staminaTable = $gameData['staminas'][$gameData['stageStaminaId']];
         $stamina = GetStamina($playerId, $staminaTable['id']);
         if (!empty($stage['requireCustomStamina']) && !empty($gameData['staminas'][$stage['requireCustomStamina']]))
@@ -51,14 +42,29 @@ function StartStage($stageDataId, $helperPlayerId)
             $staminaTable = $gameData['staminas'][$stage['requireCustomStamina']];
         }
         
-        if (!empty($helperPlayerId))
+        if (!DecreasePlayerStamina($playerId, $staminaTable['id'], $stage['requireStamina']))
         {
-            // Update achievement
-            QueryUpdateAchievement(UpdateCountUseHelper($player->id, GetAchievementListInternal($player->id)));
+            $output['error'] = 'ERROR_NOT_ENOUGH_STAGE_STAMINA';
         }
+        else
+        {
+            $session = md5($playerId . '_' . $stageDataId . '_' . time());
+            $newData = new PlayerBattle();
+            $newData->playerId = $playerId;
+            $newData->dataId = $stageDataId;
+            $newData->session = $session;
+            $newData->save();
 
-        $output['stamina'] = CursorToArray($stamina);
-        $output['session'] = $session;
+            
+            if (!empty($helperPlayerId))
+            {
+                // Update achievement
+                QueryUpdateAchievement(UpdateCountUseHelper($player->id, GetAchievementListInternal($player->id)));
+            }
+
+            $output['stamina'] = CursorToArray($stamina);
+            $output['session'] = $session;
+        }
     }
     echo json_encode($output);
 }
