@@ -1358,7 +1358,7 @@ function IsStageAvailable($stage)
         $available = false;
         foreach ($availabilities as $key => $value) {
             $fromTime = mktime($value['startTimeHour'], $value['startTimeMinute'], 0);
-            $toTime = mktime($value['startTimeHour'] + $value['durationHour'], $value['startTimeMinute'] + $value['durationMinute'], 0);
+            $toTime = $fromTime + (60*60*$value['durationHour']) + (60*$value['durationMinute']);
             if (date('w') == $value['day'] && $currentTime >= $fromTime && $currentTime < $toTime) {
                 $available = true;
                 break;
