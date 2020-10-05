@@ -1348,4 +1348,32 @@ function HaveEnoughMaterials($playerId, $materials, $requiredMaterials)
         "deleteItemIds" => $deleteItemIds
     );
 }
+
+function IsStageAvailable($stage)
+{
+    $available = true;
+    $currentTime = mktime();
+    $availabilities = $stage['availabilities'];
+    if (!empty($availabilities)) {
+        $available = false;
+        foreach ($availabilities as $key => $value) {
+            $fromTime = mktime($value['startTimeHour'], $value['startTimeMinute'], 0);
+            $toTime = mktime($value['startTimeHour'] + $value['durationHour'], $value['startTimeMinute'] + $value['durationMinute'], 0);
+            if (date('w') == $value['day'] && $currentTime >= $fromTime && $currentTime < $toTime) {
+                $available = true;
+                break;
+            }
+        }
+    }
+    if ($available) {
+        if (!$stage['hasAvailableDate']) {
+            return true;
+        }
+        $currentDate = mktime(0, 0, 0);
+        $startDate = mktime(0, 0, 0, $stage['startMonth'], $stage['startDay'], $stage['startYear']);
+        $endDate = $startDate + (60*60*24*$stage['durationDays']);
+        return $currentDate >= $startDate && $currentDate < $endDate;
+    }
+    return false;
+}
 ?>

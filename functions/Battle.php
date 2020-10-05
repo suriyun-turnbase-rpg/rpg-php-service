@@ -16,6 +16,8 @@ function StartStage($stageDataId, $helperPlayerId)
     $stage = $gameData['stages'][$stageDataId];
     if (!$stage) {
         $output['error'] = 'ERROR_INVALID_STAGE_DATA';
+    } else if (IsStageAvailable($stage)) {
+        $output['error'] = 'ERROR_INVALID_STAGE_NOT_AVAILABLE';
     } else if (!DecreasePlayerStamina($playerId, $gameData['stageStaminaId'], $stage['requireStamina'])) {
         $output['error'] = 'ERROR_NOT_ENOUGH_STAGE_STAMINA';
     } else {
