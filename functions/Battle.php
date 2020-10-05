@@ -1,4 +1,19 @@
 <?php
+function GetAvailableStageList()
+{
+    $list = array();
+    $gameData = \Base::instance()->get('GameData');
+    $stages = $gameData['stages'];
+    foreach ($stages as $key => $value) {
+        if (IsStageAvailable($value)) {
+            $list[] = $key;
+        }
+    }
+    $output = array('error' => '');
+    $output['list'] = $list;
+    echo json_encode($output);
+}
+
 function StartStage($stageDataId, $helperPlayerId)
 {
     $gameData = \Base::instance()->get('GameData');

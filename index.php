@@ -168,6 +168,9 @@ $f3->route('POST /convert-hard-currency', function($f3, $params) {
     $postBody = json_decode(urldecode($f3->get('BODY')), true);
     ConvertHardCurrency($postBody['requireHardCurrency']);
 });
+$f3->route('POST /available-stages', function($f3, $params) {
+    GetAvailableStageList();
+});
 // Social services
 $f3->route('POST /friend-request', function($f3, $params) {
     $postBody = json_decode(urldecode($f3->get('BODY')), true);
