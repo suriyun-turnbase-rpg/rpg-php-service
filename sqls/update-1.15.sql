@@ -1,0 +1,2 @@
+ALTER TABLE `<<__prefix__>>player_stamina` ADD `refillCount` INT NOT NULL DEFAULT '0' AFTER `recoveredTime`;
+ALTER TABLE `<<__prefix__>>player_stamina` ADD `lastRefillTime` INT NOT NULL DEFAULT '0' AFTER `refillCount`;

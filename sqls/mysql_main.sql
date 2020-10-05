@@ -230,6 +230,8 @@ CREATE TABLE `<<__prefix__>>player_stamina` (
   `dataId` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `amount` int(11) NOT NULL DEFAULT '0',
   `recoveredTime` int(11) NOT NULL DEFAULT '0',
+  `refillCount` int(11) NOT NULL DEFAULT '0',
+  `lastRefillTime` int(11) NOT NULL DEFAULT '0',
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
