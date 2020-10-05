@@ -30,6 +30,11 @@ function StartStage($stageDataId, $helperPlayerId)
 
         $staminaTable = $gameData['staminas'][$gameData['stageStaminaId']];
         $stamina = GetStamina($playerId, $staminaTable['id']);
+        if (!empty($stage['requireCustomStamina']) && !empty($gameData['staminas'][$stage['requireCustomStamina']]))
+        {
+            // Use custom stamina
+            $staminaTable = $gameData['staminas'][$stage['requireCustomStamina']];
+        }
         
         if (!empty($helperPlayerId))
         {
