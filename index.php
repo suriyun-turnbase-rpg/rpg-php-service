@@ -172,7 +172,7 @@ $f3->route('POST /refill-stamina', function($f3, $params) {
     $postBody = json_decode(urldecode($f3->get('BODY')), true);
     RefillStamina($postBody['staminaDataId']);
 });
-$f3->route('GET /refill-stamina-info', function($f3, $params) {
+$f3->route('GET /refill-stamina-info/@staminaDataId', function($f3, $params) {
     GetRefillStaminaInfo($params['staminaDataId']);
 });
 $f3->route('GET /available-stages', function($f3, $params) {
