@@ -62,6 +62,7 @@ function GetStaminaList()
 
 function GetStaminaListInternal($playerId)
 {
+    $gameData = \Base::instance()->get('GameData');
     $list = array();
     $staminas = $gameData['staminas'];
     foreach ($staminas as $key => $value) {
