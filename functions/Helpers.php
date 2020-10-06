@@ -1354,7 +1354,7 @@ function HaveEnoughMaterials($playerId, $materials, $requiredMaterials)
 function IsStageAvailable($stage)
 {
     $available = true;
-    $currentTime = mktime();
+    $currentTime = time();
     $availabilities = $stage['availabilities'];
     if (!empty($availabilities)) {
         $available = false;
