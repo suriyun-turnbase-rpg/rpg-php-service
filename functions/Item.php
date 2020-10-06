@@ -715,8 +715,8 @@ function RefillStamina($staminaDataId)
             $playerStamina->lastRefillTime = time();
             $playerStamina->refillCount++;
             $playerStamina->update();
-            $result['currency'] = $hardCurrency;
-            $result['stamina'] = $playerStamina;
+            $output['currency'] = CursorToArray($hardCurrency);
+            $output['stamina'] = CursorToArray($playerStamina);
         }
     }
     echo json_encode($output);
