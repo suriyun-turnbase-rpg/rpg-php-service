@@ -422,7 +422,7 @@ function SetNewPlayerData($player)
     foreach ($currencies as $key => $value) {
         $data = GetCurrency($playerId, $key);
         $data->amount = $value['startAmount'];
-        $ata->update();
+        $data->update();
     }
     return $player;
 }
