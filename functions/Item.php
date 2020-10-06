@@ -722,6 +722,40 @@ function RefillStamina($staminaDataId)
     echo json_encode($output);
 }
 
+function GetRefillStaminaInfo($staminaDataId)
+{
+    $gameData = \Base::instance()->get('GameData');
+    $output = array('error' => '');
+    $player = GetPlayer();
+    $playerId = $player->id;
+    
+    $stamina = $gameData['staminas'][$staminaDataId];
+    if (!$stamina) {
+        $output['error'] = 'ERROR_INVALID_STAMINA_DATA';
+    } else if (count($stamina['refillPrices']) == 0) {
+        $output['error'] = 'ERROR_CANNOT_REFILL_STAMINA';
+    } else {
+        $playerStamina = GetStamina($playerId, $stamina['id']);
+        $currentDate = mktime(0, 0, 0);
+        $lastRefillDate = mktime(0, 0, 0, date('n', $playerStamina->lastRefillTime), date('j', $playerStamina->lastRefillTime), date('Y', $playerStamina->lastRefillTime));
+        if ($currentDate > $lastRefillDate) {
+            $playerStamina->refillCount = 0;
+        }
+        $indexOfPrice = $playerStamina->refillCount;
+        if ($indexOfPrice >= count($stamina['refillPrices'])) {
+            $indexOfPrice = count($stamina['refillPrices']) - 1;
+        }
+        $price = $stamina['refillPrices'][$indexOfPrice];
+        $currentLevel = CalculatePlayerLevel($exp);
+        $maxLevel = $gameData['playerMaxLevel'];
+        $maxAmountTable = $stamina['maxAmountTable'];
+        $refillAmount = CalculateIntAttribute($currentLevel, $maxLevel, $maxAmountTable['minValue'], $maxAmountTable['maxValue'], $maxAmountTable['growth']);
+        $output['requireHardCurrency'] = $price;
+        $output['refillAmount'] = $refillAmount;
+    }
+    echo json_encode($output);
+}
+
 function EarnAchievementReward($achievementId)
 {
     $gameData = \Base::instance()->get('GameData');
