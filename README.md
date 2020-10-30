@@ -9,8 +9,11 @@ PHP web-service for RPG project
 * `db_name` database name
 * `db_user` database username
 * `db_pass` database password
-* Then browse `sql-importer.php` from web-browser, if you see `Done ;)` with no errors, that is done the web-service is ready to use. (To Browse `sql-importer.php` I means to open your web-browser (Google Chrome, Microsoft Edge, Apple Safari or something)
-to open your web where you placed website scripts. for example, if I placed scripts to `./htdocs/service` I have to open my web by the URL like as : `https://www.mywebsite.com/service/sql-importer.php` to import tables to database)
+* Then browse `sql-importer.php` from web-browser, if you see `Done ;)` with no errors, that is done the web-service is ready to use. 
+
+** To Browse `sql-importer.php` I means to open your web-browser (Google Chrome, Microsoft Edge, Apple Safari or something)
+to open your web where you placed website scripts. for example, if I placed scripts to `./htdocs/service` I have to open my web by the URL like as : `https://www.mywebsite.com/service/sql-importer.php` to import tables to database**
+
 * You should remove `sql-importer.php` after imported
 
 ## How to update
