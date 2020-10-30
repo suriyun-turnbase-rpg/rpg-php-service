@@ -1,5 +1,5 @@
 <?php
-function verify_app_store_in_app($receipt, $is_sandbox) 
+function VerifyAppstoreIAP($receipt, $is_sandbox) 
 {
 	//$sandbox should be TRUE if you want to test against itunes sandbox servers
 	if ($is_sandbox)
@@ -49,19 +49,19 @@ function verify_app_store_in_app($receipt, $is_sandbox)
 		}
 	}
 }
-function verify_market_in_app($signed_data, $signature, $public_key_base64) 
+function VerfifyGooglePlayBilling($data, $signature, $public_key_base64) 
 {
 	$key =	"-----BEGIN PUBLIC KEY-----\n".
 		chunk_split($public_key_base64, 64,"\n").
 		'-----END PUBLIC KEY-----';   
-	//using PHP to create an RSA key
+	// Using PHP to create an RSA key
 	$key = openssl_get_publickey($key);
-	//$signature should be in binary format, but it comes as BASE64. 
-	//So, I'll convert it.
+	// $signature should be in binary format, but it comes as BASE64. 
+	// So, I'll convert it.
 	$signature = base64_decode($signature);   
-	//using PHP's native support to verify the signature
+	// Using PHP's native support to verify the signature
 	$result = openssl_verify(
-			$signed_data,
+			$data,
 			$signature,
 			$key,
 			OPENSSL_ALGO_SHA1);
@@ -97,7 +97,7 @@ function IOSBuyGoods($iapPackageDataId, $receipt)
     {
         $output['error'] = 'ERROR_INVALID_IAP_PACKAGE_DATA';
     }
-    else if (!verify_app_store_in_app($receipt, \Base::instance()->get('appstore_is_sandbox')))
+    else if (!VerifyAppstoreIAP($receipt, \Base::instance()->get('appstore_is_sandbox')))
     {
         $buyGoodsOutput = BuyGoods($playerId, $gameData, $packageData);
         $output['rewardItems'] = $buyGoodsOutput['rewardItems'];
@@ -128,7 +128,7 @@ function AndroidBuyGoods($iapPackageDataId, $data, $signature)
     {
         $output['error'] = 'ERROR_INVALID_IAP_PACKAGE_DATA';
     }
-    else if (!verify_market_in_app($data, $signature, \Base::instance()->get('play_public_key')))
+    else if (!VerfifyGooglePlayBilling($data, $signature, \Base::instance()->get('play_public_key')))
     {
         $buyGoodsOutput = BuyGoods($playerId, $gameData, $packageData);
         $output['rewardItems'] = $buyGoodsOutput['rewardItems'];
