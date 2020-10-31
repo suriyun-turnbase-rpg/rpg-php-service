@@ -266,7 +266,7 @@ foreach(new RecursiveIteratorIterator($it) as $file) {
         include $file;
     }
 }
-if (\Base::instance()->get('enable_action_request_query')) {
+if (\Base::instance()->get('use_request_query_action')) {
     //$f3->run();
     $requestMethod = strtoupper($_SERVER['REQUEST_METHOD']);
     $actionName = $_GET['action'];
