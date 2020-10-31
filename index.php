@@ -267,7 +267,6 @@ foreach(new RecursiveIteratorIterator($it) as $file) {
     }
 }
 if (\Base::instance()->get('use_request_query_action')) {
-    //$f3->run();
     $requestMethod = strtoupper($_SERVER['REQUEST_METHOD']);
     $actionName = $_GET['action'];
     if (empty($actionName)) {
