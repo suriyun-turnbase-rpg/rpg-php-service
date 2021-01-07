@@ -602,15 +602,15 @@ function GetItemRandomAttributes($dataId)
 {
     $gameData = \Base::instance()->get('GameData');
     
+    if (empty($gameData['items'][$dataId])) {
+        return array();
+    }
     $item = $gameData['items'][$dataId];
-    if (empty($item)) {
-        return array();
-    }
     
-    $randomAttributes = $item['randomAttributes'];
-    if (empty($randomAttributes)) {
+    if (empty($item['randomAttributes'])) {
         return array();
     }
+    $randomAttributes = $item['randomAttributes'];
 
     $minType = 0;
     if (!empty($randomAttributes['minType'])) {
