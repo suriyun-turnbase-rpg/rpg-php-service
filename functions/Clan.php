@@ -60,6 +60,7 @@ function FindClan($clanName)
     $clanDb = new Clan();
     if (empty($clanName)) {
         $foundClans = $clanDb->find(array(
+            '1'
         ), array('limit' => 25));
     }
     else
