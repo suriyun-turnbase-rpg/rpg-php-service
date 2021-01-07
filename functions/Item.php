@@ -706,7 +706,7 @@ function RefillStamina($staminaDataId)
         {
             $hardCurrency->amount -= $price;
             $hardCurrency->update();
-            $currentLevel = CalculatePlayerLevel($exp);
+            $currentLevel = CalculatePlayerLevel($player->exp);
             $maxLevel = $gameData['playerMaxLevel'];
             $maxAmountTable = $stamina['maxAmountTable'];
             $refillAmount = CalculateIntAttribute($currentLevel, $maxLevel, $maxAmountTable['minValue'], $maxAmountTable['maxValue'], $maxAmountTable['growth']);
@@ -746,7 +746,7 @@ function GetRefillStaminaInfo($staminaDataId)
             $indexOfPrice = count($stamina['refillPrices']) - 1;
         }
         $price = $stamina['refillPrices'][$indexOfPrice];
-        $currentLevel = CalculatePlayerLevel($exp);
+        $currentLevel = CalculatePlayerLevel($player->exp);
         $maxLevel = $gameData['playerMaxLevel'];
         $maxAmountTable = $stamina['maxAmountTable'];
         $refillAmount = CalculateIntAttribute($currentLevel, $maxLevel, $maxAmountTable['minValue'], $maxAmountTable['maxValue'], $maxAmountTable['growth']);
