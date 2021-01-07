@@ -11,10 +11,9 @@ function Login($username, $password)
             'username = ? AND type = 1',
             $username
         ));
-        $bcrypt = \Bcrypt::instance();
         if (!$playerAuth) {
             $output['error'] = 'ERROR_INVALID_USERNAME_OR_PASSWORD';
-        } else if (!$bcrypt->verify($password, $playerAuth->password)) {
+        } else if (!password_verify($password, $playerAuth->password)) {
             $output['error'] = 'ERROR_INVALID_USERNAME_OR_PASSWORD';
         }
         else
@@ -108,8 +107,7 @@ function Register($username, $password)
     } else if (IsPlayerWithUsernameFound(1, $username)) {
         $output['error'] = 'ERROR_EXISTED_USERNAME';
     } else {
-        $bcrypt = \Bcrypt::instance();
-        $player = InsertNewPlayer(1, $username, $bcrypt->hash($password));
+        $player = InsertNewPlayer(1, $username, password_hash($password, PASSWORD_BCRYPT));
         $output['player'] = CursorToArray($player);
     }
     echo json_encode($output);
