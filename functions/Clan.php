@@ -353,4 +353,49 @@ function ClanSetRole($targetPlayerId, $targetClanRole)
     }
     echo json_encode($output);
 }
+
+function HasClanCheckin()
+{
+    $output = array('alreadyCheckin' => false);
+    $player = GetPlayer();
+    $playerId = $player->id;
+    $checkInDate = strtotime(date('Y-m-d'));
+    $clanCheckinDb = new ClanCheckin();
+    $clanCheckin = $clanCheckinDb->findone(array(
+        'playerId = ? AND checkInDate = ?',
+        $playerId,
+        $checkInDate));
+    if ($clanCheckin) {
+        $output['alreadyCheckin'] = true;
+    }
+    echo json_encode($output);
+}
+
+function ClanCheckin()
+{
+    $output = array('error' => '');
+    $player = GetPlayer();
+    $playerId = $player->id;
+    $clanId = $player->clanId;
+    $clanDb = new Clan();
+    $clan = $clanDb->findone(array('id = ?', $clanId));
+    if (!$clan) {
+        $output['error'] = 'ERROR_NOT_HAVE_PERMISSION';
+    } else {
+        $checkInDate = strtotime(date('Y-m-d'));
+        $clanCheckinDb = new ClanCheckin();
+        $clanCheckin = $clanCheckinDb->findone(array(
+            'playerId = ? AND checkInDate = ?',
+            $playerId,
+            $checkInDate));
+        if (!$clanCheckin) {
+            $clanCheckin = new ClanCheckin();
+            $clanCheckin->playerId = $playerId;
+            $clanCheckin->checkInDate = $checkInDate;
+            $clanCheckin->clanId = $clanId;
+            $clanCheckin->save();
+        }
+    }
+    echo json_encode($output);
+}
 ?>
