@@ -29,10 +29,9 @@ function StartStage($stageDataId, $helperPlayerId)
     ));
 
     $stage = $gameData['stages'][$stageDataId];
-    if (!$stage) {
-        $output['error'] = 'ERROR_INVALID_STAGE_DATA';
-    } else if (!IsStageAvailable($stage)) {
-        $output['error'] = 'ERROR_INVALID_STAGE_NOT_AVAILABLE';
+    $canEnterResult = CanEnterStage($player, $stage);
+    if (!$canEnterResult['success']) {
+        $output['error'] = $canEnterResult['error'];
     } else {
         $staminaTable = $gameData['staminas'][$gameData['stageStaminaId']];
         $stamina = GetStamina($playerId, $staminaTable['id']);
@@ -82,6 +81,12 @@ function FinishStage($session, $battleResult, $deadCharacters)
         $session
     ));
 
+    $clanDb = new Clan();
+    $clan = $clanDb->findone(array(
+        'id = ? AND id > 0',
+        $player->clanId
+    ));
+
     if (!$playerBattle) {
         $output['error'] = 'ERROR_INVALID_BATTLE_SESSION'.$session;
     } else {
@@ -96,6 +101,7 @@ function FinishStage($session, $battleResult, $deadCharacters)
             $output['deleteItemIds'] = array();
             $output['updateCurrencies'] = array();
             $output['rewardPlayerExp'] = 0;
+            $output['rewardClanExp'] = 0;
             $output['rewardCharacterExp'] = 0;
             $output['rating'] = 0;
             $output['firstClearRewardPlayerExp'] = 0;
@@ -108,6 +114,7 @@ function FinishStage($session, $battleResult, $deadCharacters)
             $deleteItemIds = array();
             $updateCurrencies = array();
             $rewardPlayerExp = 0;
+            $rewardClanExp = 0;
             $rewardCharacterExp = 0;
             $rewardSoftCurrency = 0;
             $rating = 0;
@@ -128,6 +135,11 @@ function FinishStage($session, $battleResult, $deadCharacters)
                 // Player exp
                 $rewardPlayerExp = $stage['rewardPlayerExp'];
                 $player->exp += $rewardPlayerExp;
+                // Clan exp
+                if ($clan) {
+                    $rewardClanExp = $stage['rewardClanExp'];
+                    $clan->exp += $rewardClanExp;
+                }
                 // Character exp
                 $characterIds = GetFormationCharacterIds($playerId, $playerSelectedFormation);
                 $countCharacterIds = count($characterIds);
@@ -198,6 +210,7 @@ function FinishStage($session, $battleResult, $deadCharacters)
                 $output['deleteItemIds'] = $deleteItemIds;
                 $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
                 $output['rewardPlayerExp'] = $rewardPlayerExp;
+                $output['rewardClanExp'] = $rewardClanExp;
                 $output['rewardCharacterExp'] = $rewardCharacterExp;
                 $output['rewardSoftCurrency'] = $rewardSoftCurrency;
                 $output['rating'] = $rating;
@@ -205,6 +218,10 @@ function FinishStage($session, $battleResult, $deadCharacters)
             }
             $player->update();
             $output['player'] = CursorToArray($player);
+            if ($clan) {
+                $clan->update();
+                $output['clan'] = CursorToArray($clan);
+            }
         }
     }
     echo json_encode($output);

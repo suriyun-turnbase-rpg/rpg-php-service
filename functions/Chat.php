@@ -21,9 +21,7 @@ function GetClanChatMessages($lastTime)
     $chatDb = new Chat();
     $player = GetPlayer();
     $clanId = $player->clanId;
-    if ($clanId == 0) {
-        echo '{"list":[]}';
-    } else {
+    if ($clanId > 0) {
         echo json_encode(array(
             'list' => CursorsToArray(
                 $chatDb->find(array(
@@ -36,6 +34,8 @@ function GetClanChatMessages($lastTime)
                 ))
             )
         ));
+    } else {
+        echo '{"list":[]}';
     }
 }
 

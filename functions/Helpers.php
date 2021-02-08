@@ -1252,7 +1252,7 @@ function GetSocialPlayer($playerId, $targetPlayerId)
             $targetPlayerId
         )) > 0;
         if (empty($player->clanId)) {
-            $player->clanId = '';
+            $player->clanId = 0;
         }
         // Show leader character
         $character = GetLeaderCharacter($targetPlayerId, $player->selectedFormation);
@@ -1377,5 +1377,29 @@ function IsStageAvailable($stage)
         return $currentDate >= $startDate && $currentDate < $endDate;
     }
     return false;
+}
+
+function CanEnterStage($player, $stage) {
+    $result = array('success' => true, 'error' => '');
+    if (!$stage) {
+        $result['success'] = false;
+        $result['error'] = 'ERROR_INVALID_STAGE_DATA';
+    }
+    if (!IsStageAvailable($stage)) {
+        $result['success'] = false;
+        $result['error'] = 'ERROR_INVALID_STAGE_NOT_AVAILABLE';
+    }
+    switch ($stage['stageType'])
+    {
+        case EStageType::Normal:
+            break;
+        case EStageType::Clan:
+            if ($player->clanId <= 0) {
+                $result['success'] = false;
+                $result['error'] = 'ERROR_NOT_JOINED_CLAN';
+            }
+            break;
+    }
+    return $result;
 }
 ?>
