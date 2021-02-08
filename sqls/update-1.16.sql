@@ -1,0 +1,1 @@
+ALTER TABLE `<<__prefix__>>clan` ADD `exp` INT NOT NULL DEFAULT '0' AFTER `id`;

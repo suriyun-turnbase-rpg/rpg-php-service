@@ -244,8 +244,14 @@ $actions = array(
     'chat-messages' => function($params, $postBody) {
         GetChatMessages($params['lastTime']);
     },
+    'clan-chat-messages' => function($params, $postBody) {
+        GetClanChatMessages($params['lastTime']);
+    },
     'enter-chat-message' => function($params, $postBody) {
-        EnterChatMessage($postBody['isClanChat'], $postBody['message']);
+        EnterChatMessage($postBody['message']);
+    },
+    'enter-clan-chat-message' => function($params, $postBody) {
+        EnterClanChatMessage($postBody['message']);
     },
 );
 // API actions functions
@@ -487,8 +493,14 @@ if (\Base::instance()->get('use_request_query_action')) {
     $f3->route('GET /chat-messages/@lastTime', function($f3, $params) {
         DoGetAction('chat-messages', $params);
     });
+    $f3->route('GET /clan-chat-messages/@lastTime', function($f3, $params) {
+        DoGetAction('clan-chat-messages', $params);
+    });
     $f3->route('POST /enter-chat-message', function($f3, $params) {
         DoPostAction('enter-chat-message', $f3, $params);
+    });
+    $f3->route('POST /enter-clan-chat-message', function($f3, $params) {
+        DoPostAction('enter-clan-chat-message', $f3, $params);
     });
     $f3->run();
 }
