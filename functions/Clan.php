@@ -377,23 +377,96 @@ function ClanCheckin()
     $player = GetPlayer();
     $playerId = $player->id;
     $clanId = $player->clanId;
+    $checkInDate = strtotime(date('Y-m-d'));
     $clanDb = new Clan();
-    $clan = $clanDb->findone(array('id = ?', $clanId));
-    if (!$clan) {
+    $clanCheckinDb = new ClanCheckin();
+    if (!($clan = $clanDb->findone(array('id = ?', $clanId))))
+    {
         $output['error'] = 'ERROR_NOT_HAVE_PERMISSION';
-    } else {
-        $checkInDate = strtotime(date('Y-m-d'));
-        $clanCheckinDb = new ClanCheckin();
-        $clanCheckin = $clanCheckinDb->findone(array(
-            'playerId = ? AND checkInDate = ?',
-            $playerId,
-            $checkInDate));
-        if (!$clanCheckin) {
-            $clanCheckin = new ClanCheckin();
-            $clanCheckin->playerId = $playerId;
-            $clanCheckin->checkInDate = $checkInDate;
-            $clanCheckin->clanId = $clanId;
-            $clanCheckin->save();
+    }
+    else if (($clanCheckin = $clanCheckinDb->findone(array(
+        'playerId = ? AND checkInDate = ?',
+        $playerId,
+        $checkInDate))))
+    {
+        $output['error'] = 'ERROR_NOT_HAVE_PERMISSION';
+    }
+    else
+    {
+        $clanCheckin = new ClanCheckin();
+        $clanCheckin->playerId = $playerId;
+        $clanCheckin->checkInDate = $checkInDate;
+        $clanCheckin->clanId = $clanId;
+        $clanCheckin->save();
+    }
+    echo json_encode($output);
+}
+
+function HasClanDonation()
+{
+    $output = array('alreadyDonation' => false);
+    $player = GetPlayer();
+    $playerId = $player->id;
+    $checkInDate = strtotime(date('Y-m-d'));
+    $clanDonationDb = new ClanDonation();
+    $clanDonation = $clanDonationDb->findone(array(
+        'playerId = ? AND checkInDate = ?',
+        $playerId,
+        $checkInDate));
+    if ($clanDonation) {
+        $output['alreadyDonation'] = true;
+    }
+    echo json_encode($output);
+}
+
+function ClanDonation($clanDonationDataId)
+{
+    $gameData = \Base::instance()->get('GameData');
+    $output = array('error' => '');
+    $player = GetPlayer();
+    $playerId = $player->id;
+    $clanId = $player->clanId;
+    $checkInDate = strtotime(date('Y-m-d'));
+    $clanDb = new Clan();
+    $clanDonationDb = new ClanDonation();
+    $clanDonationData = $gameData['clanDonations'][$clanDonationDataId];
+    if (!$clanDonationData)
+    {
+        $output['error'] = 'ERROR_INVALID_CLAN_DONATION_DATA';
+    }
+    else if (!($clan = $clanDb->findone(array('id = ?', $clanId))))
+    {
+        $output['error'] = 'ERROR_NOT_HAVE_PERMISSION';
+    }
+    else if (($clanDonation = $clanDonationDb->findone(array(
+        'playerId = ? AND checkInDate = ?',
+        $playerId,
+        $checkInDate))))
+    {
+        $output['error'] = 'ERROR_NOT_HAVE_PERMISSION';
+    }
+    else
+    {
+        $requireCurrencyId = $clanDonationData['requireCurrencyId'];
+        $requireCurrencyAmount = $clanDonationData['requireCurrencyAmount'];
+        $rewardClanExp = $clanDonationData['rewardClanExp'];
+        $currency = GetCurrency($playerId, $clanDonation[$requireCurrencyId]);
+        if ($requireCurrencyAmount > $currency->amount)
+        {
+            $output['error'] = 'ERROR_NOT_ENOUGH_CURRENCY';
+        }
+        else
+        {
+            $currency->amount -= $requireCurrencyAmount;
+            $clan->exp += $rewardClanExp;
+            $clan->update();
+            $clanDonation = new ClanDonation();
+            $clanDonation->playerId = $playerId;
+            $clanDonation->checkInDate = $checkInDate;
+            $clanDonation->clanId = $clanId;
+            $clanDonation->dataId = $dataId;
+            $clanDonation->save();
+            $output['clan'] = CursorToArray($clan);
         }
     }
     echo json_encode($output);
