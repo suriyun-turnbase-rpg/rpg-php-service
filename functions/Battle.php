@@ -164,7 +164,7 @@ function FinishStage($session, $battleResult, $deadCharacters)
                 }
                 // Soft currency
                 $rewardSoftCurrency = rand($stage['randomSoftCurrencyMinAmount'], $stage['randomSoftCurrencyMaxAmount']);
-                $softCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['softCurrencyId']]['id']);
+                $softCurrency = GetCurrency($playerId, $gameData['softCurrencyId']);
                 $softCurrency->amount += $rewardSoftCurrency;
                 $softCurrency->update();
                 $updateCurrencies[] = $softCurrency;
@@ -232,7 +232,7 @@ function ReviveCharacters()
     $gameData = \Base::instance()->get('GameData');
     $output = array('error' => '');
     $player = GetPlayer();
-    $hardCurrency = GetCurrency($player->id, $gameData['currencies'][$gameData['hardCurrencyId']]['id']);
+    $hardCurrency = GetCurrency($player->id, $gameData['hardCurrencyId']);
     $revivePrice = $gameData['revivePrice'];
     if ($revivePrice > $hardCurrency->amount) {
         $output['error'] = 'ERROR_NOT_ENOUGH_HARD_CURRENCY';

@@ -1027,12 +1027,12 @@ function HelperClearStage($createItems, $updateItems, $output, $player, $stage, 
         // Player exp
         $player->exp += $firstClearRewardPlayerExp;
         // Soft currency
-        $softCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['softCurrencyId']]['id']);
+        $softCurrency = GetCurrency($playerId, $gameData['softCurrencyId']);
         $softCurrency->amount += $firstClearRewardSoftCurrency;
         $softCurrency->update();
         $updateCurrencies[] = $softCurrency;
         // Hard currency
-        $hardCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['hardCurrencyId']]['id']);
+        $hardCurrency = GetCurrency($playerId, $gameData['hardCurrencyId']);
         $hardCurrency->amount += $firstClearRewardHardCurrency;
         $hardCurrency->update();
         $updateCurrencies[] = $hardCurrency;

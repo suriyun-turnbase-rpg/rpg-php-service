@@ -12,8 +12,8 @@ function CreateClan($clanName)
     } else if (empty($clanName)) {
         $output['error'] = 'ERROR_EMPTY_CLAN_NAME';
     } else {
-        $softCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['softCurrencyId']]['id']);
-        $hardCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['hardCurrencyId']]['id']);
+        $softCurrency = GetCurrency($playerId, $gameData['softCurrencyId']);
+        $hardCurrency = GetCurrency($playerId, $gameData['hardCurrencyId']);
         $requirementType = $gameData['createClanCurrencyType'];
         $price = $gameData['createClanCurrencyAmount'];
         if ($requirementType == ECreateClanRequirementType::SoftCurrency && $price > $softCurrency->amount) {

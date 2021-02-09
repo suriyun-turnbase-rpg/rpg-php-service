@@ -113,13 +113,13 @@ function FinishDuel($session, $battleResult, $deadCharacters)
                     
                 // Soft currency
                 $rewardSoftCurrency = $arenaRank['rewardSoftCurrency'];
-                $softCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['softCurrencyId']]['id']);
+                $softCurrency = GetCurrency($playerId, $gameData['softCurrencyId']);
                 $softCurrency->amount += $rewardSoftCurrency;
                 $softCurrency->update();
                 $updateCurrencies[] = $softCurrency;
                 // Hard currency
                 $rewardHardCurrency = $arenaRank['rewardHardCurrency'];
-                $hardCurrency = GetCurrency($playerId, $gameData['currencies'][$gameData['hardCurrencyId']]['id']);
+                $hardCurrency = GetCurrency($playerId, $gameData['hardCurrencyId']);
                 $hardCurrency->amount += $rewardHardCurrency;
                 $hardCurrency->update();
                 $updateCurrencies[] = $hardCurrency;
