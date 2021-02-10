@@ -5,14 +5,7 @@ function StartRaidBossBattle($eventId)
     $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
-    $playerBattleDb = new PlayerBattle();
-    $playerBattleDb->erase(array(
-        'playerId = ? AND battleResult = ? AND battleType = ?',
-        $playerId,
-        EBattleResult::None,
-        EBattleType::RaidBoss
-    ));
-
+    
     $currentTime = time();
     $raidEventDb = new RaidEvent();
     $raidEvent = $raidEventDb->findone(array(
