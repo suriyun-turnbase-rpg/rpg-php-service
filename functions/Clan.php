@@ -373,6 +373,7 @@ function HasClanCheckin()
 
 function ClanCheckin()
 {
+    $gameData = \Base::instance()->get('GameData');
     $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
@@ -393,6 +394,9 @@ function ClanCheckin()
     }
     else
     {
+        $rewardClanExp = $gameData['clanCheckinRewardClanExp'];
+        $clan->exp += $rewardClanExp;
+        $clan->update();
         $clanCheckin = new ClanCheckin();
         $clanCheckin->playerId = $playerId;
         $clanCheckin->checkInDate = $checkInDate;
