@@ -243,6 +243,18 @@ $actions = array(
     'clan-set-role' => function($params, $postBody) {
         ClanSetRole($postBody['targetPlayerId'], $postBody['clanRole']);
     },
+    'clan-checkin' => function($params, $postBody) {
+        ClanCheckin();
+    },
+    'clan-checkin-status' => function($params, $postBody) {
+        GetClanCheckinStatus();
+    },
+    'clan-donation' => function($params, $postBody) {
+        ClanDonation();
+    },
+    'clan-donation-status' => function($params, $postBody) {
+        GetClanDonationStatus();
+    },
     'chat-messages' => function($params, $postBody) {
         GetChatMessages($params['lastTime']);
     },
@@ -496,6 +508,18 @@ if (\Base::instance()->get('use_request_query_action')) {
     });
     $f3->route('POST /clan-set-role', function($f3, $params) {
         DoPostAction('clan-set-role', $f3, $params);
+    });
+    $f3->route('POST /clan-checkin', function($f3, $params) {
+        DoPostAction('clan-checkin', $f3, $params);
+    });
+    $f3->route('GET /clan-checkin-status', function($f3, $params) {
+        DoGetAction('clan-checkin-status', $params);
+    });
+    $f3->route('POST /clan-donation', function($f3, $params) {
+        DoPostAction('clan-donation', $f3, $params);
+    });
+    $f3->route('GET /clan-donation-status', function($f3, $params) {
+        DoGetAction('clan-donation-status', $params);
     });
     // Chat services
     $f3->route('GET /chat-messages/@lastTime', function($f3, $params) {

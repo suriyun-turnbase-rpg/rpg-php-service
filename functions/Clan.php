@@ -263,6 +263,8 @@ function GetClan()
         $output['clan'] = array(
             'id' => $clan->id,
             'name' => $clan->name,
+            'description' => $clan->description,
+            'exp' => $clan->exp,
             'owner' => GetClanOwner($playerId, $clanId)
         );
     }
@@ -354,7 +356,7 @@ function ClanSetRole($targetPlayerId, $targetClanRole)
     echo json_encode($output);
 }
 
-function HasClanCheckin()
+function GetClanCheckinStatus()
 {
     $output = array('alreadyCheckin' => false);
     $player = GetPlayer();
@@ -402,11 +404,18 @@ function ClanCheckin()
         $clanCheckin->checkInDate = $checkInDate;
         $clanCheckin->clanId = $clanId;
         $clanCheckin->save();
+        $output['clan'] = array(
+            'id' => $clan->id,
+            'name' => $clan->name,
+            'description' => $clan->description,
+            'exp' => $clan->exp,
+            'owner' => GetClanOwner($playerId, $clanId)
+        );
     }
     echo json_encode($output);
 }
 
-function HasClanDonation()
+function GetClanDonationStatus()
 {
     $output = array('alreadyDonation' => false);
     $player = GetPlayer();
@@ -470,7 +479,13 @@ function ClanDonation($clanDonationDataId)
             $clanDonation->clanId = $clanId;
             $clanDonation->dataId = $dataId;
             $clanDonation->save();
-            $output['clan'] = CursorToArray($clan);
+            $output['clan'] = array(
+                'id' => $clan->id,
+                'name' => $clan->name,
+                'description' => $clan->description,
+                'exp' => $clan->exp,
+                'owner' => GetClanOwner($playerId, $clanId)
+            );
         }
     }
     echo json_encode($output);
