@@ -54,7 +54,7 @@ function StartDuel($targetPlayerId)
     echo json_encode($output);
 }
 
-function FinishDuel($session, $battleResult, $deadCharacters)
+function FinishDuel($session, $battleResult, $totalDamage, $deadCharacters)
 {
     $gameData = \Base::instance()->get('GameData');
     $output = array('error' => '');
@@ -62,9 +62,10 @@ function FinishDuel($session, $battleResult, $deadCharacters)
     $playerId = $player->id;
     $playerBattleDb = new PlayerBattle();
     $playerBattle = $playerBattleDb->findone(array(
-        'playerId = ? AND session = ?',
+        'playerId = ? AND session = ? AND battleType = ?',
         $playerId,
-        $session
+        $session,
+        EBattleType::Arena
     ));
 
     if (!$playerBattle) {
@@ -84,6 +85,7 @@ function FinishDuel($session, $battleResult, $deadCharacters)
         $arenaRank = GetArenaRank($arenaScore);
         // Set battle session
         $playerBattle->battleResult = $battleResult;
+        $playerBattle->totalDamage = $totalDamage;
         if ($battleResult == EBattleResult::Win)
         {
             $rating = 3 - $deadCharacters;
@@ -181,6 +183,7 @@ function FinishDuel($session, $battleResult, $deadCharacters)
         $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
         $output['rewardSoftCurrency'] = $rewardSoftCurrency;
         $output['rewardHardCurrency'] = $rewardHardCurrency;
+        $output['totalDamage'] = $totalDamage;
         $output['rating'] = $rating;
         $output['updateScore'] = $updateScore;
         $output['player'] = CursorToArray($player);

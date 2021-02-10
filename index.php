@@ -47,6 +47,8 @@ require_once('functions/Arena.php');
 require_once('functions/Billing.php');
 require_once('functions/Clan.php');
 require_once('functions/Chat.php');
+require_once('functions/RaidBoss.php');
+require_once('functions/RaidBossCreation.php');
 // API actions
 $actions = array(
     'login' => function($params, $postBody) {
@@ -170,7 +172,7 @@ $actions = array(
         StartStage($postBody['stageDataId'], $postBody['helperPlayerId']);
     },
     'finish-stage' => function($params, $postBody) {
-        FinishStage($postBody['session'], $postBody['battleResult'], $postBody['deadCharacters']);
+        FinishStage($postBody['session'], $postBody['battleResult'], $postBody['totalDamage'], $postBody['deadCharacters']);
     },
     'revive-characters' => function($params, $postBody) {
         ReviveCharacters();
@@ -185,7 +187,7 @@ $actions = array(
         StartDuel($postBody['targetPlayerId']);
     },
     'finish-duel' => function($params, $postBody) {
-        FinishDuel($postBody['session'], $postBody['battleResult'], $postBody['deadCharacters']);
+        FinishDuel($postBody['session'], $postBody['battleResult'], $postBody['totalDamage'], $postBody['deadCharacters']);
     },
     'ios-buy-goods' => function($params, $postBody) {
         IOSBuyGoods($postBody['iapPackageDataId'], $postBody['receipt']);
@@ -252,6 +254,12 @@ $actions = array(
     },
     'enter-clan-chat-message' => function($params, $postBody) {
         EnterClanChatMessage($postBody['message']);
+    },
+    'start-raid-boss-battle' => function($params, $postBody) {
+        StartRaidBossBattle($postBody['eventId']);
+    },
+    'finish-raid-boss-battle' => function($params, $postBody) {
+        FinishRaidBossBattle($postBody['session'], $postBody['battleResult'], $postBody['totalDamage'], $postBody['deadCharacters']);
     },
 );
 // API actions functions

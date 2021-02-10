@@ -34,12 +34,12 @@ function StartStage($stageDataId, $helperPlayerId)
         $output['error'] = $canEnterResult['error'];
     } else {
         $staminaTable = $gameData['staminas'][$gameData['stageStaminaId']];
-        $stamina = GetStamina($playerId, $staminaTable['id']);
         if (!empty($stage['requireCustomStamina']) && !empty($gameData['staminas'][$stage['requireCustomStamina']]))
         {
             // Use custom stamina
             $staminaTable = $gameData['staminas'][$stage['requireCustomStamina']];
         }
+        $stamina = GetStamina($playerId, $staminaTable['id']);
         
         if (!DecreasePlayerStamina($playerId, $staminaTable['id'], $stage['requireStamina']))
         {
@@ -68,7 +68,7 @@ function StartStage($stageDataId, $helperPlayerId)
     echo json_encode($output);
 }
 
-function FinishStage($session, $battleResult, $deadCharacters)
+function FinishStage($session, $battleResult, $totalDamage, $deadCharacters)
 {
     $gameData = \Base::instance()->get('GameData');
     $output = array('error' => '');
@@ -76,9 +76,10 @@ function FinishStage($session, $battleResult, $deadCharacters)
     $playerId = $player->id;
     $playerBattleDb = new PlayerBattle();
     $playerBattle = $playerBattleDb->findone(array(
-        'playerId = ? AND session = ?',
+        'playerId = ? AND session = ? AND battleType = ?',
         $playerId,
-        $session
+        $session,
+        EBattleType::Stage
     ));
 
     $clanDb = new Clan();
@@ -88,7 +89,7 @@ function FinishStage($session, $battleResult, $deadCharacters)
     ));
 
     if (!$playerBattle) {
-        $output['error'] = 'ERROR_INVALID_BATTLE_SESSION'.$session;
+        $output['error'] = 'ERROR_INVALID_BATTLE_SESSION';
     } else {
         $stage = $gameData['stages'][$playerBattle->dataId];
         if (!$stage) {
@@ -120,6 +121,7 @@ function FinishStage($session, $battleResult, $deadCharacters)
             $rating = 0;
             // Set battle session
             $playerBattle->battleResult = $battleResult;
+            $playerBattle->totalDamage = $totalDamage;
             if ($battleResult == EBattleResult::Win)
             {
                 $rating = 3 - $deadCharacters;
@@ -213,6 +215,7 @@ function FinishStage($session, $battleResult, $deadCharacters)
                 $output['rewardClanExp'] = $rewardClanExp;
                 $output['rewardCharacterExp'] = $rewardCharacterExp;
                 $output['rewardSoftCurrency'] = $rewardSoftCurrency;
+                $output['totalDamage'] = $totalDamage;
                 $output['rating'] = $rating;
                 $output = HelperClearStage($createItems, $updateItems, $output, $player, $stage, $rating);
             }
