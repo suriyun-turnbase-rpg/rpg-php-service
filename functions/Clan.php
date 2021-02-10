@@ -417,7 +417,7 @@ function ClanCheckin()
 
 function GetClanDonationStatus()
 {
-    $output = array('alreadyDonation' => false);
+    $output = array('alreadyDonate' => false);
     $player = GetPlayer();
     $playerId = $player->id;
     $checkInDate = strtotime(date('Y-m-d'));
@@ -427,7 +427,7 @@ function GetClanDonationStatus()
         $playerId,
         $checkInDate));
     if ($clanDonation) {
-        $output['alreadyDonation'] = true;
+        $output['alreadyDonate'] = true;
     }
     echo json_encode($output);
 }
