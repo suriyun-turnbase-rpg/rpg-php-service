@@ -423,7 +423,7 @@ function GetClanDonationStatus()
     $checkInDate = strtotime(date('Y-m-d'));
     $clanDonationDb = new ClanDonation();
     $clanDonation = $clanDonationDb->findone(array(
-        'playerId = ? AND checkInDate = ?',
+        'playerId = ? AND donationDate = ?',
         $playerId,
         $checkInDate));
     if ($clanDonation) {
@@ -439,7 +439,7 @@ function ClanDonation($clanDonationDataId)
     $player = GetPlayer();
     $playerId = $player->id;
     $clanId = $player->clanId;
-    $checkInDate = strtotime(date('Y-m-d'));
+    $donationDate = strtotime(date('Y-m-d'));
     $clanDb = new Clan();
     $clanDonationDb = new ClanDonation();
     $clanDonationData = $gameData['clanDonations'][$clanDonationDataId];
@@ -452,9 +452,9 @@ function ClanDonation($clanDonationDataId)
         $output['error'] = 'ERROR_NOT_HAVE_PERMISSION';
     }
     else if (($clanDonation = $clanDonationDb->findone(array(
-        'playerId = ? AND checkInDate = ?',
+        'playerId = ? AND donationDate = ?',
         $playerId,
-        $checkInDate))))
+        $donationDate))))
     {
         $output['error'] = 'ERROR_NOT_HAVE_PERMISSION';
     }
@@ -463,21 +463,24 @@ function ClanDonation($clanDonationDataId)
         $requireCurrencyId = $clanDonationData['requireCurrencyId'];
         $requireCurrencyAmount = $clanDonationData['requireCurrencyAmount'];
         $rewardClanExp = $clanDonationData['rewardClanExp'];
-        $currency = GetCurrency($playerId, $clanDonation[$requireCurrencyId]);
+        $currency = GetCurrency($playerId, $requireCurrencyId);
         if ($requireCurrencyAmount > $currency->amount)
         {
             $output['error'] = 'ERROR_NOT_ENOUGH_CURRENCY';
         }
         else
         {
+            $updateCurrencies = array();
             $currency->amount -= $requireCurrencyAmount;
+            $currency->update();
+            $updateCurrencies[] = $currency;
             $clan->exp += $rewardClanExp;
             $clan->update();
             $clanDonation = new ClanDonation();
             $clanDonation->playerId = $playerId;
-            $clanDonation->checkInDate = $checkInDate;
+            $clanDonation->donationDate = $donationDate;
             $clanDonation->clanId = $clanId;
-            $clanDonation->dataId = $dataId;
+            $clanDonation->dataId = $clanDonationDataId;
             $clanDonation->save();
             $output['clan'] = array(
                 'id' => $clan->id,
@@ -486,6 +489,7 @@ function ClanDonation($clanDonationDataId)
                 'exp' => $clan->exp,
                 'owner' => GetClanOwner($playerId, $clanId)
             );
+            $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
         }
     }
     echo json_encode($output);
