@@ -26,15 +26,15 @@ function StartStage($stageDataId, $helperPlayerId)
     if (!$canEnterResult['success']) {
         $output['error'] = $canEnterResult['error'];
     } else {
-        $staminaTable = $gameData['staminas'][$gameData['stageStaminaId']];
+        $staminaId = $gameData['stageStaminaId'];
         if (!empty($stage['requireCustomStamina']) && !empty($gameData['staminas'][$stage['requireCustomStamina']]))
         {
             // Use custom stamina
-            $staminaTable = $gameData['staminas'][$stage['requireCustomStamina']];
+            $staminaId = $stage['requireCustomStamina'];
         }
-        $stamina = GetStamina($playerId, $staminaTable['id']);
+        $stamina = GetStamina($playerId, $staminaId);
         
-        if (!DecreasePlayerStamina($playerId, $staminaTable['id'], $stage['requireStamina']))
+        if (!DecreasePlayerStamina($playerId, $staminaId, $stage['requireStamina']))
         {
             $output['error'] = 'ERROR_NOT_ENOUGH_STAGE_STAMINA';
         }

@@ -17,13 +17,13 @@ function StartRaidBossBattle($eventId)
     if (!$raidEvent) {
         $output['error'] = 'ERROR_NOT_HAVE_PERMISSION';
     } else {
-        $staminaTable = $gameData['staminas'][$gameData['stageStaminaId']];
+        $staminaId = $gameData['stageStaminaId'];
         if (!empty($stage['requireCustomStamina']) && !empty($gameData['staminas'][$stage['requireCustomStamina']]))
         {
             // Use custom stamina
-            $staminaTable = $gameData['staminas'][$stage['requireCustomStamina']];
+            $staminaId = $stage['requireCustomStamina'];
         }
-        $stamina = GetStamina($playerId, $staminaTable['id']);
+        $stamina = GetStamina($playerId, $staminaId);
         
         if (!DecreasePlayerStamina($playerId, $staminaTable['id'], $stage['requireStamina']))
         {

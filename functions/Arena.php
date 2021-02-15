@@ -34,8 +34,7 @@ function StartDuel($targetPlayerId)
             $targetPlayerId,
         ));
         
-        $staminaTable = $gameData['staminas'][$gameData['arenaStaminaId']];
-        $stamina = GetStamina($playerId, $staminaTable['id']);
+        $stamina = GetStamina($playerId, $gameData['arenaStaminaId']);
         $output['stamina'] = CursorToArray($stamina);
         $output['session'] = $session;
         
