@@ -20,13 +20,6 @@ function StartStage($stageDataId, $helperPlayerId)
     $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
-    $playerBattleDb = new PlayerBattle();
-    $playerBattleDb->erase(array(
-        'playerId = ? AND battleResult = ? AND battleType = ?',
-        $playerId,
-        EBattleResult::None,
-        EBattleType::Stage
-    ));
 
     $stage = $gameData['stages'][$stageDataId];
     $canEnterResult = CanEnterStage($player, $stage);
@@ -47,14 +40,22 @@ function StartStage($stageDataId, $helperPlayerId)
         }
         else
         {
+            $playerBattleDb = new PlayerBattle();
+            $playerBattleDb->erase(array(
+                'playerId = ? AND battleResult = ? AND battleType = ?',
+                $playerId,
+                EBattleResult::None,
+                EBattleType::Stage
+            ));
+
             $session = md5($playerId . '_' . $stageDataId . '_' . time());
             $newData = new PlayerBattle();
             $newData->playerId = $playerId;
             $newData->dataId = $stageDataId;
             $newData->session = $session;
+            $newData->battleType = EBattleType::Stage;
             $newData->save();
 
-            
             if (!empty($helperPlayerId))
             {
                 // Update achievement

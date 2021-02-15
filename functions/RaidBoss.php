@@ -31,12 +31,22 @@ function StartRaidBossBattle($eventId)
         }
         else
         {
+            $playerBattleDb = new PlayerBattle();
+            $playerBattleDb->erase(array(
+                'playerId = ? AND battleResult = ? AND battleType = ?',
+                $playerId,
+                EBattleResult::None,
+                EBattleType::RaidBoss
+            ));
+
             $session = md5($playerId . '_' . $eventId . '_' . time());
             $newData = new PlayerBattle();
             $newData->playerId = $playerId;
             $newData->dataId = $eventId;
             $newData->session = $session;
+            $newData->battleType = EBattleType::RaidBoss;
             $newData->save();
+
             $output['stamina'] = CursorToArray($stamina);
             $output['session'] = $session;
         }

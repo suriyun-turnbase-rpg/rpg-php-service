@@ -5,22 +5,27 @@ function StartDuel($targetPlayerId)
     $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
-    $playerBattleDb = new PlayerBattle();
-    $playerBattleDb->erase(array(
-        'playerId = ? AND battleResult = ? AND battleType = ?',
-        $playerId,
-        EBattleResult::None,
-        EBattleType::Arena
-    ));
 
-    if (!DecreasePlayerStamina($playerId, $gameData['arenaStaminaId'], 1)) {
+    if (!DecreasePlayerStamina($playerId, $gameData['arenaStaminaId'], 1))
+    {
         $output['error'] = 'ERROR_NOT_ENOUGH_ARENA_STAMINA';
-    } else {
+    }
+    else
+    {
+        $playerBattleDb = new PlayerBattle();
+        $playerBattleDb->erase(array(
+            'playerId = ? AND battleResult = ? AND battleType = ?',
+            $playerId,
+            EBattleResult::None,
+            EBattleType::Arena
+        ));
+
         $session = md5($playerId . '_' . $targetPlayerId . '_' . time());
         $newData = new PlayerBattle();
         $newData->playerId = $playerId;
         $newData->dataId = $targetPlayerId;
         $newData->session = $session;
+        $newData->battleType = EBattleType::Arena;
         $newData->save();
         
         $opponent = new Player();
