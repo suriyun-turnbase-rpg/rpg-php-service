@@ -56,6 +56,7 @@ CREATE TABLE `<<__prefix__>>clan_checkin` (
 CREATE TABLE `<<__prefix__>>clan_donation` (
   `playerId` bigint NOT NULL,
   `donationDate` int NOT NULL,
+  `count` tinyint UNSIGNED NOT NULL DEFAULT '1',
   `clanId` bigint NOT NULL,
   `dataId` varchar(50) NOT NULL
 ) ENGINE=InnoDB;
@@ -329,8 +330,9 @@ ALTER TABLE `<<__prefix__>>clan_checkin`
 -- Indexes for table `<<__prefix__>>clan_donation`
 --
 ALTER TABLE `<<__prefix__>>clan_donation`
-  ADD PRIMARY KEY (`playerId`,`donationDate`),
+  ADD PRIMARY KEY (`playerId`,`donationDate`,`count`) USING BTREE,
   ADD KEY `clanId` (`clanId`);
+COMMIT;
 
 --
 -- Indexes for table `<<__prefix__>>clan_join_request`
