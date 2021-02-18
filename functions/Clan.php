@@ -396,6 +396,16 @@ function ClanCheckin()
     }
     else
     {
+        $updateCurrencies = array();
+        // Increase currency
+        $rewardCurrencies = $gameData['clanCheckinRewardCurrencies'];
+        foreach ($rewardCurrencies as $rewardCurrency) {
+            $rewardingCurrency = GetCurrency($playerId, $rewardCurrency['id']);
+            $rewardingCurrency->amount += $rewardCurrency['amount'];
+            $rewardingCurrency->update();
+            $updateCurrencies[] = $rewardingCurrency;
+        }
+        // Increase clan exp
         $rewardClanExp = $gameData['clanCheckinRewardClanExp'];
         $clan->exp += $rewardClanExp;
         $clan->update();
@@ -411,6 +421,7 @@ function ClanCheckin()
             'exp' => $clan->exp,
             'owner' => GetClanOwner($playerId, $clanId)
         );
+        $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
     }
     echo json_encode($output);
 }
@@ -462,6 +473,7 @@ function ClanDonation($clanDonationDataId)
     {
         $requireCurrencyId = $clanDonationData['requireCurrencyId'];
         $requireCurrencyAmount = $clanDonationData['requireCurrencyAmount'];
+        $rewardCurrencies = $clanDonationData['rewardCurrencies'];
         $rewardClanExp = $clanDonationData['rewardClanExp'];
         $currency = GetCurrency($playerId, $requireCurrencyId);
         if ($requireCurrencyAmount > $currency->amount)
@@ -471,9 +483,18 @@ function ClanDonation($clanDonationDataId)
         else
         {
             $updateCurrencies = array();
+            // Decrease currency
             $currency->amount -= $requireCurrencyAmount;
             $currency->update();
             $updateCurrencies[] = $currency;
+            // Increase currency
+            foreach ($rewardCurrencies as $rewardCurrency) {
+                $rewardingCurrency = GetCurrency($playerId, $rewardCurrency['id']);
+                $rewardingCurrency->amount += $rewardCurrency['amount'];
+                $rewardingCurrency->update();
+                $updateCurrencies[] = $rewardingCurrency;
+            }
+            // Increase clan exp
             $clan->exp += $rewardClanExp;
             $clan->update();
             $clanDonation = new ClanDonation();

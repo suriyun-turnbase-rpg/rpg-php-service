@@ -165,6 +165,15 @@ function FinishStage($session, $battleResult, $totalDamage, $deadCharacters)
                         }
                     }
                 }
+                // Custom Currencies
+                $randomCustomCurrencies = $stage['randomCustomCurrencies'];
+                foreach ($randomCustomCurrencies as $randomCustomCurrency)
+                {
+                    $customCurrency = GetCurrency($playerId, $randomCustomCurrency['id']);
+                    $customCurrency->amount += rand($randomCustomCurrency['minAmount'], $randomCustomCurrency['maxAmount']);
+                    $customCurrency->update();
+                    $updateCurrencies[] = $customCurrency;
+                }
                 // Soft currency
                 $rewardSoftCurrency = rand($stage['randomSoftCurrencyMinAmount'], $stage['randomSoftCurrencyMaxAmount']);
                 $softCurrency = GetCurrency($playerId, $gameData['softCurrencyId']);

@@ -1020,12 +1020,21 @@ function HelperClearStage($createItems, $updateItems, $output, $player, $stage, 
         $playerClearStage->save();
         // First clear rewards
         $updateCurrencies = array();
+        $firstClearRewardCustomCurrencies = $stage['firstClearRewardCustomCurrencies'];
         $firstClearRewardPlayerExp = $stage['firstClearRewardPlayerExp'];
         $firstClearRewardSoftCurrency = $stage['firstClearRewardSoftCurrency'];
         $firstClearRewardHardCurrency = $stage['firstClearRewardHardCurrency'];
         $firstClearRewardItems = array();
         // Player exp
         $player->exp += $firstClearRewardPlayerExp;
+        // Custom currencies
+        foreach ($firstClearRewardCustomCurrencies as $firstClearRewardCustomCurrency)
+        {
+            $customCurrency = GetCurrency($playerId, $firstClearRewardCustomCurrency['id']);
+            $customCurrency->amount += $firstClearRewardCustomCurrency['amount'];
+            $customCurrency->update();
+            $updateCurrencies[] = $customCurrency;
+        }
         // Soft currency
         $softCurrency = GetCurrency($playerId, $gameData['softCurrencyId']);
         $softCurrency->amount += $firstClearRewardSoftCurrency;
