@@ -17,7 +17,7 @@ function VerifyAppstoreIAP($receipt, $is_sandbox)
 	} 
 	else
 	{ 
-		//iTune's request url is /verifyReceipt     
+		// iTune's request url is /verifyReceipt     
 		$header = "POST /verifyReceipt HTTP/1.0\r\n";
 		$header .= "Content-Type: application/x-www-form-urlencoded\r\n";
 		$header .= "Content-Length: " . strlen($json) . "\r\n\r\n";
@@ -29,14 +29,14 @@ function VerifyAppstoreIAP($receipt, $is_sandbox)
 			$res = $res . $step_res;
 		}
 		fclose ($fp);
-		//taking the JSON response
+		// Taking the JSON response
 		$json_source = substr($res, stripos($res, "\r\n\r\n{") + 4);
-		//decoding
+		// Decoding
 		$app_store_response_map = json_decode($json_source);
 		$app_store_response_status = $app_store_response_map->{'status'};
 		if ($app_store_response_status == 0)//eithr OK or expired and needs to synch
 		{
-			//here are some fields from the json, btw.
+			// Here are some fields from the json, btw.
 			$json_receipt = $app_store_response_map->{'receipt'};
 			$transaction_id = $json_receipt->{'transaction_id'};
 			$original_transaction_id = $json_receipt->{'original_transaction_id'};
@@ -65,18 +65,8 @@ function VerfifyGooglePlayBilling($data, $signature, $public_key_base64)
 			$signature,
 			$key,
 			OPENSSL_ALGO_SHA1);
-	if (0 === $result) 
-	{
-		return false;
-	}
-	else if (1 !== $result)
-	{
-		return false;
-	}
-	else 
-	{
-		return true;
-	}
+    // openssl_verify returns 1 for a valid signature
+    return $result === 1;
 }
 
 function IOSBuyGoods($iapPackageDataId, $receipt)
@@ -97,7 +87,7 @@ function IOSBuyGoods($iapPackageDataId, $receipt)
     {
         $output['error'] = 'ERROR_INVALID_IAP_PACKAGE_DATA';
     }
-    else if (!VerifyAppstoreIAP($receipt, \Base::instance()->get('appstore_is_sandbox')))
+    else if (VerifyAppstoreIAP($receipt, \Base::instance()->get('appstore_is_sandbox')))
     {
         $buyGoodsOutput = BuyGoods($playerId, $gameData, $packageData);
         $output['rewardItems'] = $buyGoodsOutput['rewardItems'];
@@ -128,7 +118,7 @@ function AndroidBuyGoods($iapPackageDataId, $data, $signature)
     {
         $output['error'] = 'ERROR_INVALID_IAP_PACKAGE_DATA';
     }
-    else if (!VerfifyGooglePlayBilling($data, $signature, \Base::instance()->get('play_public_key')))
+    else if (VerfifyGooglePlayBilling($data, $signature, \Base::instance()->get('play_public_key')))
     {
         $buyGoodsOutput = BuyGoods($playerId, $gameData, $packageData);
         $output['rewardItems'] = $buyGoodsOutput['rewardItems'];
