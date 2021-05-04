@@ -1,4 +1,53 @@
 <?php
+function CreateRaidEvent()
+{
+    $gameData = \Base::instance()->get('GameData');
+    // Create date is server today timestamp
+    $createDate = mktime(0, 0, 0);
+    $raidEventCreationDb = new RaidEventCreation();
+    $raidEventCreation = $raidEventCreationDb->findone(array(
+        'createDate = ?',
+        $createDate,
+    ));
+    if ($raidEventCreation) {
+        // Already create events, skip it
+        return;
+    }
+    $eventIds = array();
+    // Create raid event by stage data
+    foreach ($gameData['stages'] as $id => $stage) {
+        if ($stage['stageType'] != EStageType::RaidEvent && $stage['stageType'] != EStageType::ClanRaidEvent)
+        {
+            // stage type must be raid event or clan raid event
+            continue;
+        }
+        $hasAvailableDate = $stage['hasAvailableDate'];
+        $startDate = mktime(0, 0, 0, $stage['startMonth'], $stage['startDay'], $stage['startYear']);
+        $endDate = $startDate + (60*60*24*$stage['durationDays']);
+        if ($hasAvailableDate && ($createDate < $startDate || $createDate > $endDate))
+        {
+            // stage is not available
+            continue;
+        }
+        $availabilities = $stage['availabilities'];
+        if (!empty($availabilities)) {
+            $available = false;
+            foreach ($availabilities as $key => $value) {
+                if (date('w') == $value['day']) {
+                    $fromTime = mktime($value['startTimeHour'], $value['startTimeMinute'], 0);
+                    $toTime = $fromTime + (60*60*$value['durationHour']) + (60*$value['durationMinute']);
+                    // Create new raid event
+                    $raidEvent = new RaidEvent();
+                    $raidEvent->dataId = $id;
+                    $raidEvent->remainingHp = 0;    // Implement this
+                    $raidEvent->startTime = $fromTime;
+                    $raidEvent->endTime = $toTime;
+                }
+            }
+        }
+    }
+}
+
 function StartRaidBossBattle($eventId)
 {
     $gameData = \Base::instance()->get('GameData');
@@ -17,6 +66,8 @@ function StartRaidBossBattle($eventId)
     if (!$raidEvent) {
         $output['error'] = 'ERROR_NOT_HAVE_PERMISSION';
     } else {
+        $stageDataId = $raidEvent->dataId;
+        $stage = $gameData['stages'][$stageDataId];
         $staminaId = $gameData['stageStaminaId'];
         if (!empty($stage['requireCustomStamina']) && !empty($gameData['staminas'][$stage['requireCustomStamina']]))
         {
