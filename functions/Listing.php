@@ -247,6 +247,18 @@ function GetOpponentList()
     echo json_encode(array('list' => $list));
 }
 
+function GetRaidEventList()
+{
+    $currentTime = time();
+    $raidEventDb = new RaidEvent();
+    $raidEvents = $raidEventDb->find(array(
+        'startTime >= ? AND endTime <= ?',
+        $currentTime,
+        $currentTime
+    ));
+    echo json_encode(array('list' => ItemCursorsToArray($raidEvents)));
+}
+
 function GetServiceTime()
 {
     echo json_encode(array('serviceTime' => time()));

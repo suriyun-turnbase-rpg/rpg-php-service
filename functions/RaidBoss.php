@@ -95,6 +95,7 @@ function StartRaidBossBattle($eventId)
 
             $output['stamina'] = CursorToArray($stamina);
             $output['session'] = $session;
+            $output['remainingHp'] = $raidEvent->remainingHp;
         }
     }
     echo json_encode($output);
