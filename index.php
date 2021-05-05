@@ -48,7 +48,7 @@ require_once('functions/Billing.php');
 require_once('functions/Clan.php');
 require_once('functions/Chat.php');
 require_once('functions/RaidBoss.php');
-// Initial service
+// Initial services
 CreateRaidEvent();
 // API actions
 $actions = array(

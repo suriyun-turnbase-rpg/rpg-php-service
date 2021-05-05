@@ -16,6 +16,11 @@ function CreateRaidEvent()
     $eventIds = array();
     // Create raid event by stage data
     foreach ($gameData['raidBossStages'] as $id => $stage) {
+        if ($stage['maxHp'] <= 0)
+        {
+            // character max hp must > 0
+            continue;
+        }
         $hasAvailableDate = $stage['hasAvailableDate'];
         $startDate = mktime(0, 0, 0, $stage['startMonth'], $stage['startDay'], $stage['startYear']);
         $endDate = $startDate + (60*60*24*$stage['durationDays']);
@@ -25,10 +30,12 @@ function CreateRaidEvent()
             continue;
         }
         $availabilities = $stage['availabilities'];
-        if (!empty($availabilities)) {
-            $available = false;
-            foreach ($availabilities as $key => $value) {
-                if (date('w') == $value['day']) {
+        if (!empty($availabilities))
+        {
+            foreach ($availabilities as $key => $value)
+            {
+                if (date('w') == $value['day'])
+                {
                     $fromTime = mktime($value['startTimeHour'], $value['startTimeMinute'], 0);
                     $toTime = $fromTime + (60*60*$value['durationHour']) + (60*$value['durationMinute']);
                     // Create new raid event
@@ -37,10 +44,17 @@ function CreateRaidEvent()
                     $raidEvent->remainingHp = $stage['maxHp'];
                     $raidEvent->startTime = $fromTime;
                     $raidEvent->endTime = $toTime;
+                    $raidEvent->save();
+                    $eventIds[] = $raidEvent->id;
                 }
             }
         }
     }
+    // Create new raid event creation
+    $raidEventCreation = new RaidEventCreation();
+    $raidEventCreation->createDate = $createDate;
+    $raidEventCreation->events = json_encode($eventIds);
+    $raidEventCreation->save();
 }
 
 function StartRaidBossBattle($eventId)
@@ -125,6 +139,13 @@ function FinishRaidBossBattle($session, $battleResult, $totalDamage, $deadCharac
         $output['error'] = 'ERROR_INVALID_BATTLE_SESSION';
     } else {
         // Set raid event
+        $stageDataId = $raidEvent->dataId;
+        $stage = $gameData['raidBossStages'][$stageDataId];
+        if ($totalDamage > $stage['maxHp'])
+        {
+            // Total damage must not over max HP
+            $totalDamage = $stage['maxHp'];
+        }
         $raidEvent->remainingHp = $raidEvent->remainingHp - $totalDamage;
         if ($raidEvent->remainingHp < 0) {
             $raidEvent->remainingHp = 0;
