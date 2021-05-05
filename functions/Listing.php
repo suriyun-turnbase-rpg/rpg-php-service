@@ -252,7 +252,7 @@ function GetRaidEventList()
     $currentTime = time();
     $raidEventDb = new RaidEvent();
     $raidEvents = $raidEventDb->find(array(
-        'startTime >= ? AND endTime <= ?',
+        'startTime < ? AND endTime >= ?',
         $currentTime,
         $currentTime
     ));
