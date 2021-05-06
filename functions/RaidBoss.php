@@ -67,7 +67,7 @@ function StartRaidBossBattle($eventId)
     $currentTime = time();
     $raidEventDb = new RaidEvent();
     $raidEvent = $raidEventDb->findone(array(
-        'id = ? AND remainingHp > 0 AND startTime > ? AND endTime < ?',
+        'id = ? AND remainingHp > 0 AND startTime < ? AND endTime >= ?',
         $eventId,
         $currentTime,
         $currentTime
@@ -85,7 +85,7 @@ function StartRaidBossBattle($eventId)
         }
         $stamina = GetStamina($playerId, $staminaId);
         
-        if (!DecreasePlayerStamina($playerId, $staminaTable['id'], $stage['requireStamina']))
+        if (!DecreasePlayerStamina($playerId, $staminaId, $stage['requireStamina']))
         {
             $output['error'] = 'ERROR_NOT_ENOUGH_STAGE_STAMINA';
         }
@@ -151,6 +151,7 @@ function FinishRaidBossBattle($session, $battleResult, $totalDamage, $deadCharac
             $raidEvent->remainingHp = 0;
         }
         $raidEvent->update();
+        $rating = 0;
         // Set battle session
         $playerBattle->battleResult = $battleResult;
         $playerBattle->totalDamage = $totalDamage;
