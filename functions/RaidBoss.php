@@ -57,6 +57,74 @@ function CreateRaidEvent()
     $raidEventCreation->save();
 }
 
+function RaidEventRewarding()
+{
+    $gameData = \Base::instance()->get('GameData');
+    $currentTime = time();
+    $endTime = $currentTime - (60 * 15);
+    $raidEventDb = new RaidEvent();
+    $raidEvents = $raidEventDb->find(array(
+        'endTime <= ? AND rewarded = 0',
+        $endTime
+    ));
+    foreach ($raidEvents as $index => $raidEvent) {
+        // Rewarding
+        $rankCount = 0;
+        $stageDataId = $raidEvent->dataId;
+        $stage = $gameData['raidBossStages'][$stageDataId];
+        $rewards = $stage['rewards'];
+        $rewardIndex = 0;
+        $rankingLimit = 0;
+        foreach ($rewards as $rewardInddex => $reward) {
+            if ($reward['rankMax'] > $rankingLimit) {
+                $rankingLimit = $reward['rankMax'];
+            }
+        }
+        $raidEventRankingDb = new RaidEventRanking();
+        $raidEventRankings = $raidEventRankingDb->find(array(
+            'eventId = ?',
+            $raidEvent->id
+        ), array(
+            'order' => 'damage DESC, updatedAt ASC',
+            'LIMIT' => $rankingLimit
+        ));
+        foreach ($raidEventRankings as $index2 => $raidEventRanking) {
+            $rankCount++;
+            $reward = $rewards[$rewardIndex];
+            $items = $reward['rewardItems'];
+            $currencies = $reward['rewardCustomCurrencies'];
+            if (!empty($reward['rewardSoftCurrency'])) {
+                $currencies[] = array(
+                    'id' => $gameData['softCurrencyId'],
+                    'amount' => $reward['rewardSoftCurrency']
+                );
+            }
+            if (!empty($reward['rewardHardCurrency'])) {
+                $currencies[] = array(
+                    'id' => $gameData['hardCurrencyId'],
+                    'amount' => $reward['rewardHardCurrency']
+                );
+            }
+            // Send mail reward
+            $mail = new Mail();
+            $mail->playerId  = $raidEventRanking->playerId;
+            $mail->title = $stage['title']." reward#".$rankCount;
+            if (!empty($items) || !empty($currencies)) {
+                $mail->items = json_encode($items);
+                $mail->currencies = json_encode($currencies);
+                $mail->hasReward = 1;
+            }
+            $mail->save();
+            // Update reward index
+            if ($rankCount >= $reward['rankMax']) {
+                $rewardIndex++;
+            }
+        }
+        $raidEvent->rewarded = 1;
+        $raidEvent->save();
+    }
+}
+
 function StartRaidBossBattle($eventId)
 {
     $gameData = \Base::instance()->get('GameData');
@@ -67,7 +135,7 @@ function StartRaidBossBattle($eventId)
     $currentTime = time();
     $raidEventDb = new RaidEvent();
     $raidEvent = $raidEventDb->findone(array(
-        'id = ? AND remainingHp > 0 AND startTime < ? AND endTime >= ?',
+        'id = ? AND remainingHp > 0 AND startTime < ? AND endTime >= ? AND rewarded = 0',
         $eventId,
         $currentTime,
         $currentTime
@@ -131,11 +199,11 @@ function FinishRaidBossBattle($session, $battleResult, $totalDamage, $deadCharac
 
     $raidEventDb = new RaidEvent();
     $raidEvent = $raidEventDb->findone(array(
-        'id = ?',
+        'id = ? AND rewarded = 0',
         $playerBattle->dataId
     ));
 
-    if (!$playerBattle) {
+    if (!$playerBattle || !$raidEvent) {
         $output['error'] = 'ERROR_INVALID_BATTLE_SESSION';
     } else {
         // Set raid event
@@ -177,10 +245,11 @@ function FinishRaidBossBattle($session, $battleResult, $totalDamage, $deadCharac
             }
             $raidEventRanking->damage = $sumDamage + $totalDamage;
             $raidEventRanking->save();
-            // Set remaining HP
+            // Set remaining HP and end time
             $raidEvent->remainingHp = $raidEvent->remainingHp - $totalDamage;
-            if ($raidEvent->remainingHp < 0) {
+            if ($raidEvent->remainingHp <= 0) {
                 $raidEvent->remainingHp = 0;
+                $raidEvent->endTime = time();
             }
             $raidEvent->update();
         }

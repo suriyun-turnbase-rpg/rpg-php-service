@@ -49,7 +49,9 @@ require_once('functions/Clan.php');
 require_once('functions/Chat.php');
 require_once('functions/RaidBoss.php');
 // Initial services
+// TODO: Theses should be called by cronjob settings
 CreateRaidEvent();
+RaidEventRewarding();
 // API actions
 $actions = array(
     'login' => function($params, $postBody) {
