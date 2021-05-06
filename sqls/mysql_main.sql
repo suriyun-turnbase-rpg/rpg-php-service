@@ -289,7 +289,8 @@ CREATE TABLE `<<__prefix__>>raid_event` (
   `dataId` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `remainingHp` int NOT NULL,
   `startTime` int NOT NULL DEFAULT '0',
-  `endTime` int NOT NULL DEFAULT '0'
+  `endTime` int NOT NULL DEFAULT '0',
+  `rewarded` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB;
 
 -- --------------------------------------------------------

@@ -7,3 +7,5 @@ CREATE TABLE `<<__prefix__>>raid_event_ranking` (
   `updatedAt` DATETIME on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`), INDEX (`playerId`), INDEX (`eventId`)
 ) ENGINE = InnoDB;
+
+ALTER TABLE `<<__prefix__>>raid_event` ADD `rewarded` tinyint(1) NOT NULL DEFAULT '0' AFTER `endTime`;
