@@ -141,22 +141,54 @@ function FinishRaidBossBattle($session, $battleResult, $totalDamage, $deadCharac
         // Set raid event
         $stageDataId = $raidEvent->dataId;
         $stage = $gameData['raidBossStages'][$stageDataId];
-        if ($totalDamage > $stage['maxHp'])
-        {
+        $maxHp = $stage['maxHp'];
+        $sumDamage = 0;
+        // Find old battles to calculate damage
+        $oldPlayerBattles = $playerBattleDb->find(array(
+            'id != ? AND playerId = ? AND dataId = ? AND battleType = ?',
+            $playerBattle->id,
+            $playerId,
+            $playerBattle->dataId,
+            EBattleType::RaidBoss
+        ));
+        // Calculate damage
+        foreach ($oldPlayerBattles as $index => $oldBattle) {
+            $sumDamage += $oldBattle->totalDamage;
+        }
+        // Player trying to hack?
+        if ($sumDamage >= $maxHp) {
+            $totalDamage = 0; 
+        } else {
             // Total damage must not over max HP
-            $totalDamage = $stage['maxHp'];
+            if ($sumDamage + $totalDamage > $maxHp) {
+                $totalDamage = $maxHp - $sumDamage;
+            }
+            // Set ranking
+            $raidEventRankingDb = new RaidEventRanking();
+            $raidEventRanking = $raidEventRankingDb->findone(array(
+                'playerId = ? AND eventId = ?',
+                $playerId,
+                $raidEvent->id
+            ));
+            if (!$raidEventRanking) {
+                $raidEventRanking = new RaidEventRanking();
+                $raidEventRanking->playerId = $playerId;
+                $raidEventRanking->eventId = $raidEvent->id;
+            }
+            $raidEventRanking->damage = $sumDamage + $totalDamage;
+            $raidEventRanking->save();
+            // Set remaining HP
+            $raidEvent->remainingHp = $raidEvent->remainingHp - $totalDamage;
+            if ($raidEvent->remainingHp < 0) {
+                $raidEvent->remainingHp = 0;
+            }
+            $raidEvent->update();
         }
-        $raidEvent->remainingHp = $raidEvent->remainingHp - $totalDamage;
-        if ($raidEvent->remainingHp < 0) {
-            $raidEvent->remainingHp = 0;
-        }
-        $raidEvent->update();
         $rating = 0;
         // Set battle session
         $playerBattle->battleResult = $battleResult;
         $playerBattle->totalDamage = $totalDamage;
-        if ($battleResult == EBattleResult::Win)
-        {
+        if ($battleResult == EBattleResult::Win) {
             $rating = 3 - $deadCharacters;
             if ($rating <= 0) {
                 $rating = 1;
