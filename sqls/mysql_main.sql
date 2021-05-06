@@ -78,6 +78,30 @@ CREATE TABLE `<<__prefix__>>clan_join_request` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `<<__prefix__>>mail`
+--
+
+CREATE TABLE `<<__prefix__>>mail` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `playerId` BIGINT NOT NULL DEFAULT '0',
+  `title` VARCHAR(160) NOT NULL DEFAULT '',
+  `content` TEXT NULL,
+  `currencies` TEXT NULL,
+  `items` TEXT NULL,
+  `hasReward` TINYINT(1) NOT NULL DEFAULT '0',
+  `isRead` TINYINT(1) NOT NULL DEFAULT '0',
+  `readTimestamp` TIMESTAMP NULL,
+  `isClaim` TINYINT(1) NOT NULL DEFAULT '0',
+  `claimTimestamp` TIMESTAMP NULL,
+  `isDelete` TINYINT(1) NOT NULL DEFAULT '0',
+  `deleteTimestamp` TIMESTAMP NULL,
+  `sentTimestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`), INDEX (`playerId`), INDEX (`hasReward`), INDEX (`isRead`), INDEX (`isClaim`), INDEX (`isDelete`)
+) ENGINE = InnoDB;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `<<__prefix__>>player`
 --
 
