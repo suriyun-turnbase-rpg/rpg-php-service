@@ -266,7 +266,7 @@ function FinishRaidBossBattle($session, $battleResult, $totalDamage, $deadCharac
         $playerBattle->rating = $rating;
         $playerBattle->update();
 
-        $output['totalDamage'] = $totalDamage;
+        $output['totalDamage'] = $sumDamage + $totalDamage;
         $output['rating'] = $rating;
         $output['raidEvent'] = CursorToArray($raidEvent);
     }
