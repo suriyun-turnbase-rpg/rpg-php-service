@@ -83,8 +83,8 @@ function ClaimMailRewards($id) {
             $output['error'] = 'ERROR_CANNOT_RECEIVE_ALL_ITEMS';
         }
     }
-    $output['createItems'] = CursorsToArray($createItems);
-    $output['updateItems'] = CursorsToArray($updateItems);
+    $output['createItems'] = ItemCursorsToArray($createItems);
+    $output['updateItems'] = ItemCursorsToArray($updateItems);
     $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
     echo json_encode($output);
 }
