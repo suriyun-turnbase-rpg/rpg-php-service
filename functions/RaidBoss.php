@@ -108,7 +108,7 @@ function RaidEventRewarding()
             // Send mail reward
             $mail = new Mail();
             $mail->playerId  = $raidEventRanking->playerId;
-            $mail->title = $stage['title']." reward#".$rankCount;
+            $mail->title = "Raid boss reward#".$rankCount;
             if (!empty($items) || !empty($currencies)) {
                 $mail->items = json_encode($items);
                 $mail->currencies = json_encode($currencies);
@@ -268,6 +268,7 @@ function FinishRaidBossBattle($session, $battleResult, $totalDamage, $deadCharac
 
         $output['totalDamage'] = $totalDamage;
         $output['rating'] = $rating;
+        $output['raidEvent'] = CursorToArray($raidEvent);
     }
     echo json_encode($output);
 }
