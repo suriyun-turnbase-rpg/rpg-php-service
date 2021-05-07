@@ -285,6 +285,18 @@ $actions = array(
     'finish-raid-boss-battle' => function($params, $postBody) {
         FinishRaidBossBattle($postBody['session'], $postBody['battleResult'], $postBody['totalDamage'], $postBody['deadCharacters']);
     },
+    'mails' => function($params, $postBody) {
+        GetMailList();
+    },
+    'read-mail' => function($params, $postBody) {
+        ReadMail($postBody['id']);
+    },
+    'claim-mail-rewards' => function($params, $postBody) {
+        ClaimMailRewards($postBody['id']);
+    },
+    'delete-mail' => function($params, $postBody) {
+        DeleteMail($postBody['id']);
+    }
 );
 // API actions functions
 function DoGetAction($actionName, $params)

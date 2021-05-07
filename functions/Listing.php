@@ -259,6 +259,24 @@ function GetRaidEventList()
     echo json_encode(array('list' => ItemCursorsToArray($raidEvents)));
 }
 
+function GetMailList()
+{
+    $player = GetPlayer();
+    $playerId = $player->id;
+    echo json_encode(array('list' => ItemCursorsToArray(GetMailListInternal($playerId))));
+}
+
+function GetMailListInternal($playerId)
+{
+    $mailDb = new Mail();
+    return $mailDb->find(array(
+        'playerId = ? AND isDelete = 0',
+        $playerId
+    ), array(
+        'order' => 'sentTimestamp DESC, isRead ASC, isClaim ASC'
+    ));
+}
+
 function GetServiceTime()
 {
     echo json_encode(array('serviceTime' => time()));
