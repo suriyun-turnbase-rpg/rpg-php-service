@@ -61,7 +61,7 @@ function RaidEventRewarding()
 {
     $gameData = \Base::instance()->get('GameData');
     $currentTime = time();
-    $endTime = $currentTime - (60 * 15);
+    $endTime = $currentTime - $f3->get('raid_boss_rewarding_delay');
     $raidEventDb = new RaidEvent();
     $raidEvents = $raidEventDb->find(array(
         'endTime <= ? AND rewarded = 0',
