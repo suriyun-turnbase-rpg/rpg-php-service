@@ -19,17 +19,19 @@ function ClaimMailRewards($id) {
     $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
+    $createItems = array();
+    $updateItems = array();
+    $updateCurrencies = array();
     $mail = $mailDb->findone(array(
         'playerId = ? AND isDelete = 0 AND hasReward = 1 AND isClaim = 0',
         $playerId
     ));
-    $updateItems = array();
-    $updateCurrencies = array();
     if ($mail) {
         $mail->isClaim = 1;
         $mail->claimTimestamp = 'NOW()';
         $mail->save();
         // Add items to inventory
+        $addItemsDone = true;
         $items = json_decode($mail->items, true);
         foreach ($items as $key => $value) {
             $id = $value['id'];
@@ -43,32 +45,45 @@ function ClaimMailRewards($id) {
                 $countUpdateItems = count($resultUpdateItems);
                 for ($j = 0; $j < $countCreateItems; ++$j)
                 {
-                    $createItem = $resultCreateItems[$j];
-                    $createItem->save();
-                    HelperUnlockItem($playerId, $createItem->dataId);
-                    $createItems[] = $createItem;
+                    $createItems[] = $resultCreateItems[$j];
                 }
                 for ($j = 0; $j < $countUpdateItems; ++$j)
                 {
-                    $updateItem = $resultUpdateItems[$j];
-                    $updateItem->update();
-                    $updateItems[] = $updateItem;
+                    $updateItems[] = $resultUpdateItems[$j];
                 }
             }
+            else
+            {
+                // Error occurs when add items
+                $addItemsDone = false;
+                break;
+            }
         }
-        // Add currencies
-        $currencies = json_decode($mail->currencies, true);
-        foreach ($currencies as $key => $value) {
-            $id = $value['id'];
-            $amount = $value['amount'];
-            $updateCurrency = GetCurrency($playerId, $id);
-            $updateCurrency->amount += $amount;
-            $updateCurrency->update();
-            $updateCurrencies[] = $updateCurrency;
+        if ($addItemsDone) {
+            // Applies add items
+            foreach ($createItems as $key => $createItem) {
+                $createItem->save();
+                HelperUnlockItem($playerId, $createItem->dataId);
+            }
+            foreach ($updateItems as $key => $updateItem) {
+                $updateItem->update();
+            }
+            // Add currencies
+            $currencies = json_decode($mail->currencies, true);
+            foreach ($currencies as $key => $value) {
+                $id = $value['id'];
+                $amount = $value['amount'];
+                $updateCurrency = GetCurrency($playerId, $id);
+                $updateCurrency->amount += $amount;
+                $updateCurrency->update();
+                $updateCurrencies[] = $updateCurrency;
+            }
+        } else {
+            $output['error'] = 'ERROR_CANNOT_RECEIVE_ALL_ITEMS';
         }
     }
-    $output['createItems'] = array();
-    $output['updateItems'] = array();
+    $output['createItems'] = CursorsToArray($createItems);
+    $output['updateItems'] = CursorsToArray($updateItems);
     $output['updateCurrencies'] = CursorsToArray($updateCurrencies);
     echo json_encode($output);
 }
