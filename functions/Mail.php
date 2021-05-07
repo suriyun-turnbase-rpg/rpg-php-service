@@ -11,6 +11,7 @@ function ReadMail($id) {
         $mail->isRead = 1;
         $mail->readTimestamp = 'NOW()';
         $mail->save();
+        $output['mail'] = CursorToArray($mail);
     }
     echo json_encode($output);
 }
