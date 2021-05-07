@@ -269,7 +269,8 @@ function GetMailList()
 function GetMailListInternal($playerId)
 {
     $mailDb = new Mail();
-    return $mailDb->find(array(
+    return $mailDb->select(array(
+        'id, playerId, title, isRead, isClaim, isDelete, sentTimestamp',
         'playerId = ? AND isDelete = 0',
         $playerId
     ), array(
