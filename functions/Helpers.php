@@ -46,48 +46,49 @@ function GetBearerToken()
     return null;
 }
 
-function CursorToArray($cursor)
+function CursorToArray($cursor, $timeFields = array('createdAt', 'updatedAt'))
 {
     $arr = array();
     $fields = $cursor->fields();
     foreach ($fields as $field)
     {
-        if ($field == 'createdAt' || $field == 'updatedAt') {
-            $arr[$field] = strtotime($cursor->get($field));
-        } else {
-            $arr[$field] = $cursor->get($field);
+        $value = $cursor->get($field);
+        if (in_array($field, $timeFields)) {
+            $arr[$field] = strtotime($value);
+        } else if (!empty($value)) {
+            $arr[$field] = $value;
         }
     }
     return $arr;
 }
 
-function CursorsToArray($cursors)
+function CursorsToArray($cursors, $timeFields = array('createdAt', 'updatedAt'))
 {
     $arr = array();
     if (!empty($cursors)) {
         foreach ($cursors as $cursor)
         {
-            $arr[] = CursorToArray($cursor);
+            $arr[] = CursorToArray($cursor, $timeFields);
         }
     }
     return $arr;
 }
 
-function ItemCursorToArray($cursor)
+function ItemCursorToArray($cursor, $timeFields = array('createdAt', 'updatedAt'))
 {
-    $arr = CursorToArray($cursor);
+    $arr = CursorToArray($cursor, $timeFields);
     if (!empty($arr['randomedAttributes']))
         $arr['randomedAttributes'] = json_decode($arr['randomedAttributes']);
     return $arr;
 }
 
-function ItemCursorsToArray($cursors)
+function ItemCursorsToArray($cursors, $timeFields = array('createdAt', 'updatedAt'))
 {
     $arr = array();
     if (!empty($cursors)) {
         foreach ($cursors as $cursor)
         {
-            $arr[] = ItemCursorToArray($cursor);
+            $arr[] = ItemCursorToArray($cursor, $timeFields);
         }
     }
     return $arr;

@@ -3,15 +3,17 @@ function ReadMail($id) {
     $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
+    $mailDb = new Mail();
     $mail = $mailDb->findone(array(
-        'playerId = ? AND isDelete = 0',
-        $playerId
+        'playerId = ? AND isDelete = 0 AND id = ?',
+        $playerId,
+        $id
     ));
     if ($mail) {
         $mail->isRead = 1;
-        $mail->readTimestamp = 'NOW()';
+        $mail->readTimestamp = date('Y-m-d H:i:s', time());
         $mail->save();
-        $output['mail'] = CursorToArray($mail);
+        $output['mail'] = CursorToArray($mail, array('readTimestamp','claimTimestamp','deleteTimestamp','sentTimestamp'));
     }
     echo json_encode($output);
 }
@@ -23,13 +25,15 @@ function ClaimMailRewards($id) {
     $createItems = array();
     $updateItems = array();
     $updateCurrencies = array();
+    $mailDb = new Mail();
     $mail = $mailDb->findone(array(
-        'playerId = ? AND isDelete = 0 AND hasReward = 1 AND isClaim = 0',
-        $playerId
+        'playerId = ? AND isDelete = 0 AND hasReward = 1 AND isClaim = 0 AND id = ?',
+        $playerId,
+        $id
     ));
     if ($mail) {
         $mail->isClaim = 1;
-        $mail->claimTimestamp = 'NOW()';
+        $mail->claimTimestamp = date('Y-m-d H:i:s', time());
         $mail->save();
         // Add items to inventory
         $addItemsDone = true;
@@ -93,13 +97,15 @@ function DeleteMail($id) {
     $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
+    $mailDb = new Mail();
     $mail = $mailDb->findone(array(
-        'playerId = ? AND isDelete = 0 AND (hasReward = 0 OR isClaim = 1)',
-        $playerId
+        'playerId = ? AND isDelete = 0 AND (hasReward = 0 OR isClaim = 1) AND id = ?',
+        $playerId,
+        $id
     ));
     if ($mail) {
         $mail->isDelete = 1;
-        $mail->deleteTimestamp = 'NOW()';
+        $mail->deleteTimestamp = date('Y-m-d H:i:s', time());
         $mail->save();
     }
     echo json_encode($output);

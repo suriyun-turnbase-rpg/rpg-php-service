@@ -48,6 +48,7 @@ require_once('functions/Billing.php');
 require_once('functions/Clan.php');
 require_once('functions/Chat.php');
 require_once('functions/RaidBoss.php');
+require_once('functions/Mail.php');
 // Initial services
 // TODO: Theses should be called by cronjob settings
 CreateRaidEvent();
@@ -567,6 +568,19 @@ if (\Base::instance()->get('use_request_query_action')) {
     });
     $f3->route('POST /enter-clan-chat-message', function($f3, $params) {
         DoPostAction('enter-clan-chat-message', $f3, $params);
+    });
+    // Mail services
+    $f3->route('GET /mails', function($f3, $params) {
+        DoGetAction('mails', $params);
+    });
+    $f3->route('POST /read-mail', function($f3, $params) {
+        DoPostAction('read-mail', $f3, $params);
+    });
+    $f3->route('POST /claim-mail-rewards', function($f3, $params) {
+        DoPostAction('claim-mail-rewards', $f3, $params);
+    });
+    $f3->route('POST /delete-mail', function($f3, $params) {
+        DoPostAction('delete-mail', $f3, $params);
     });
     $f3->run();
 }

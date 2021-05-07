@@ -256,22 +256,22 @@ function GetRaidEventList()
         $currentTime,
         $currentTime
     ));
-    echo json_encode(array('list' => ItemCursorsToArray($raidEvents)));
+    echo json_encode(array('list' => CursorsToArray($raidEvents)));
 }
 
 function GetMailList()
 {
     $player = GetPlayer();
     $playerId = $player->id;
-    echo json_encode(array('list' => ItemCursorsToArray(GetMailListInternal($playerId))));
+    echo json_encode(array('list' => CursorsToArray(GetMailListInternal($playerId), array('readTimestamp','claimTimestamp','deleteTimestamp','sentTimestamp'))));
 }
 
 function GetMailListInternal($playerId)
 {
     $mailDb = new Mail();
-    return $mailDb->select(array(
-        'id, playerId, title, isRead, isClaim, isDelete, sentTimestamp',
-        'playerId = ? AND isDelete = 0',
+    return $mailDb->select(
+        'id, playerId, title, hasReward, isRead, isClaim, isDelete, sentTimestamp',
+    array('playerId = ? AND isDelete = 0',
         $playerId
     ), array(
         'order' => 'sentTimestamp DESC, isRead ASC, isClaim ASC'
