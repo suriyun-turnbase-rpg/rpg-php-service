@@ -55,7 +55,7 @@ function CursorToArray($cursor, $timeFields = array('createdAt', 'updatedAt'))
         $value = $cursor->get($field);
         if (in_array($field, $timeFields)) {
             $arr[$field] = strtotime($value);
-        } else if (!empty($value)) {
+        } else if (!is_null($value)) {
             $arr[$field] = $value;
         }
     }
