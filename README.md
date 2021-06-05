@@ -16,6 +16,10 @@ to open your web where you placed website scripts. for example, if I placed scri
 
 * You should remove `sql-importer.php` after imported
 
+## For someone who has problem with .htaccess settings
+You can set `use_request_query_action` setting in `config.ini` to `TRUE`.
+And also have to set setting at client project -> `WebServiceClient` -> `SendActionTargetViaRequestQuery` to `TRUE`.
+
 ## How to update
 * Browse `sql-importer.php?update={{version}}`, for example `sql-importer.php?update=1.10`
 
