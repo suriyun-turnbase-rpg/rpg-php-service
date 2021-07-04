@@ -48,11 +48,14 @@ require_once('functions/Billing.php');
 require_once('functions/Clan.php');
 require_once('functions/Chat.php');
 require_once('functions/RaidBoss.php');
+require_once('functions/ClanBoss.php');
 require_once('functions/Mail.php');
 // Initial services
 // TODO: Theses should be called by cronjob settings
 CreateRaidEvent();
+CreateClanEvent();
 RaidEventRewarding();
+ClanEventRewarding();
 // API actions
 $actions = array(
     'login' => function($params, $postBody) {
@@ -108,6 +111,9 @@ $actions = array(
     },
     'raid-events' => function($params, $postBody) {
         GetRaidEventList();
+    },
+    'clan-events' => function($params, $postBody) {
+        GetClanEventList();
     },
     'service-time' => function($params, $postBody) {
         GetServiceTime();
@@ -202,6 +208,12 @@ $actions = array(
     'finish-raid-boss-battle' => function($params, $postBody) {
         FinishRaidBossBattle($postBody['session'], $postBody['battleResult'], $postBody['totalDamage'], $postBody['deadCharacters']);
     },
+    'start-clan-boss-battle' => function($params, $postBody) {
+        StartClanBossBattle($postBody['eventId']);
+    },
+    'finish-clan-boss-battle' => function($params, $postBody) {
+        FinishClanBossBattle($postBody['session'], $postBody['battleResult'], $postBody['totalDamage'], $postBody['deadCharacters']);
+    },
     'ios-buy-goods' => function($params, $postBody) {
         IOSBuyGoods($postBody['iapPackageDataId'], $postBody['receipt']);
     },
@@ -285,6 +297,12 @@ $actions = array(
     },
     'finish-raid-boss-battle' => function($params, $postBody) {
         FinishRaidBossBattle($postBody['session'], $postBody['battleResult'], $postBody['totalDamage'], $postBody['deadCharacters']);
+    },
+    'start-clan-boss-battle' => function($params, $postBody) {
+        StartClanBossBattle($postBody['eventId']);
+    },
+    'finish-clan-boss-battle' => function($params, $postBody) {
+        FinishClanBossBattle($postBody['session'], $postBody['battleResult'], $postBody['totalDamage'], $postBody['deadCharacters']);
     },
     'mails' => function($params, $postBody) {
         GetMailList();
@@ -389,6 +407,9 @@ if (\Base::instance()->get('use_request_query_action')) {
     $f3->route('GET /raid-events', function($f3, $params) {
         DoGetAction('raid-events', $params);
     });
+    $f3->route('GET /clan-events', function($f3, $params) {
+        DoGetAction('clan-events', $params);
+    });
     $f3->route('GET /service-time', function($f3, $params) {
         DoGetAction('service-time', $params);
     });
@@ -486,6 +507,13 @@ if (\Base::instance()->get('use_request_query_action')) {
     });
     $f3->route('POST /finish-raid-boss-battle', function($f3, $params) {
         DoPostAction('finish-raid-boss-battle', $f3, $params);
+    });
+    // Clan boss services
+    $f3->route('POST /start-clan-boss-battle', function($f3, $params) {
+        DoPostAction('start-clan-boss-battle', $f3, $params);
+    });
+    $f3->route('POST /finish-clan-boss-battle', function($f3, $params) {
+        DoPostAction('finish-clan-boss-battle', $f3, $params);
     });
     // Billing services
     $f3->route('POST /ios-buy-goods', function($f3, $params) {

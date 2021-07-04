@@ -259,6 +259,18 @@ function GetRaidEventList()
     echo json_encode(array('list' => CursorsToArray($raidEvents)));
 }
 
+function GetClanEventList()
+{
+    $currentTime = time();
+    $clanEventDb = new ClanEvent();
+    $clanEvents = $clanEventDb->find(array(
+        'startTime < ? AND endTime >= ?',
+        $currentTime,
+        $currentTime
+    ));
+    echo json_encode(array('list' => CursorsToArray($clanEvents)));
+}
+
 function GetMailList()
 {
     $player = GetPlayer();
