@@ -1,3 +1,7 @@
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
 --
 -- Database: `tbrpg`
 --
@@ -5,610 +9,690 @@
 -- --------------------------------------------------------
 
 --
--- Table structure for table `<<__prefix__>>chat`
+-- Table structure for table `chat`
 --
 
 CREATE TABLE `<<__prefix__>>chat` (
-  `id` bigint NOT NULL,
-  `playerId` bigint NOT NULL,
-  `clanId` bigint NOT NULL,
+  `id` bigint(20) NOT NULL,
+  `playerId` bigint(20) NOT NULL,
+  `clanId` bigint(20) NOT NULL,
   `profileName` varchar(50) NOT NULL,
   `clanName` varchar(50) NOT NULL,
   `message` text NOT NULL,
-  `chatTime` int NOT NULL DEFAULT '0',
-  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
+  `chatTime` int(11) NOT NULL DEFAULT 0,
+  `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `<<__prefix__>>clan`
+-- Table structure for table `clan`
 --
 
 CREATE TABLE `<<__prefix__>>clan` (
-  `id` bigint NOT NULL,
-  `exp` int NOT NULL DEFAULT '0',
+  `id` bigint(20) NOT NULL,
+  `exp` int(11) NOT NULL DEFAULT 0,
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `description` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
-  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
+  `description` text CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `<<__prefix__>>clan_checkin`
+-- Table structure for table `clan_checkin`
 --
 
 CREATE TABLE `<<__prefix__>>clan_checkin` (
-  `playerId` bigint NOT NULL,
-  `checkInDate` int NOT NULL,
-  `clanId` bigint NOT NULL
-) ENGINE=InnoDB;
+  `playerId` bigint(20) NOT NULL,
+  `checkInDate` int(11) NOT NULL,
+  `clanId` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `<<__prefix__>>clan_donation`
+-- Table structure for table `clan_donation`
 --
 
 CREATE TABLE `<<__prefix__>>clan_donation` (
-  `playerId` bigint NOT NULL,
-  `donationDate` int NOT NULL,
-  `count` tinyint UNSIGNED NOT NULL DEFAULT '1',
-  `clanId` bigint NOT NULL,
+  `playerId` bigint(20) NOT NULL,
+  `donationDate` int(11) NOT NULL,
+  `count` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+  `clanId` bigint(20) NOT NULL,
   `dataId` varchar(50) NOT NULL
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `<<__prefix__>>clan_join_request`
---
-
-CREATE TABLE `<<__prefix__>>clan_join_request` (
-  `id` bigint NOT NULL,
-  `playerId` bigint NOT NULL DEFAULT '0',
-  `clanId` bigint NOT NULL DEFAULT '0',
-  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `<<__prefix__>>clan_event`
+-- Table structure for table `clan_event`
 --
 
 CREATE TABLE `<<__prefix__>>clan_event` (
-  `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `clanId` BIGINT NOT NULL,
-  `dataId` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `remainingHp` INT NOT NULL,
-  `startTime` INT NOT NULL DEFAULT '0',
-  `endTime` INT NOT NULL DEFAULT '0',
-  `rewarded` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE = InnoDB;
+  `id` bigint(20) NOT NULL,
+  `clanId` bigint(20) NOT NULL,
+  `dataId` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `remainingHp` int(11) NOT NULL,
+  `startTime` int(11) NOT NULL DEFAULT 0,
+  `endTime` int(11) NOT NULL DEFAULT 0,
+  `rewarded` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `<<__prefix__>>clan_event_creation`
+-- Table structure for table `clan_event_creation`
 --
 
 CREATE TABLE `<<__prefix__>>clan_event_creation` (
-  `clanId` BIGINT NOT NULL,
-  `createDate` INT NOT NULL,
-  `events` TEXT NOT NULL,
-  PRIMARY KEY (`clanId`, `createDate`)
-) ENGINE = InnoDB;
+  `clanId` bigint(20) NOT NULL,
+  `createDate` int(11) NOT NULL,
+  `events` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `<<__prefix__>>clan_event_ranking`
+-- Table structure for table `clan_event_ranking`
 --
 
 CREATE TABLE `<<__prefix__>>clan_event_ranking` (
-  `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `playerId` BIGINT NOT NULL DEFAULT '0',
-  `eventId` BIGINT NOT NULL DEFAULT '0',
-  `damage` INT NOT NULL DEFAULT '0',
-  `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` DATETIME on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`), INDEX (`playerId`), INDEX (`eventId`)
-) ENGINE = InnoDB;
+  `id` bigint(20) NOT NULL,
+  `playerId` bigint(20) NOT NULL DEFAULT 0,
+  `eventId` bigint(20) NOT NULL DEFAULT 0,
+  `damage` int(11) NOT NULL DEFAULT 0,
+  `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `<<__prefix__>>mail`
+-- Table structure for table `clan_join_request`
+--
+
+CREATE TABLE `<<__prefix__>>clan_join_request` (
+  `id` bigint(20) NOT NULL,
+  `playerId` bigint(20) NOT NULL DEFAULT 0,
+  `clanId` bigint(20) NOT NULL DEFAULT 0,
+  `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mail`
 --
 
 CREATE TABLE `<<__prefix__>>mail` (
-  `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `playerId` BIGINT NOT NULL DEFAULT '0',
-  `title` VARCHAR(160) NOT NULL DEFAULT '',
-  `content` TEXT NULL,
-  `currencies` TEXT NULL,
-  `items` TEXT NULL,
-  `hasReward` TINYINT(1) NOT NULL DEFAULT '0',
-  `isRead` TINYINT(1) NOT NULL DEFAULT '0',
-  `readTimestamp` TIMESTAMP NULL,
-  `isClaim` TINYINT(1) NOT NULL DEFAULT '0',
-  `claimTimestamp` TIMESTAMP NULL,
-  `isDelete` TINYINT(1) NOT NULL DEFAULT '0',
-  `deleteTimestamp` TIMESTAMP NULL,
-  `sentTimestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`), INDEX (`playerId`), INDEX (`hasReward`), INDEX (`isRead`), INDEX (`isClaim`), INDEX (`isDelete`)
-) ENGINE = InnoDB;
+  `id` bigint(20) NOT NULL,
+  `playerId` bigint(20) NOT NULL DEFAULT 0,
+  `title` varchar(160) NOT NULL DEFAULT '',
+  `content` text DEFAULT NULL,
+  `currencies` text DEFAULT NULL,
+  `items` text DEFAULT NULL,
+  `hasReward` tinyint(1) NOT NULL DEFAULT 0,
+  `isRead` tinyint(1) NOT NULL DEFAULT 0,
+  `readTimestamp` timestamp NULL DEFAULT NULL,
+  `isClaim` tinyint(1) NOT NULL DEFAULT 0,
+  `claimTimestamp` timestamp NULL DEFAULT NULL,
+  `isDelete` tinyint(1) NOT NULL DEFAULT 0,
+  `deleteTimestamp` timestamp NULL DEFAULT NULL,
+  `sentTimestamp` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `<<__prefix__>>player`
+-- Table structure for table `player`
 --
 
 CREATE TABLE `<<__prefix__>>player` (
-  `id` bigint NOT NULL,
+  `id` bigint(20) NOT NULL,
   `profileName` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `loginToken` varchar(512) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `exp` int NOT NULL DEFAULT '0',
+  `exp` int(11) NOT NULL DEFAULT 0,
   `selectedFormation` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `selectedArenaFormation` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `mainCharacter` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `mainCharacterExp` int NOT NULL DEFAULT '0',
-  `arenaScore` int NOT NULL DEFAULT '0',
-  `highestArenaRank` int NOT NULL DEFAULT '0',
-  `highestArenaRankCurrentSeason` int NOT NULL DEFAULT '0',
-  `clanId` bigint NOT NULL DEFAULT '0',
-  `clanRole` tinyint NOT NULL DEFAULT '0',
-  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
+  `mainCharacterExp` int(11) NOT NULL DEFAULT 0,
+  `arenaScore` int(11) NOT NULL DEFAULT 0,
+  `highestArenaRank` int(11) NOT NULL DEFAULT 0,
+  `highestArenaRankCurrentSeason` int(11) NOT NULL DEFAULT 0,
+  `clanId` bigint(20) NOT NULL DEFAULT 0,
+  `clanRole` tinyint(4) NOT NULL DEFAULT 0,
+  `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `<<__prefix__>>player_achievement`
+-- Table structure for table `player_achievement`
 --
 
 CREATE TABLE `<<__prefix__>>player_achievement` (
-  `id` bigint NOT NULL,
-  `playerId` bigint NOT NULL DEFAULT '0',
+  `id` bigint(20) NOT NULL,
+  `playerId` bigint(20) NOT NULL DEFAULT 0,
   `dataId` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `progress` int NOT NULL DEFAULT '0',
-  `earned` tinyint(1) NOT NULL DEFAULT '0',
-  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
+  `progress` int(11) NOT NULL DEFAULT 0,
+  `earned` tinyint(1) NOT NULL DEFAULT 0,
+  `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `<<__prefix__>>player_auth`
+-- Table structure for table `player_auth`
 --
 
 CREATE TABLE `<<__prefix__>>player_auth` (
-  `id` bigint NOT NULL,
-  `playerId` bigint NOT NULL DEFAULT '0',
-  `type` tinyint NOT NULL DEFAULT '0',
+  `id` bigint(20) NOT NULL,
+  `playerId` bigint(20) NOT NULL DEFAULT 0,
+  `type` tinyint(4) NOT NULL DEFAULT 0,
   `username` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `password` varchar(128) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
+  `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `<<__prefix__>>player_battle`
+-- Table structure for table `player_battle`
 --
 
 CREATE TABLE `<<__prefix__>>player_battle` (
-  `id` bigint NOT NULL,
-  `playerId` bigint NOT NULL DEFAULT '0',
+  `id` bigint(20) NOT NULL,
+  `playerId` bigint(20) NOT NULL DEFAULT 0,
   `dataId` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `session` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `battleResult` tinyint NOT NULL DEFAULT '0',
-  `rating` tinyint NOT NULL DEFAULT '0',
-  `battleType` tinyint NOT NULL DEFAULT '0',
-  `totalDamage` int NOT NULL DEFAULT '0',
-  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
+  `battleResult` tinyint(4) NOT NULL DEFAULT 0,
+  `rating` tinyint(4) NOT NULL DEFAULT 0,
+  `battleType` tinyint(4) NOT NULL DEFAULT 0,
+  `totalDamage` int(11) NOT NULL DEFAULT 0,
+  `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `<<__prefix__>>player_clear_stage`
+-- Table structure for table `player_clear_stage`
 --
 
 CREATE TABLE `<<__prefix__>>player_clear_stage` (
-  `id` bigint NOT NULL,
-  `playerId` bigint NOT NULL DEFAULT '0',
+  `id` bigint(20) NOT NULL,
+  `playerId` bigint(20) NOT NULL DEFAULT 0,
   `dataId` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `bestRating` tinyint NOT NULL DEFAULT '0',
-  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
+  `bestRating` tinyint(4) NOT NULL DEFAULT 0,
+  `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `<<__prefix__>>player_currency`
+-- Table structure for table `player_currency`
 --
 
 CREATE TABLE `<<__prefix__>>player_currency` (
-  `id` bigint NOT NULL,
-  `playerId` bigint NOT NULL DEFAULT '0',
+  `id` bigint(20) NOT NULL,
+  `playerId` bigint(20) NOT NULL DEFAULT 0,
   `dataId` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `amount` int NOT NULL DEFAULT '0',
-  `purchasedAmount` int NOT NULL DEFAULT '0',
-  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
+  `amount` int(11) NOT NULL DEFAULT 0,
+  `purchasedAmount` int(11) NOT NULL DEFAULT 0,
+  `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `<<__prefix__>>player_formation`
+-- Table structure for table `player_formation`
 --
 
 CREATE TABLE `<<__prefix__>>player_formation` (
-  `id` bigint NOT NULL,
-  `playerId` bigint NOT NULL DEFAULT '0',
+  `id` bigint(20) NOT NULL,
+  `playerId` bigint(20) NOT NULL DEFAULT 0,
   `dataId` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `position` tinyint NOT NULL DEFAULT '0',
+  `position` tinyint(4) NOT NULL DEFAULT 0,
   `itemId` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `isLeader` tinyint(1) NOT NULL DEFAULT '0',
-  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
+  `isLeader` tinyint(1) NOT NULL DEFAULT 0,
+  `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `<<__prefix__>>player_friend`
+-- Table structure for table `player_friend`
 --
 
 CREATE TABLE `<<__prefix__>>player_friend` (
-  `id` bigint NOT NULL,
-  `playerId` bigint NOT NULL DEFAULT '0',
-  `targetPlayerId` bigint NOT NULL DEFAULT '0',
-  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
+  `id` bigint(20) NOT NULL,
+  `playerId` bigint(20) NOT NULL DEFAULT 0,
+  `targetPlayerId` bigint(20) NOT NULL DEFAULT 0,
+  `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `<<__prefix__>>player_friend_request`
+-- Table structure for table `player_friend_request`
 --
 
 CREATE TABLE `<<__prefix__>>player_friend_request` (
-  `id` bigint NOT NULL,
-  `playerId` bigint NOT NULL DEFAULT '0',
-  `targetPlayerId` bigint NOT NULL DEFAULT '0',
-  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
+  `id` bigint(20) NOT NULL,
+  `playerId` bigint(20) NOT NULL DEFAULT 0,
+  `targetPlayerId` bigint(20) NOT NULL DEFAULT 0,
+  `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `<<__prefix__>>player_item`
+-- Table structure for table `player_item`
 --
 
 CREATE TABLE `<<__prefix__>>player_item` (
-  `id` bigint NOT NULL,
-  `playerId` bigint NOT NULL DEFAULT '0',
+  `id` bigint(20) NOT NULL,
+  `playerId` bigint(20) NOT NULL DEFAULT 0,
   `dataId` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `amount` int NOT NULL DEFAULT '0',
-  `exp` int NOT NULL DEFAULT '0',
+  `amount` int(11) NOT NULL DEFAULT 0,
+  `exp` int(11) NOT NULL DEFAULT 0,
   `equipItemId` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `equipPosition` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `randomedAttributes` text NOT NULL,
-  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
+  `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `<<__prefix__>>player_stamina`
+-- Table structure for table `player_stamina`
 --
 
 CREATE TABLE `<<__prefix__>>player_stamina` (
-  `id` bigint NOT NULL,
-  `playerId` bigint NOT NULL DEFAULT '0',
+  `id` bigint(20) NOT NULL,
+  `playerId` bigint(20) NOT NULL DEFAULT 0,
   `dataId` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `amount` int NOT NULL DEFAULT '0',
-  `recoveredTime` int NOT NULL DEFAULT '0',
-  `refillCount` int NOT NULL DEFAULT '0',
-  `lastRefillTime` int NOT NULL DEFAULT '0',
-  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
+  `amount` int(11) NOT NULL DEFAULT 0,
+  `recoveredTime` int(11) NOT NULL DEFAULT 0,
+  `refillCount` int(11) NOT NULL DEFAULT 0,
+  `lastRefillTime` int(11) NOT NULL DEFAULT 0,
+  `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `<<__prefix__>>player_unlock_item`
+-- Table structure for table `player_unlock_item`
 --
 
 CREATE TABLE `<<__prefix__>>player_unlock_item` (
-  `id` bigint NOT NULL,
-  `playerId` bigint NOT NULL DEFAULT '0',
+  `id` bigint(20) NOT NULL,
+  `playerId` bigint(20) NOT NULL DEFAULT 0,
   `dataId` varchar(50) NOT NULL DEFAULT '',
-  `amount` int NOT NULL DEFAULT '0',
-  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
+  `amount` int(11) NOT NULL DEFAULT 0,
+  `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `<<__prefix__>>raid_event`
+-- Table structure for table `raid_event`
 --
 
 CREATE TABLE `<<__prefix__>>raid_event` (
-  `id` bigint NOT NULL,
+  `id` bigint(20) NOT NULL,
+  `clanId` bigint(20) NOT NULL DEFAULT 0,
   `dataId` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `remainingHp` int NOT NULL,
-  `startTime` int NOT NULL DEFAULT '0',
-  `endTime` int NOT NULL DEFAULT '0',
-  `rewarded` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB;
+  `remainingHp` int(11) NOT NULL,
+  `startTime` int(11) NOT NULL DEFAULT 0,
+  `endTime` int(11) NOT NULL DEFAULT 0,
+  `rewarded` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `<<__prefix__>>raid_event_creation`
+-- Table structure for table `raid_event_creation`
 --
 
 CREATE TABLE `<<__prefix__>>raid_event_creation` (
-  `createDate` int NOT NULL,
+  `createDate` int(11) NOT NULL,
   `events` text NOT NULL
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `<<__prefix__>>raid_event_ranking`
+-- Table structure for table `raid_event_ranking`
 --
 
 CREATE TABLE `<<__prefix__>>raid_event_ranking` (
-  `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `playerId` BIGINT NOT NULL DEFAULT '0',
-  `eventId` BIGINT NOT NULL DEFAULT '0',
-  `damage` INT NOT NULL DEFAULT '0',
-  `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` DATETIME on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`), INDEX (`playerId`), INDEX (`eventId`)
-) ENGINE = InnoDB;
+  `id` bigint(20) NOT NULL,
+  `playerId` bigint(20) NOT NULL DEFAULT 0,
+  `eventId` bigint(20) NOT NULL DEFAULT 0,
+  `damage` int(11) NOT NULL DEFAULT 0,
+  `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `random_store`
+--
+
+CREATE TABLE `<<__prefix__>>random_store` (
+  `dataId` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `playerId` bigint(20) NOT NULL,
+  `randomedItems` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `purchaseItems` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `lastRefresh` int(11) NOT NULL,
+  `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `<<__prefix__>>chat`
+-- Indexes for table `chat`
 --
 ALTER TABLE `<<__prefix__>>chat`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `<<__prefix__>>clan`
+-- Indexes for table `clan`
 --
 ALTER TABLE `<<__prefix__>>clan`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `<<__prefix__>>clan_checkin`
+-- Indexes for table `clan_checkin`
 --
 ALTER TABLE `<<__prefix__>>clan_checkin`
   ADD PRIMARY KEY (`playerId`,`checkInDate`),
   ADD KEY `clanId` (`clanId`);
 
 --
--- Indexes for table `<<__prefix__>>clan_donation`
+-- Indexes for table `clan_donation`
 --
 ALTER TABLE `<<__prefix__>>clan_donation`
   ADD PRIMARY KEY (`playerId`,`donationDate`,`count`) USING BTREE,
   ADD KEY `clanId` (`clanId`);
-COMMIT;
 
 --
--- Indexes for table `<<__prefix__>>clan_join_request`
+-- Indexes for table `clan_event`
+--
+ALTER TABLE `<<__prefix__>>clan_event`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `clan_event_creation`
+--
+ALTER TABLE `<<__prefix__>>clan_event_creation`
+  ADD PRIMARY KEY (`clanId`,`createDate`);
+
+--
+-- Indexes for table `clan_event_ranking`
+--
+ALTER TABLE `<<__prefix__>>clan_event_ranking`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `playerId` (`playerId`),
+  ADD KEY `eventId` (`eventId`);
+
+--
+-- Indexes for table `clan_join_request`
 --
 ALTER TABLE `<<__prefix__>>clan_join_request`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `<<__prefix__>>player`
+-- Indexes for table `mail`
+--
+ALTER TABLE `<<__prefix__>>mail`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `playerId` (`playerId`),
+  ADD KEY `hasReward` (`hasReward`),
+  ADD KEY `isRead` (`isRead`),
+  ADD KEY `isClaim` (`isClaim`),
+  ADD KEY `isDelete` (`isDelete`);
+
+--
+-- Indexes for table `player`
 --
 ALTER TABLE `<<__prefix__>>player`
   ADD PRIMARY KEY (`id`),
   ADD KEY `loginToken` (`loginToken`(255));
 
 --
--- Indexes for table `<<__prefix__>>player_achievement`
+-- Indexes for table `player_achievement`
 --
 ALTER TABLE `<<__prefix__>>player_achievement`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `<<__prefix__>>player_auth`
+-- Indexes for table `player_auth`
 --
 ALTER TABLE `<<__prefix__>>player_auth`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `<<__prefix__>>player_battle`
+-- Indexes for table `player_battle`
 --
 ALTER TABLE `<<__prefix__>>player_battle`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `<<__prefix__>>player_clear_stage`
+-- Indexes for table `player_clear_stage`
 --
 ALTER TABLE `<<__prefix__>>player_clear_stage`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `<<__prefix__>>player_currency`
+-- Indexes for table `player_currency`
 --
 ALTER TABLE `<<__prefix__>>player_currency`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `<<__prefix__>>player_formation`
+-- Indexes for table `player_formation`
 --
 ALTER TABLE `<<__prefix__>>player_formation`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `<<__prefix__>>player_friend`
+-- Indexes for table `player_friend`
 --
 ALTER TABLE `<<__prefix__>>player_friend`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `<<__prefix__>>player_friend_request`
+-- Indexes for table `player_friend_request`
 --
 ALTER TABLE `<<__prefix__>>player_friend_request`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `<<__prefix__>>player_item`
+-- Indexes for table `player_item`
 --
 ALTER TABLE `<<__prefix__>>player_item`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `<<__prefix__>>player_stamina`
+-- Indexes for table `player_stamina`
 --
 ALTER TABLE `<<__prefix__>>player_stamina`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `<<__prefix__>>player_unlock_item`
+-- Indexes for table `player_unlock_item`
 --
 ALTER TABLE `<<__prefix__>>player_unlock_item`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `<<__prefix__>>raid_event`
+-- Indexes for table `raid_event`
 --
 ALTER TABLE `<<__prefix__>>raid_event`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `<<__prefix__>>raid_event_creation`
+-- Indexes for table `raid_event_creation`
 --
 ALTER TABLE `<<__prefix__>>raid_event_creation`
   ADD PRIMARY KEY (`createDate`);
+
+--
+-- Indexes for table `raid_event_ranking`
+--
+ALTER TABLE `<<__prefix__>>raid_event_ranking`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `playerId` (`playerId`),
+  ADD KEY `eventId` (`eventId`);
+
+--
+-- Indexes for table `random_store`
+--
+ALTER TABLE `<<__prefix__>>random_store`
+  ADD PRIMARY KEY (`dataId`,`playerId`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `<<__prefix__>>chat`
+-- AUTO_INCREMENT for table `chat`
 --
 ALTER TABLE `<<__prefix__>>chat`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `<<__prefix__>>clan`
+-- AUTO_INCREMENT for table `clan`
 --
 ALTER TABLE `<<__prefix__>>clan`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `<<__prefix__>>clan_join_request`
+-- AUTO_INCREMENT for table `clan_event`
+--
+ALTER TABLE `<<__prefix__>>clan_event`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `clan_event_ranking`
+--
+ALTER TABLE `<<__prefix__>>clan_event_ranking`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `clan_join_request`
 --
 ALTER TABLE `<<__prefix__>>clan_join_request`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `<<__prefix__>>player`
+-- AUTO_INCREMENT for table `mail`
+--
+ALTER TABLE `<<__prefix__>>mail`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `player`
 --
 ALTER TABLE `<<__prefix__>>player`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `<<__prefix__>>player_achievement`
+-- AUTO_INCREMENT for table `player_achievement`
 --
 ALTER TABLE `<<__prefix__>>player_achievement`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `<<__prefix__>>player_auth`
+-- AUTO_INCREMENT for table `player_auth`
 --
 ALTER TABLE `<<__prefix__>>player_auth`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `<<__prefix__>>player_battle`
+-- AUTO_INCREMENT for table `player_battle`
 --
 ALTER TABLE `<<__prefix__>>player_battle`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `<<__prefix__>>player_clear_stage`
+-- AUTO_INCREMENT for table `player_clear_stage`
 --
 ALTER TABLE `<<__prefix__>>player_clear_stage`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `<<__prefix__>>player_currency`
+-- AUTO_INCREMENT for table `player_currency`
 --
 ALTER TABLE `<<__prefix__>>player_currency`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `<<__prefix__>>player_formation`
+-- AUTO_INCREMENT for table `player_formation`
 --
 ALTER TABLE `<<__prefix__>>player_formation`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `<<__prefix__>>player_friend`
+-- AUTO_INCREMENT for table `player_friend`
 --
 ALTER TABLE `<<__prefix__>>player_friend`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `<<__prefix__>>player_friend_request`
+-- AUTO_INCREMENT for table `player_friend_request`
 --
 ALTER TABLE `<<__prefix__>>player_friend_request`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `<<__prefix__>>player_item`
+-- AUTO_INCREMENT for table `player_item`
 --
 ALTER TABLE `<<__prefix__>>player_item`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `<<__prefix__>>player_stamina`
+-- AUTO_INCREMENT for table `player_stamina`
 --
 ALTER TABLE `<<__prefix__>>player_stamina`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `<<__prefix__>>player_unlock_item`
+-- AUTO_INCREMENT for table `player_unlock_item`
 --
 ALTER TABLE `<<__prefix__>>player_unlock_item`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `<<__prefix__>>raid_event`
+-- AUTO_INCREMENT for table `raid_event`
 --
 ALTER TABLE `<<__prefix__>>raid_event`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `raid_event_ranking`
+--
+ALTER TABLE `<<__prefix__>>raid_event_ranking`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 COMMIT;
