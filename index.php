@@ -616,8 +616,8 @@ if (\Base::instance()->get('use_request_query_action')) {
     $f3->route('POST /delete-mail', function($f3, $params) {
         DoPostAction('delete-mail', $f3, $params);
     });
-    $f3->route('POST /mails-count', function($f3, $params) {
-        DoPostAction('mails-count', $f3, $params);
+    $f3->route('GET /mails-count', function($f3, $params) {
+        DoGetAction('mails-count', $params);
     });
     $f3->run();
 }
