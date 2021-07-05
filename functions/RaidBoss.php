@@ -75,7 +75,7 @@ function RaidEventRewarding()
         $rewards = $stage['rewards'];
         $rewardIndex = 0;
         $rankingLimit = 0;
-        foreach ($rewards as $rewardInddex => $reward) {
+        foreach ($rewards as $index1 => $reward) {
             if ($reward['rankMax'] > $rankingLimit) {
                 $rankingLimit = $reward['rankMax'];
             }

@@ -52,10 +52,13 @@ require_once('functions/ClanBoss.php');
 require_once('functions/Mail.php');
 // Initial services
 // TODO: Theses should be called by cronjob settings
-CreateRaidEvent();
-CreateClanEvent();
-RaidEventRewarding();
-ClanEventRewarding();
+$player = GetPlayer(true);
+if ($player) {
+    CreateRaidEvent();
+    CreateClanEvent();
+    RaidEventRewarding();
+    ClanEventRewarding();
+}
 // API actions
 $actions = array(
     'login' => function($params, $postBody) {

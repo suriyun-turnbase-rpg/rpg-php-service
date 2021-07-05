@@ -261,10 +261,17 @@ function GetRaidEventList()
 
 function GetClanEventList()
 {
+    $player = GetPlayer();
+    if ($player->clanId <= 0) {
+        echo json_encode(array('list' => array()));
+        return;
+    }
+    $clanId = $player->clanId;
     $currentTime = time();
     $clanEventDb = new ClanEvent();
     $clanEvents = $clanEventDb->find(array(
-        'startTime < ? AND endTime >= ?',
+        'clanId = ? AND startTime < ? AND endTime >= ?',
+        $clanId,
         $currentTime,
         $currentTime
     ));

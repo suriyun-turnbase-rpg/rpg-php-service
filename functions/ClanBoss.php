@@ -1,12 +1,19 @@
 <?php
 function CreateClanEvent()
 {
+    // If player is not joined clan, skip it
+    $player = GetPlayer();
+    if ($player->clanId <= 0) {
+        return;
+    }
+    $clanId = $player->clanId;
     $gameData = \Base::instance()->get('GameData');
     // Create date is server today timestamp
     $createDate = mktime(0, 0, 0);
     $clanEventCreationDb = new ClanEventCreation();
     $clanEventCreation = $clanEventCreationDb->findone(array(
-        'createDate = ?',
+        'clanId = ? AND createDate = ?',
+        $clanId,
         $createDate,
     ));
     if ($clanEventCreation) {
@@ -40,6 +47,7 @@ function CreateClanEvent()
                     $toTime = $fromTime + (60*60*$value['durationHour']) + (60*$value['durationMinute']);
                     // Create new clan event
                     $clanEvent = new ClanEvent();
+                    $clanEvent->clanId = $clanId;
                     $clanEvent->dataId = $id;
                     $clanEvent->remainingHp = $stage['maxHp'];
                     $clanEvent->startTime = $fromTime;
@@ -52,6 +60,7 @@ function CreateClanEvent()
     }
     // Create new clan event creation
     $clanEventCreation = new ClanEventCreation();
+    $clanEventCreation->clanId = $clanId;
     $clanEventCreation->createDate = $createDate;
     $clanEventCreation->events = json_encode($eventIds);
     $clanEventCreation->save();
@@ -59,6 +68,12 @@ function CreateClanEvent()
 
 function ClanEventRewarding()
 {
+    // If player is not joined clan, skip it
+    $player = GetPlayer();
+    if ($player->clanId <= 0) {
+        return;
+    }
+    $clanId = $player->clanId;
     $gameData = \Base::instance()->get('GameData');
     $currentTime = time();
     $endTime = $currentTime - \Base::instance()->get('clan_boss_rewarding_delay');
@@ -73,51 +88,47 @@ function ClanEventRewarding()
         $stageDataId = $clanEvent->dataId;
         $stage = $gameData['clanBossStages'][$stageDataId];
         $rewards = $stage['rewards'];
-        $rewardIndex = 0;
-        $rankingLimit = 0;
-        foreach ($rewards as $rewardInddex => $reward) {
-            if ($reward['rankMax'] > $rankingLimit) {
-                $rankingLimit = $reward['rankMax'];
-            }
-        }
+        $rewardsCount = count($rewards);
         $clanEventRankingDb = new ClanEventRanking();
         $clanEventRankings = $clanEventRankingDb->find(array(
             'eventId = ?',
             $clanEvent->id
         ), array(
-            'order' => 'damage DESC, updatedAt ASC',
+            'order' => 'damage ASC, updatedAt ASC',
             'LIMIT' => $rankingLimit
         ));
         foreach ($clanEventRankings as $index2 => $clanEventRanking) {
-            $rankCount++;
-            $reward = $rewards[$rewardIndex];
-            $items = $reward['rewardItems'];
-            $currencies = $reward['rewardCustomCurrencies'];
-            if (!empty($reward['rewardSoftCurrency'])) {
-                $currencies[] = array(
-                    'id' => $gameData['softCurrencyId'],
-                    'amount' => $reward['rewardSoftCurrency']
-                );
-            }
-            if (!empty($reward['rewardHardCurrency'])) {
-                $currencies[] = array(
-                    'id' => $gameData['hardCurrencyId'],
-                    'amount' => $reward['rewardHardCurrency']
-                );
-            }
-            // Send mail reward
-            $mail = new Mail();
-            $mail->playerId  = $clanEventRanking->playerId;
-            $mail->title = "Clan boss reward#".$rankCount;
-            if (!empty($items) || !empty($currencies)) {
-                $mail->items = json_encode($items);
-                $mail->currencies = json_encode($currencies);
-                $mail->hasReward = 1;
-            }
-            $mail->save();
-            // Update reward index
-            if ($rankCount >= $reward['rankMax']) {
-                $rewardIndex++;
+            $damage = $clanEventRanking->damage;
+            for ($i = 0; $i < $rewardsCount; $i++) { 
+                $reward = $rewards[$i];
+                if ($reward['damageDealtMin'] >= $damage && 
+                    ($reward['damageDealtMax'] <= 0 || $reward['damageDealtMax'] < $damage))
+                {
+                    $items = $reward['rewardItems'];
+                    $currencies = $reward['rewardCustomCurrencies'];
+                    if (!empty($reward['rewardSoftCurrency'])) {
+                        $currencies[] = array(
+                            'id' => $gameData['softCurrencyId'],
+                            'amount' => $reward['rewardSoftCurrency']
+                        );
+                    }
+                    if (!empty($reward['rewardHardCurrency'])) {
+                        $currencies[] = array(
+                            'id' => $gameData['hardCurrencyId'],
+                            'amount' => $reward['rewardHardCurrency']
+                        );
+                    }
+                    // Send mail reward
+                    $mail = new Mail();
+                    $mail->playerId  = $clanEventRanking->playerId;
+                    $mail->title = "Clan boss reward#".$rankCount;
+                    if (!empty($items) || !empty($currencies)) {
+                        $mail->items = json_encode($items);
+                        $mail->currencies = json_encode($currencies);
+                        $mail->hasReward = 1;
+                    }
+                    $mail->save();
+                }
             }
         }
         $clanEvent->rewarded = 1;
@@ -131,12 +142,14 @@ function StartClanBossBattle($eventId)
     $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
+    $clanId = $player->clanId;
     
     $currentTime = time();
     $clanEventDb = new ClanEvent();
     $clanEvent = $clanEventDb->findone(array(
-        'id = ? AND remainingHp > 0 AND startTime < ? AND endTime >= ? AND rewarded = 0',
+        'id = ? AND clanId = ? AND remainingHp > 0 AND startTime < ? AND endTime >= ? AND rewarded = 0',
         $eventId,
+        $clanId,
         $currentTime,
         $currentTime
     ));
