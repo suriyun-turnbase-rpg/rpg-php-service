@@ -4,7 +4,7 @@ function ReadMail($id) {
     $player = GetPlayer();
     $playerId = $player->id;
     $mailDb = new Mail();
-    $mail = $mailDb->find(array(
+    $mail = $mailDb->findone(array(
         'playerId = ? AND isDelete = 0 AND id = ?',
         $playerId,
         $id
