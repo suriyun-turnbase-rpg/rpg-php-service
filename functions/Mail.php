@@ -116,8 +116,7 @@ function GetMailsCount() {
     $playerId = $player->id;
     $mailDb = new Mail();
     $count = $mailDb->count(array(
-        'playerId = ? AND isDelete = 0 AND (isRead = 0 OR (hasReward = 1 AND isClaim = 0)',
-        $playerId
+        'playerId = '.$playerId.' AND isDelete = 0 AND (isRead = 0 OR (hasReward = 1 AND isClaim = 0))'
     ));
     echo json_encode(array('count' => $count));
 }
