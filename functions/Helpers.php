@@ -94,7 +94,7 @@ function ItemCursorsToArray($cursors, $timeFields = array('createdAt', 'updatedA
     return $arr;
 }
 
-function GetPlayer()
+function GetPlayer($justBreakWhenError = false)
 {
     $player = \Base::instance()->get('PLAYER');
     if (!$player)
@@ -113,6 +113,9 @@ function GetPlayer()
             ));
         }
         if (!$player) {
+            if ($justBreakWhenError) {
+                return NULL;
+            }
             exit('{"error":"ERROR_INVALID_LOGIN_TOKEN","loginToken":"'.$loginToken.'"}');
         } else {
             \Base::instance()->set('PLAYER', $player);
