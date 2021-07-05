@@ -78,6 +78,52 @@ CREATE TABLE `<<__prefix__>>clan_join_request` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `<<__prefix__>>clan_event`
+--
+
+CREATE TABLE `<<__prefix__>>clan_event` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `clanId` BIGINT NOT NULL,
+  `dataId` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `remainingHp` INT NOT NULL,
+  `startTime` INT NOT NULL DEFAULT '0',
+  `endTime` INT NOT NULL DEFAULT '0',
+  `rewarded` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `<<__prefix__>>clan_event_creation`
+--
+
+CREATE TABLE `<<__prefix__>>clan_event_creation` (
+  `clanId` BIGINT NOT NULL,
+  `createDate` INT NOT NULL,
+  `events` TEXT NOT NULL,
+  PRIMARY KEY (`clanId`, `createDate`)
+) ENGINE = InnoDB;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `<<__prefix__>>clan_event_ranking`
+--
+
+CREATE TABLE `<<__prefix__>>clan_event_ranking` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `playerId` BIGINT NOT NULL DEFAULT '0',
+  `eventId` BIGINT NOT NULL DEFAULT '0',
+  `damage` INT NOT NULL DEFAULT '0',
+  `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` DATETIME on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`), INDEX (`playerId`), INDEX (`eventId`)
+) ENGINE = InnoDB;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `<<__prefix__>>mail`
 --
 
@@ -464,7 +510,7 @@ ALTER TABLE `<<__prefix__>>raid_event`
 -- Indexes for table `<<__prefix__>>raid_event_creation`
 --
 ALTER TABLE `<<__prefix__>>raid_event_creation`
-  ADD UNIQUE KEY `createDate` (`createDate`);
+  ADD PRIMARY KEY (`createDate`);
 
 --
 -- AUTO_INCREMENT for dumped tables
