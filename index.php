@@ -50,6 +50,7 @@ require_once('functions/Chat.php');
 require_once('functions/RaidBoss.php');
 require_once('functions/ClanBoss.php');
 require_once('functions/Mail.php');
+require_once('functions/RandomStore.php');
 // Initial services
 // TODO: Theses should be called by cronjob settings
 $player = GetPlayer(true);
@@ -321,6 +322,15 @@ $actions = array(
     },
     'mails-count' => function($params, $postBody) {
         GetMailsCount();
+    },
+    'random-store' => function($params, $postBody) {
+        GetRandomStore($params['id']);
+    },
+    'purchase-random-store-item' => function($params, $postBody) {
+        PurchaseRandomStoreItem($postBody['id'], $postBody['index']);
+    },
+    'refresh-random-store' => function($params, $postBody) {
+        RefreshRandomStore($postBody['id']);
     },
 );
 // API actions functions
@@ -618,6 +628,16 @@ if (\Base::instance()->get('use_request_query_action')) {
     });
     $f3->route('GET /mails-count', function($f3, $params) {
         DoGetAction('mails-count', $params);
+    });
+    // Random store services
+    $f3->route('GET /random-store/@id', function($f3, $params) {
+        DoGetAction('random-store', $params);
+    });
+    $f3->route('POST /purchase-random-store-item', function($f3, $params) {
+        DoPostAction('purchase-random-store-item', $f3, $params);
+    });
+    $f3->route('POST /refresh-random-store', function($f3, $params) {
+        DoPostAction('refresh-random-store', $f3, $params);
     });
     $f3->run();
 }

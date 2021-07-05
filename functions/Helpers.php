@@ -178,6 +178,27 @@ function RandomLootBoxReward($lootBox)
     return NULL;
 }
 
+function RandomRandomStoreItems($store)
+{
+    $items = $store['items'];
+    $generatedResult = array();
+    $generatedWeight = array();
+    $countItems = count($items);
+    for ($i = 0; $i < $countItems; ++$i)
+    {
+        $item = $countItems[$i];
+        $id = '_' . $i;
+        $generatedResult[$id] = $item;
+        $generatedWeight[$id] = $item['randomWeight'];
+    }
+    
+    $takenId = WeightedRandom($generatedWeight, 0);
+    if ($takenId) {
+        return $generatedResult[$takenId];
+    }
+    return NULL;
+}
+
 function CalculateIntAttribute($currentLevel, $maxLevel, $minValue, $maxValue, $growth)
 {
     if ($currentLevel <= 0)

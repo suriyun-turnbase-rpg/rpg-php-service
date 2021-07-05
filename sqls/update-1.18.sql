@@ -29,3 +29,14 @@ CREATE TABLE `<<__prefix__>>clan_event_ranking` (
   `updatedAt` DATETIME on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`), INDEX (`playerId`), INDEX (`eventId`)
 ) ENGINE = InnoDB;
+
+CREATE TABLE `<<__prefix__>>random_store` (
+  `dataId` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `playerId` BIGINT NOT NULL,
+  `randomedItems` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `purchaseItems` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `lastRefresh` INT NOT NULL,
+  `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` DATETIME on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`dataId`, `playerId`)
+) ENGINE = InnoDB;
