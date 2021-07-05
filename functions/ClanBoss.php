@@ -94,15 +94,14 @@ function ClanEventRewarding()
             'eventId = ?',
             $clanEvent->id
         ), array(
-            'order' => 'damage ASC, updatedAt ASC',
-            'LIMIT' => $rankingLimit
+            'order' => 'damage ASC, updatedAt ASC'
         ));
         foreach ($clanEventRankings as $index2 => $clanEventRanking) {
             $damage = $clanEventRanking->damage;
             for ($i = 0; $i < $rewardsCount; $i++) { 
                 $reward = $rewards[$i];
-                if ($reward['damageDealtMin'] >= $damage && 
-                    ($reward['damageDealtMax'] <= 0 || $reward['damageDealtMax'] < $damage))
+                if ($damage >= $reward['damageDealtMin'] && 
+                    ($i == $rewardsCount - 1 || $reward['damageDealtMax'] <= 0 || $damage < $reward['damageDealtMax']))
                 {
                     $items = $reward['rewardItems'];
                     $currencies = $reward['rewardCustomCurrencies'];
@@ -121,7 +120,7 @@ function ClanEventRewarding()
                     // Send mail reward
                     $mail = new Mail();
                     $mail->playerId  = $clanEventRanking->playerId;
-                    $mail->title = "Clan boss reward#".$rankCount;
+                    $mail->title = "Clan boss reward - Lv.".($i + 1);
                     if (!empty($items) || !empty($currencies)) {
                         $mail->items = json_encode($items);
                         $mail->currencies = json_encode($currencies);
