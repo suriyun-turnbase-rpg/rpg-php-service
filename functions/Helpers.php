@@ -186,7 +186,7 @@ function RandomRandomStoreItems($store)
     $countItems = count($items);
     for ($i = 0; $i < $countItems; ++$i)
     {
-        $item = $countItems[$i];
+        $item = $items[$i];
         $id = '_' . $i;
         $generatedResult[$id] = $item;
         $generatedWeight[$id] = $item['randomWeight'];
