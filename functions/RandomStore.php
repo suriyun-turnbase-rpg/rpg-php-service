@@ -32,7 +32,7 @@ function GetRandomStore($storeDataId)
         $storeOutput['randomedItems'] = $randomedItems;
         $storeOutput['purchaseItems'] = array();
     } else {
-        if ($store->lastRefresh - $currentTime >= $refreshDuration) {
+        if ($currentTime - $store->lastRefresh >= $refreshDuration) {
             // If its sales session is over, refresh
             $itemsAmount = $storeData['itemsAmount'];
             for ($i = 0; $i < $itemsAmount; $i++) {
@@ -56,7 +56,7 @@ function GetRandomStore($storeDataId)
     $storeOutput['lastRefresh'] = $store->lastRefresh;
     echo json_encode(array(
         'store' => $storeOutput,
-        'endsIn' => ($store->lastRefresh + $refreshDuration) - $currentTime;
+        'endsIn' => ($store->lastRefresh + $refreshDuration) - $currentTime
     ));
 }
 
@@ -191,7 +191,7 @@ function RefreshRandomStore($storeDataId)
     $storeOutput['lastRefresh'] = $store->lastRefresh;
     echo json_encode(array(
         'store' => $storeOutput,
-        'endsIn' => ($store->lastRefresh + $refreshDuration) - $currentTime;
+        'endsIn' => ($store->lastRefresh + $refreshDuration) - $currentTime
     ));
 }
 ?>
