@@ -108,7 +108,7 @@ function RaidEventRewarding()
             // Send mail reward
             $mail = new Mail();
             $mail->playerId  = $raidEventRanking->playerId;
-            $mail->title = "Raid boss reward#".$rankCount;
+            $mail->title = "Raid boss reward - Rank ".$rankCount;
             if (!empty($items) || !empty($currencies)) {
                 $mail->items = json_encode($items);
                 $mail->currencies = json_encode($currencies);
