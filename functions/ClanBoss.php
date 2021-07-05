@@ -179,7 +179,7 @@ function StartClanBossBattle($eventId)
                 EBattleType::ClanBoss
             ));
 
-            $session = md5($playerId . '_' . $eventId . '_' . time());
+            $session = md5($playerId . '_' . $eventId . '_' . $currentTime);
             $newData = new PlayerBattle();
             $newData->playerId = $playerId;
             $newData->dataId = $eventId;
