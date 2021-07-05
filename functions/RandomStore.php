@@ -156,42 +156,58 @@ function RefreshRandomStore($storeDataId)
     $currentTime = time();
     $storeData = $gameData['randomStores'][$storeDataId];
     $refreshDuration = $storeData['refreshDuration'];
-    $randomedItems = array();
-    if (!$store) {
-        // Create new store for this user
-        $itemsAmount = $storeData['itemsAmount'];
-        for ($i = 0; $i < $itemsAmount; $i++) {
-            $randomedItems[] = RandomRandomStoreItems($storeData);
-        }
-        $store = new RandomStore();
-        $store->dataId = $storeDataId;
-        $store->playerId = $playerId;
-        $store->randomedItems = json_encode($randomedItems);
-        $store->purchaseItems = '[]';
-        $store->lastRefresh = $currentTime;
-        $store->save();
-        
-        $storeOutput['randomedItems'] = $randomedItems;
-        $storeOutput['purchaseItems'] = array();
+    $refreshCurrencyId = $randomedItem['refreshCurrencyId'];
+    $refreshCurrencyAmount = $randomedItem['refreshCurrencyAmount'];
+    $currency = GetCurrency($playerId, $refreshCurrencyId);
+    // Have enough currency?
+    if ($refreshCurrencyAmount > $currency->amount) {
+        echo json_encode(array('error' => 'ERROR_NOT_ENOUGH_CURRENCY'));
     } else {
-        // If its sales session is over, refresh
-        $itemsAmount = $storeData['itemsAmount'];
-        for ($i = 0; $i < $itemsAmount; $i++) {
-            $randomedItems[] = RandomRandomStoreItems($storeData);
-        }
-        $store->randomedItems = json_encode($randomedItems);
-        $store->purchaseItems = '[]';
-        $store->lastRefresh = $currentTime;
-        $store->save();
+        $randomedItems = array();
+        if (!$store) {
+            // Create new store for this user
+            $itemsAmount = $storeData['itemsAmount'];
+            for ($i = 0; $i < $itemsAmount; $i++) {
+                $randomedItems[] = RandomRandomStoreItems($storeData);
+            }
+            $store = new RandomStore();
+            $store->dataId = $storeDataId;
+            $store->playerId = $playerId;
+            $store->randomedItems = json_encode($randomedItems);
+            $store->purchaseItems = '[]';
+            $store->lastRefresh = $currentTime;
+            $store->save();
+            
+            $storeOutput['randomedItems'] = $randomedItems;
+            $storeOutput['purchaseItems'] = array();
+        } else {
+            // If its sales session is over, refresh
+            $itemsAmount = $storeData['itemsAmount'];
+            for ($i = 0; $i < $itemsAmount; $i++) {
+                $randomedItems[] = RandomRandomStoreItems($storeData);
+            }
+            $store->randomedItems = json_encode($randomedItems);
+            $store->purchaseItems = '[]';
+            $store->lastRefresh = $currentTime;
+            $store->save();
 
-        $storeOutput['randomedItems'] = $randomedItems;
-        $storeOutput['purchaseItems'] = array();
+            $storeOutput['randomedItems'] = $randomedItems;
+            $storeOutput['purchaseItems'] = array();
+        }
+        
+        // Decrease currency
+        $updateCurrencies = array();
+        $currency->amount -= $requireCurrencyAmount;
+        $currency->update();
+        $updateCurrencies[] = $currency;
+
+        $storeOutput['dataId'] = $store->dataId;
+        $storeOutput['lastRefresh'] = $store->lastRefresh;
+        echo json_encode(array(
+            'store' => $storeOutput,
+            'endsIn' => ($store->lastRefresh + $refreshDuration) - $currentTime,
+            'updateCurrencies' => CursorsToArray($updateCurrencies)
+        ));
     }
-    $storeOutput['dataId'] = $store->dataId;
-    $storeOutput['lastRefresh'] = $store->lastRefresh;
-    echo json_encode(array(
-        'store' => $storeOutput,
-        'endsIn' => ($store->lastRefresh + $refreshDuration) - $currentTime
-    ));
 }
 ?>
