@@ -156,8 +156,8 @@ function RefreshRandomStore($storeDataId)
     $currentTime = time();
     $storeData = $gameData['randomStores'][$storeDataId];
     $refreshDuration = $storeData['refreshDuration'];
-    $refreshCurrencyId = $randomedItem['refreshCurrencyId'];
-    $refreshCurrencyAmount = $randomedItem['refreshCurrencyAmount'];
+    $refreshCurrencyId = $storeData['refreshCurrencyId'];
+    $refreshCurrencyAmount = $storeData['refreshCurrencyAmount'];
     $currency = GetCurrency($playerId, $refreshCurrencyId);
     // Have enough currency?
     if ($refreshCurrencyAmount > $currency->amount) {
@@ -197,7 +197,7 @@ function RefreshRandomStore($storeDataId)
         
         // Decrease currency
         $updateCurrencies = array();
-        $currency->amount -= $requireCurrencyAmount;
+        $currency->amount -= $refreshCurrencyAmount;
         $currency->update();
         $updateCurrencies[] = $currency;
 
