@@ -318,7 +318,10 @@ $actions = array(
     },
     'delete-mail' => function($params, $postBody) {
         DeleteMail($postBody['id']);
-    }
+    },
+    'mails-count' => function($params, $postBody) {
+        GetMailsCount();
+    },
 );
 // API actions functions
 function DoGetAction($actionName, $params)
@@ -612,6 +615,9 @@ if (\Base::instance()->get('use_request_query_action')) {
     });
     $f3->route('POST /delete-mail', function($f3, $params) {
         DoPostAction('delete-mail', $f3, $params);
+    });
+    $f3->route('POST /mails-count', function($f3, $params) {
+        DoPostAction('mails-count', $f3, $params);
     });
     $f3->run();
 }

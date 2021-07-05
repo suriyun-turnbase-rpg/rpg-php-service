@@ -4,7 +4,7 @@ function ReadMail($id) {
     $player = GetPlayer();
     $playerId = $player->id;
     $mailDb = new Mail();
-    $mail = $mailDb->findone(array(
+    $mail = $mailDb->find(array(
         'playerId = ? AND isDelete = 0 AND id = ?',
         $playerId,
         $id
@@ -109,5 +109,16 @@ function DeleteMail($id) {
         $mail->save();
     }
     echo json_encode($output);
+}
+
+function GetMailsCount() {
+    $player = GetPlayer();
+    $playerId = $player->id;
+    $mailDb = new Mail();
+    $count = $mailDb->count(array(
+        'playerId = ? AND isDelete = 0 AND (isRead = 0 OR (hasReward = 1 AND isClaim = 0)',
+        $playerId
+    ));
+    echo json_encode(array('count' => $count));
 }
 ?>
