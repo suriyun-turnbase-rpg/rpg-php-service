@@ -16,7 +16,7 @@ function CreateClanEvent()
         $clanId,
         $createDate,
     ));
-    if ($clanEventCreation) {
+    if ($clanEventCreation || empty($gameData['clanBossStages'])) {
         // Already create events, skip it
         return;
     }

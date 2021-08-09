@@ -9,7 +9,7 @@ function CreateRaidEvent()
         'createDate = ?',
         $createDate,
     ));
-    if ($raidEventCreation) {
+    if ($raidEventCreation || empty($gameData['raidBossStages'])) {
         // Already create events, skip it
         return;
     }
