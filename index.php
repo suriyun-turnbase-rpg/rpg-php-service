@@ -335,6 +335,14 @@ $actions = array(
     'formation-characters-and-equipments' => function($params, $postBody) {
         echo json_encode(GetFormationCharactersAndEquipments($params['playerId'], $params['formationDataId']));
     },
+    'arena-formation-characters-and-equipments' => function($params, $postBody) {
+        $playerDb = new Player();
+        $player = $playerDb->findone(array(
+            'id = ?',
+            $params['playerId']
+        ));
+        echo json_encode(GetFormationCharactersAndEquipments($params['playerId'], $player->selectedArenaFormation));
+    },
 );
 // API actions functions
 function DoGetAction($actionName, $params)
@@ -645,6 +653,9 @@ if (\Base::instance()->get('use_request_query_action')) {
     // Other services
     $f3->route('GET /formation-characters-and-equipments/@playerId/@formationDataId', function($f3, $params) {
         DoGetAction('formation-characters-and-equipments', $params);
+    });
+    $f3->route('GET /arena-formation-characters-and-equipments/@playerId', function($f3, $params) {
+        DoGetAction('arena-formation-characters-and-equipments', $params);
     });
     $f3->run();
 }
