@@ -38,31 +38,9 @@ function StartDuel($targetPlayerId)
         $output['stamina'] = CursorToArray($stamina);
         $output['session'] = $session;
         
-        $opponentCharacters = [];
-        $opponentEquipments = [];
-        $opponentCharacterIds = GetFormationCharacterIds($opponent->id, $opponent->selectedArenaFormation);
-        $count = count($opponentCharacterIds);
-        $playerItemDb = new PlayerItem();
-        for ($i = 0; $i < $count; ++$i)
-        {
-            $characterId = $opponentCharacterIds[$i];
-            $characterEntry = $playerItemDb->load(array(
-                'id = ?',
-                $characterId
-            ));
-            if ($characterEntry) {
-                $opponentCharacters[] = $characterEntry;
-            }
-            $equipmentEntries = $playerItemDb->find(array(
-                'equipItemId = ?',
-                $characterId
-            ));
-            foreach ($equipmentEntries as $equipmentEntry) {
-                $opponentEquipments[] = $equipmentEntry;
-            }
-        }
-        $output['opponentCharacters'] = ItemCursorsToArray($opponentCharacters);
-        $output['opponentEquipments'] = ItemCursorsToArray($opponentEquipments);
+        $charactersAndEquipments = GetFormationCharactersAndEquipments($opponent->id, $opponent->selectedArenaFormation);
+        $output['opponentCharacters'] = $charactersAndEquipments['characters'];
+        $output['opponentEquipments'] = $charactersAndEquipments['equipments'];
     }
     echo json_encode($output);
 }

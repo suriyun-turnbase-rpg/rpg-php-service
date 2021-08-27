@@ -1160,25 +1160,35 @@ function GetFormationCharacterIds($playerId, $playerSelectedFormation)
     return $characterIds;
 }
 
-function GetFormationCharacter($playerId, $playerSelectedFormation)
+function GetFormationCharactersAndEquipments($playerId, $formationDataId)
 {
-    $characters = array();
-    $characterIds = GetFormationCharacterIds($playerId, $playerSelectedFormation);
+    $output = array();
+    $characters = [];
+    $equipments = [];
+    $characterIds = GetFormationCharacterIds($playerId, $formationDataId);
     $count = count($characterIds);
     $playerItemDb = new PlayerItem();
     for ($i = 0; $i < $count; ++$i)
     {
         $characterId = $characterIds[$i];
-        $characterData = $playerItemDb->load(array(
-            'id => ?',
+        $characterEntry = $playerItemDb->findone(array(
+            'id = ?',
             $characterId
         ));
-        // Add data to list if existed
-        if ($characterData) {
-            $characters[] = $characterData;
+        if ($characterEntry) {
+            $characters[] = $characterEntry;
+        }
+        $equipmentEntries = $playerItemDb->find(array(
+            'equipItemId = ?',
+            $characterId
+        ));
+        foreach ($equipmentEntries as $equipmentEntry) {
+            $equipments[] = $equipmentEntry;
         }
     }
-    return $characters;
+    $output['characters'] = ItemCursorsToArray($characters);
+    $output['equipments'] = ItemCursorsToArray($equipments);
+    return $output;
 }
 
 function GetLeaderCharacter($playerId, $playerSelectedFormation)
