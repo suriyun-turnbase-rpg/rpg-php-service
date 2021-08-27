@@ -332,6 +332,9 @@ $actions = array(
     'refresh-random-store' => function($params, $postBody) {
         RefreshRandomStore($postBody['id']);
     },
+    'formation-characters-and-equipments' => function($params, $postBody) {
+        echo json_encode(GetFormationCharactersAndEquipments($params['playerId'], $params['formationDataId']));
+    },
 );
 // API actions functions
 function DoGetAction($actionName, $params)
@@ -638,6 +641,10 @@ if (\Base::instance()->get('use_request_query_action')) {
     });
     $f3->route('POST /refresh-random-store', function($f3, $params) {
         DoPostAction('refresh-random-store', $f3, $params);
+    });
+    // Other services
+    $f3->route('GET /formation-characters-and-equipments/@playerId/@formationDataId', function($f3, $params) {
+        DoGetAction('formation-characters-and-equipments', $params);
     });
     $f3->run();
 }
