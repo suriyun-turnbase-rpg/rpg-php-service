@@ -35,6 +35,9 @@ CREATE TABLE `<<__prefix__>>clan` (
   `exp` int(11) NOT NULL DEFAULT 0,
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `description` text CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `iconId` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `frameId` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `titleId` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
   `updatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -125,6 +128,20 @@ CREATE TABLE `<<__prefix__>>clan_join_request` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `daily_reward_given`
+--
+
+CREATE TABLE `<<__prefix__>>daily_reward_given` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `playerId` bigint(20) NOT NULL DEFAULT 0,
+  `dailyRewardId` VARCHAR(50) NOT NULL DEFAULT '',
+  `createdAt` DATETIME NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `mail`
 --
 
@@ -165,6 +182,9 @@ CREATE TABLE `<<__prefix__>>player` (
   `highestArenaRankCurrentSeason` int(11) NOT NULL DEFAULT 0,
   `clanId` bigint(20) NOT NULL DEFAULT 0,
   `clanRole` tinyint(4) NOT NULL DEFAULT 0,
+  `iconId` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `frameId` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `titleId` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
   `updatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -344,6 +364,48 @@ CREATE TABLE `<<__prefix__>>player_unlock_item` (
   `playerId` bigint(20) NOT NULL DEFAULT 0,
   `dataId` varchar(50) NOT NULL DEFAULT '',
   `amount` int(11) NOT NULL DEFAULT 0,
+  `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `player_unlock_icon`
+--
+
+CREATE TABLE `<<__prefix__>>player_unlock_icon` (
+  `id` bigint(20) NOT NULL,
+  `playerId` bigint(20) NOT NULL DEFAULT 0,
+  `dataId` varchar(50) NOT NULL DEFAULT '',
+  `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `player_unlock_frame`
+--
+
+CREATE TABLE `<<__prefix__>>player_unlock_frame` (
+  `id` bigint(20) NOT NULL,
+  `playerId` bigint(20) NOT NULL DEFAULT 0,
+  `dataId` varchar(50) NOT NULL DEFAULT '',
+  `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `player_unlock_title`
+--
+
+CREATE TABLE `<<__prefix__>>player_unlock_title` (
+  `id` bigint(20) NOT NULL,
+  `playerId` bigint(20) NOT NULL DEFAULT 0,
+  `dataId` varchar(50) NOT NULL DEFAULT '',
   `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
   `updatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
