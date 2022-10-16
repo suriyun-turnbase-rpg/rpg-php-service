@@ -1,5 +1,5 @@
 <?php
-$f3 = require_once('fatfree/lib/base.php');
+$f3 = require_once('fatfree/base.php');
 
 if ((float)PCRE_VERSION < 7.9) {
     trigger_error('PCRE version is out of date');

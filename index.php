@@ -5,7 +5,7 @@ header('Access-Control-Allow-Headers: Authorization, Origin, Cache-Control, X-Re
 header('Access-Control-Allow-Methods: *');
 header('Content-type: application/json');
 
-$f3 = require_once('fatfree/lib/base.php');
+$f3 = require_once('fatfree/base.php');
 
 if ((float)PCRE_VERSION < 7.9) {
     trigger_error('PCRE version is out of date');
