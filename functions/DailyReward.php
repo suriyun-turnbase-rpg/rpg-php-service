@@ -44,7 +44,7 @@ function IsAnyClaimedWithinDate($entries, $currentDate, $testDate) {
     return false;
 }
 
-function getClaimableRewards($currentDate, $cycleStart, $cycleEnd, $rewards, $consecutive, $playerId, $dailyRewardId) {
+function GetClaimableRewards($currentDate, $cycleStart, $cycleEnd, $rewards, $consecutive, $playerId, $dailyRewardId) {
     $startOfCurrentDate = strtotime("today", $currentDate);
     $rewardGiven = new DailyRewardGiven();
     $entries = $rewardGiven->find(array(
@@ -108,7 +108,7 @@ function GetRewardList($dailyRewardId) {
     $rewards = $dailyRewards['rewards'];
     $consecutive = $dailyRewards['consecutive'];
     // Get reward list and earn state
-    $claimableRewards = getClaimableRewards($currentDate, $cycleStart, $cycleEnd, $rewards, $consecutive, $playerId, $dailyRewardId);
+    $claimableRewards = GetClaimableRewards($currentDate, $cycleStart, $cycleEnd, $rewards, $consecutive, $playerId, $dailyRewardId);
     $output['rewards'] = $claimableRewards;
     $output['currentDate'] = $currentDate;
     $output['cycleStart'] = $cycleStart;
@@ -128,7 +128,7 @@ function ClaimReward($dailyRewardId) {
     $rewards = $dailyRewards['rewards'];
     $consecutive = $dailyRewards['consecutive'];
     // Get reward list and earn state
-    $claimableRewards = getClaimableRewards($currentDate, $cycleStart, $cycleEnd, $rewards, $consecutive, $playerId, $dailyRewardId);
+    $claimableRewards = GetClaimableRewards($currentDate, $cycleStart, $cycleEnd, $rewards, $consecutive, $playerId, $dailyRewardId);
     $count = count($claimableRewards);
     for ($i = 0; $i < $count; $i++) {
         $element = $claimableRewards[$i]
