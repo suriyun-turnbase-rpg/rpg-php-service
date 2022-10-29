@@ -150,6 +150,9 @@ function ClaimReward($dailyRewardId) {
             $rewardGiven->dailyRewardId = $dailyRewardId;
             $rewardGiven->createdAt = date("Y-m-d H:i:s", $currentDate);
             $rewardGiven->save();
+            // Write output
+            $output['reward'] = $reward;
+            echo json_encode($output);
             return;
         }
     }
