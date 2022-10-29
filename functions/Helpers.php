@@ -1274,6 +1274,9 @@ function GetClanOwner($playerId, $clanId)
                 'selectedArenaFormation' => $player->selectedArenaFormation,
                 'clanId' => $player->clanId,
                 'clanRole' => $player->clanRole,
+                'iconId' => $player->iconId,
+                'frameId' => $player->frameId,
+                'titleId' => $player->titleId,
                 'isFriend' => $isFriend
             );
         }
@@ -1311,6 +1314,9 @@ function GetSocialPlayer($playerId, $targetPlayerId)
                 'selectedArenaFormation' => $player->selectedArenaFormation,
                 'clanId' => $player->clanId,
                 'clanRole' => $player->clanRole,
+                'iconId' => $player->iconId,
+                'frameId' => $player->frameId,
+                'titleId' => $player->titleId,
                 'isFriend' => $isFriend
             );
         }
