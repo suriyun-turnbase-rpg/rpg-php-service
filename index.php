@@ -47,6 +47,7 @@ require_once('functions/RaidBoss.php');
 require_once('functions/ClanBoss.php');
 require_once('functions/Mail.php');
 require_once('functions/RandomStore.php');
+require_once('functions/DailyReward.php');
 // Initial services
 // TODO: Theses should be called by cronjob settings
 $player = GetPlayer(true);
@@ -327,6 +328,12 @@ $actions = array(
     },
     'refresh-random-store' => function($params, $postBody) {
         RefreshRandomStore($postBody['id']);
+    },
+    'daily-rewarding' => function($params, $postBody) {
+        GetRewardList($params['id']);
+    },
+    'daily-rewarding-claim' => function($params, $postBody) {
+        ClaimReward($postBody['id']);
     },
     'formation-characters-and-equipments' => function($params, $postBody) {
         echo json_encode(GetFormationCharactersAndEquipments($params['playerId'], $params['formationDataId']));
@@ -645,6 +652,13 @@ if (\Base::instance()->get('use_request_query_action')) {
     });
     $f3->route('POST /refresh-random-store', function($f3, $params) {
         DoPostAction('refresh-random-store', $f3, $params);
+    });
+    // Daily reward services
+    $f3->route('GET /daily-rewarding/@id', function ($f3, $params) {
+        DoGetAction('daily-rewarding', $params);
+    });
+    $f3->route('POST /daily-rewarding-claim', function ($f3, $params) {
+        DoGetAction('daily-rewarding-claim', $f3, $params);
     });
     // Other services
     $f3->route('GET /formation-characters-and-equipments/@playerId/@formationDataId', function($f3, $params) {
