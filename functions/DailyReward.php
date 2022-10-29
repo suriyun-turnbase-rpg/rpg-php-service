@@ -149,6 +149,7 @@ function ClaimReward($dailyRewardId) {
             $rewardGiven->playerId = $playerId;
             $rewardGiven->dailyRewardId = $dailyRewardId;
             $rewardGiven->createdAt = date("Y-m-d H:i:s", $currentDate);
+            $rewardGiven->save();
             return;
         }
     }
