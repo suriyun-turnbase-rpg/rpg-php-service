@@ -72,7 +72,7 @@ function GetClaimableRewards($currentDate, $cycleStart, $cycleEnd, $rewards, $co
         $canClaim = false;
         if (!$isClaimed) {
             if ($count > 0) {
-                $canClaim = $entries[$count - 1]->createdAt < $startOfCurrentDate;
+                $canClaim = strtotime($entries[$count - 1]->createdAt) < $startOfCurrentDate;
             } else {
                 $canClaim = true;
             }
