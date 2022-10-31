@@ -329,6 +329,9 @@ $actions = array(
     'refresh-random-store' => function($params, $postBody) {
         RefreshRandomStore($postBody['id']);
     },
+    'all-daily-rewarding' => function($params, $postBody) {
+        GetAllDailyRewardList();
+    },
     'daily-rewarding' => function($params, $postBody) {
         GetDailyRewardList($params['id']);
     },
@@ -680,6 +683,9 @@ if (\Base::instance()->get('use_request_query_action')) {
     // Daily reward services
     $f3->route('GET /daily-rewarding/@id', function ($f3, $params) {
         DoGetAction('daily-rewarding', $params);
+    });
+    $f3->route('GET /all-daily-rewarding', function ($f3, $params) {
+        DoGetAction('all-daily-rewarding', $params);
     });
     $f3->route('POST /daily-rewarding-claim', function ($f3, $params) {
         DoGetAction('daily-rewarding-claim', $f3, $params);
