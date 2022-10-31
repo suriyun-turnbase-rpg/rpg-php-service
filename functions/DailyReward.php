@@ -76,6 +76,32 @@ function GetClaimableDailyRewards($currentDate, $cycleStart, $cycleEnd, $rewards
     return $result;
 }
 
+function GetAllDailyRewardList() {
+    $gameData = \Base::instance()->get('GameData');
+    $output = array('error' => '');
+    $player = GetPlayer();
+    $playerId = $player->id;
+    $currentDate = GetCurrentDate();
+    $allDailyRewards = $gameData['dailyRewards'];
+    $list = array();
+    foreach ($allDailyRewards as $dailyRewardId => $dailyRewards) {
+        $cycleStart = GetDailyRewardCycleStart($dailyRewards['mode']);
+        $cycleEnd = GetDailyRewardCycleEnd($dailyRewards['mode']);
+        $rewards = $dailyRewards['rewards'];
+        $consecutive = $dailyRewards['consecutive'];
+        // Get reward list and earn state
+        $claimableRewards = GetClaimableDailyRewards($currentDate, $cycleStart, $cycleEnd, $rewards, $consecutive, $playerId, $dailyRewardId);
+        $entry = array();
+        $entry['rewards'] = $claimableRewards;
+        $entry['currentDate'] = $currentDate;
+        $entry['cycleStart'] = $cycleStart;
+        $entry['cycleEnd'] = $cycleEnd;
+        $list[] = $entry;
+    }
+    $output['dailyRewards'] = $list;
+    echo json_encode($output);
+}
+
 function GetDailyRewardList($dailyRewardId) {
     $gameData = \Base::instance()->get('GameData');
     $dailyRewards = $gameData['dailyRewards'][$dailyRewardId];
@@ -83,8 +109,8 @@ function GetDailyRewardList($dailyRewardId) {
     $player = GetPlayer();
     $playerId = $player->id;
     $currentDate = GetCurrentDate();
-    $cycleStart = GetDailyRewardCycleStart();
-    $cycleEnd = GetDailyRewardCycleEnd();
+    $cycleStart = GetDailyRewardCycleStart($dailyRewards['mode']);
+    $cycleEnd = GetDailyRewardCycleEnd($dailyRewards['mode']);
     $rewards = $dailyRewards['rewards'];
     $consecutive = $dailyRewards['consecutive'];
     // Get reward list and earn state
