@@ -92,6 +92,7 @@ function GetAllDailyRewardList() {
         // Get reward list and earn state
         $claimableRewards = GetClaimableDailyRewards($currentDate, $cycleStart, $cycleEnd, $rewards, $consecutive, $playerId, $dailyRewardId);
         $entry = array();
+        $output['id'] = $dailyRewardId;
         $entry['rewards'] = $claimableRewards;
         $entry['currentDate'] = $currentDate;
         $entry['cycleStart'] = $cycleStart;
@@ -115,6 +116,7 @@ function GetDailyRewardList($dailyRewardId) {
     $consecutive = $dailyRewards['consecutive'];
     // Get reward list and earn state
     $claimableRewards = GetClaimableDailyRewards($currentDate, $cycleStart, $cycleEnd, $rewards, $consecutive, $playerId, $dailyRewardId);
+    $output['id'] = $dailyRewardId;
     $output['rewards'] = $claimableRewards;
     $output['currentDate'] = $currentDate;
     $output['cycleStart'] = $cycleStart;
