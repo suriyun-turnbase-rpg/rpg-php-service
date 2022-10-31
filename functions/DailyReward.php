@@ -60,16 +60,16 @@ function GetClaimableDailyRewards($currentDate, $cycleStart, $cycleEnd, $rewards
                 $canClaim = $canClaim && $currentDate >= $claimableDate;
                 $canClaim = $canClaim && $currentDate <= $claimableDate + (60 * 60 * 24) /* +1 day */;
             } else {
-                $canClaim = $canClaim && !$foundClaimableEntry
+                $canClaim = $canClaim && !$foundClaimableEntry;
             }
             if (!$foundClaimableEntry) {
-                $foundClaimableEntry = $canClaim
+                $foundClaimableEntry = $canClaim;
             }
         }
         $result[] = array(
             'isClaimed' => $isClaimed,
             'canClaim' => $canClaim,
-            'reward' => $reward
+            'reward' => $reward,
         );
         $claimableDate = $claimableDate + (60 * 60 * 24) /* +1 day */;
     }
@@ -139,7 +139,7 @@ function ClaimDailyReward($dailyRewardId) {
     $claimableRewards = GetClaimableDailyRewards($currentDate, $cycleStart, $cycleEnd, $rewards, $consecutive, $playerId, $dailyRewardId);
     $count = count($claimableRewards);
     for ($i = 0; $i < $count; $i++) {
-        $element = $claimableRewards[$i]
+        $element = $claimableRewards[$i];
         if ($element['canClaim']) {
             $reward = $element['reward'];
             // Send rewards
