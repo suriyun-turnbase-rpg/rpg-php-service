@@ -668,9 +668,27 @@ ALTER TABLE `<<__prefix__>>player_stamina`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `player_unlock_frame`
+--
+ALTER TABLE `<<__prefix__>>player_unlock_frame`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `player_unlock_icon`
+--
+ALTER TABLE `<<__prefix__>>player_unlock_icon`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `player_unlock_item`
 --
 ALTER TABLE `<<__prefix__>>player_unlock_item`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `player_unlock_title`
+--
+ALTER TABLE `<<__prefix__>>player_unlock_title`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -830,9 +848,27 @@ ALTER TABLE `<<__prefix__>>player_stamina`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `player_unlock_frame`
+--
+ALTER TABLE `<<__prefix__>>player_unlock_frame`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `player_unlock_icon`
+--
+ALTER TABLE `<<__prefix__>>player_unlock_icon`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `player_unlock_item`
 --
 ALTER TABLE `<<__prefix__>>player_unlock_item`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `player_unlock_title`
+--
+ALTER TABLE `<<__prefix__>>player_unlock_title`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
