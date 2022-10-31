@@ -31,8 +31,8 @@ function GetClaimableDailyRewards($currentDate, $cycleStart, $cycleEnd, $rewards
         'playerId = ? AND dailyRewardId = ? AND createdAt >= ? AND createdAt <= ?',
         $playerId,
         $dailyRewardId,
-        $cycleStart,
-        $cycleEnd,
+        date("Y-m-d H:i:s", $cycleStart),
+        date("Y-m-d H:i:s", $cycleEnd),
     ), array(
         'order' => 'createdAt DESC',
     ));
