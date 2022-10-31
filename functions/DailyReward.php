@@ -131,8 +131,8 @@ function ClaimDailyReward($dailyRewardId) {
     $player = GetPlayer();
     $playerId = $player->id;
     $currentDate = GetCurrentDate();
-    $cycleStart = GetDailyRewardCycleStart();
-    $cycleEnd = GetDailyRewardCycleEnd();
+    $cycleStart = GetDailyRewardCycleStart($dailyRewards['mode']);
+    $cycleEnd = GetDailyRewardCycleEnd($dailyRewards['mode']);
     $rewards = $dailyRewards['rewards'];
     $consecutive = $dailyRewards['consecutive'];
     // Get reward list and earn state
