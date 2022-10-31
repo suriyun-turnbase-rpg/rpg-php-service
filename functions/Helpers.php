@@ -53,7 +53,7 @@ function CursorToArray($cursor, $timeFields = array('createdAt', 'updatedAt'))
     foreach ($fields as $field)
     {
         $value = $cursor->get($field);
-        if (in_array($field, $timeFields)) {
+        if (in_array($field, $timeFields) && !is_null($value)) {
             $arr[$field] = strtotime($value);
         } else if (!is_null($value)) {
             $arr[$field] = $value;
@@ -1274,6 +1274,9 @@ function GetClanOwner($playerId, $clanId)
                 'selectedArenaFormation' => $player->selectedArenaFormation,
                 'clanId' => $player->clanId,
                 'clanRole' => $player->clanRole,
+                'iconId' => $player->iconId,
+                'frameId' => $player->frameId,
+                'titleId' => $player->titleId,
                 'isFriend' => $isFriend
             );
         }
@@ -1311,6 +1314,9 @@ function GetSocialPlayer($playerId, $targetPlayerId)
                 'selectedArenaFormation' => $player->selectedArenaFormation,
                 'clanId' => $player->clanId,
                 'clanRole' => $player->clanRole,
+                'iconId' => $player->iconId,
+                'frameId' => $player->frameId,
+                'titleId' => $player->titleId,
                 'isFriend' => $isFriend
             );
         }
@@ -1446,4 +1452,25 @@ function CanEnterStage($player, $stage) {
     }
     return $result;
 }
+
+function GetCurrentDate() {
+    return time();
+}
+
+function GetStartOfMonth() {
+    return strtotime('first day of this month');
+}
+
+function GetEndOfMonth() {
+    return strtotime('last day of this month');
+}
+
+function GetStartOfWeek() {
+    return strtotime('last Sunday');
+}
+
+function GetEndOfWeek() {
+    return strtotime('next Sunday');
+}
+
 ?>

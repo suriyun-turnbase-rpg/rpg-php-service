@@ -47,6 +47,7 @@ require_once('functions/RaidBoss.php');
 require_once('functions/ClanBoss.php');
 require_once('functions/Mail.php');
 require_once('functions/RandomStore.php');
+require_once('functions/DailyReward.php');
 // Initial services
 // TODO: Theses should be called by cronjob settings
 $player = GetPlayer(true);
@@ -328,6 +329,15 @@ $actions = array(
     'refresh-random-store' => function($params, $postBody) {
         RefreshRandomStore($postBody['id']);
     },
+    'all-daily-rewarding' => function($params, $postBody) {
+        GetAllDailyRewardList();
+    },
+    'daily-rewarding' => function($params, $postBody) {
+        GetDailyRewardList($params['id']);
+    },
+    'daily-rewarding-claim' => function($params, $postBody) {
+        ClaimDailyReward($postBody['id']);
+    },
     'formation-characters-and-equipments' => function($params, $postBody) {
         echo json_encode(GetFormationCharactersAndEquipments($params['playerId'], $params['formationDataId']));
     },
@@ -343,13 +353,25 @@ $actions = array(
 // API actions functions
 function DoGetAction($actionName, $params)
 {
-    call_user_func($GLOBALS['actions'][$actionName], $params, array());
+    try {
+        call_user_func($GLOBALS['actions'][$actionName], $params, array());
+    } catch (Exception $e) {
+        echo json_encode(array(
+            'error' => 'Caught exception: ',  $e->getMessage()
+        ));
+    }
 }
 
 function DoPostAction($actionName, $f3, $params)
 {
     $postBody = json_decode(urldecode($f3->get('BODY')), true);
-    call_user_func($GLOBALS['actions'][$actionName], $params, $postBody);
+    try {
+        call_user_func($GLOBALS['actions'][$actionName], $params, $postBody);
+    } catch (Exception $e) {
+        echo json_encode(array(
+            'error' => 'Caught exception: ',  $e->getMessage()
+        ));
+    }
 }
 // Other services
 $it = new RecursiveDirectoryIterator("./extensions");
@@ -364,10 +386,22 @@ if (\Base::instance()->get('use_request_query_action')) {
     if (empty($actionName)) {
         echo ";)";
     } else if ($requestMethod === 'GET') {
-        call_user_func($GLOBALS['actions'][$actionName], $_GET, array());
+        try {
+            call_user_func($GLOBALS['actions'][$actionName], $_GET, array());
+        } catch (Exception $e) {
+            echo json_encode(array(
+                'error' => 'Caught exception: ',  $e->getMessage()
+            ));
+        }
     } else if ($requestMethod === 'POST') {
         $postBody = json_decode(urldecode(file_get_contents('php://input')), true);
-        call_user_func($GLOBALS['actions'][$actionName], $_GET, $postBody);
+        try {
+            call_user_func($GLOBALS['actions'][$actionName], $_GET, $postBody);
+        } catch (Exception $e) {
+            echo json_encode(array(
+                'error' => 'Caught exception: ',  $e->getMessage()
+            ));
+        }
     }
 } else {
     // Services
@@ -645,6 +679,16 @@ if (\Base::instance()->get('use_request_query_action')) {
     });
     $f3->route('POST /refresh-random-store', function($f3, $params) {
         DoPostAction('refresh-random-store', $f3, $params);
+    });
+    // Daily reward services
+    $f3->route('GET /daily-rewarding/@id', function ($f3, $params) {
+        DoGetAction('daily-rewarding', $params);
+    });
+    $f3->route('GET /all-daily-rewarding', function ($f3, $params) {
+        DoGetAction('all-daily-rewarding', $params);
+    });
+    $f3->route('POST /daily-rewarding-claim', function ($f3, $params) {
+        DoPostAction('daily-rewarding-claim', $f3, $params);
     });
     // Other services
     $f3->route('GET /formation-characters-and-equipments/@playerId/@formationDataId', function($f3, $params) {
