@@ -688,7 +688,7 @@ if (\Base::instance()->get('use_request_query_action')) {
         DoGetAction('all-daily-rewarding', $params);
     });
     $f3->route('POST /daily-rewarding-claim', function ($f3, $params) {
-        DoGetAction('daily-rewarding-claim', $f3, $params);
+        DoPostAction('daily-rewarding-claim', $f3, $params);
     });
     // Other services
     $f3->route('GET /formation-characters-and-equipments/@playerId/@formationDataId', function($f3, $params) {
