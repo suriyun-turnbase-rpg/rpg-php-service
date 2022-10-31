@@ -1,33 +1,13 @@
 <?php
-function getCurrentDate() {
-    return time();
+function GetDailyRewardCycleStart($mode) {
+    return $mode == EDailyRewardMode::Weekly ? GetStartOfWeek() : GetStartOfMonth();
 }
 
-function getStartOfMonth() {
-    return strtotime('first day of this month');
+function GetDailyRewardCycleEnd($mode) {
+    return $mode == EDailyRewardMode::Weekly ? GetEndOfWeek() : GetEndOfMonth();
 }
 
-function getEndOfMonth() {
-    return strtotime('last day of this month');
-}
-
-function getStartOfWeek() {
-    return strtotime('last Sunday');
-}
-
-function getEndOfWeek() {
-    return strtotime('next Sunday');
-}
-
-function getCycleStart($mode) {
-    return $mode == EDailyRewardMode::Weekly ? getStartOfWeek() : getStartOfMonth();
-}
-
-function getCycleEnd($mode) {
-    return $mode == EDailyRewardMode::Weekly ? getEndOfWeek() : getEndOfMonth();
-}
-
-function IsAnyClaimedWithinDate($entries, $currentDate, $testDate) {
+function IsAnyDailyRewardClaimedWithinDate($entries, $currentDate, $testDate) {
     $startOfCurrentDate = strtotime("today", $currentDate);
     $endOfCurrentDate = strtotime("tomorrow", $startOfCurrentDate) - 1 /* -1 second so the time will be 23:59:59 */;
     $count = count($entries);
@@ -44,7 +24,7 @@ function IsAnyClaimedWithinDate($entries, $currentDate, $testDate) {
     return false;
 }
 
-function GetClaimableRewards($currentDate, $cycleStart, $cycleEnd, $rewards, $consecutive, $playerId, $dailyRewardId) {
+function GetClaimableDailyRewards($currentDate, $cycleStart, $cycleEnd, $rewards, $consecutive, $playerId, $dailyRewardId) {
     $startOfCurrentDate = strtotime("today", $currentDate);
     $rewardGiven = new DailyRewardGiven();
     $entries = $rewardGiven->find(array(
@@ -65,7 +45,7 @@ function GetClaimableRewards($currentDate, $cycleStart, $cycleEnd, $rewards, $co
         $reward = $rewards[$i];
         $isClaimed = false;
         if (!$consecutive) {
-            $isClaimed = IsAnyClaimedWithinDate($entries, $currentDate, $claimableDate);
+            $isClaimed = IsAnyDailyRewardClaimedWithinDate($entries, $currentDate, $claimableDate);
         } else {
             $isClaimed = $i < $count;
         }
@@ -96,19 +76,19 @@ function GetClaimableRewards($currentDate, $cycleStart, $cycleEnd, $rewards, $co
     return $result;
 }
 
-function GetRewardList($dailyRewardId) {
+function GetDailyRewardList($dailyRewardId) {
     $gameData = \Base::instance()->get('GameData');
     $dailyRewards = $gameData['dailyRewards'][$dailyRewardId];
     $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
-    $currentDate = getCurrentDate();
-    $cycleStart = getCycleStart();
-    $cycleEnd = getCycleEnd();
+    $currentDate = GetCurrentDate();
+    $cycleStart = GetDailyRewardCycleStart();
+    $cycleEnd = GetDailyRewardCycleEnd();
     $rewards = $dailyRewards['rewards'];
     $consecutive = $dailyRewards['consecutive'];
     // Get reward list and earn state
-    $claimableRewards = GetClaimableRewards($currentDate, $cycleStart, $cycleEnd, $rewards, $consecutive, $playerId, $dailyRewardId);
+    $claimableRewards = GetClaimableDailyRewards($currentDate, $cycleStart, $cycleEnd, $rewards, $consecutive, $playerId, $dailyRewardId);
     $output['rewards'] = $claimableRewards;
     $output['currentDate'] = $currentDate;
     $output['cycleStart'] = $cycleStart;
@@ -116,19 +96,19 @@ function GetRewardList($dailyRewardId) {
     echo json_encode($output);
 }
 
-function ClaimReward($dailyRewardId) {
+function ClaimDailyReward($dailyRewardId) {
     $gameData = \Base::instance()->get('GameData');
     $dailyRewards = $gameData['dailyRewards'][$dailyRewardId];
     $output = array('error' => '');
     $player = GetPlayer();
     $playerId = $player->id;
-    $currentDate = getCurrentDate();
-    $cycleStart = getCycleStart();
-    $cycleEnd = getCycleEnd();
+    $currentDate = GetCurrentDate();
+    $cycleStart = GetDailyRewardCycleStart();
+    $cycleEnd = GetDailyRewardCycleEnd();
     $rewards = $dailyRewards['rewards'];
     $consecutive = $dailyRewards['consecutive'];
     // Get reward list and earn state
-    $claimableRewards = GetClaimableRewards($currentDate, $cycleStart, $cycleEnd, $rewards, $consecutive, $playerId, $dailyRewardId);
+    $claimableRewards = GetClaimableDailyRewards($currentDate, $cycleStart, $cycleEnd, $rewards, $consecutive, $playerId, $dailyRewardId);
     $count = count($claimableRewards);
     for ($i = 0; $i < $count; $i++) {
         $element = $claimableRewards[$i]

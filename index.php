@@ -330,10 +330,10 @@ $actions = array(
         RefreshRandomStore($postBody['id']);
     },
     'daily-rewarding' => function($params, $postBody) {
-        GetRewardList($params['id']);
+        GetDailyRewardList($params['id']);
     },
     'daily-rewarding-claim' => function($params, $postBody) {
-        ClaimReward($postBody['id']);
+        ClaimDailyReward($postBody['id']);
     },
     'formation-characters-and-equipments' => function($params, $postBody) {
         echo json_encode(GetFormationCharactersAndEquipments($params['playerId'], $params['formationDataId']));

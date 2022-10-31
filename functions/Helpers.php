@@ -1452,4 +1452,25 @@ function CanEnterStage($player, $stage) {
     }
     return $result;
 }
+
+function GetCurrentDate() {
+    return time();
+}
+
+function GetStartOfMonth() {
+    return strtotime('first day of this month');
+}
+
+function GetEndOfMonth() {
+    return strtotime('last day of this month');
+}
+
+function GetStartOfWeek() {
+    return strtotime('last Sunday');
+}
+
+function GetEndOfWeek() {
+    return strtotime('next Sunday');
+}
+
 ?>
