@@ -350,13 +350,25 @@ $actions = array(
 // API actions functions
 function DoGetAction($actionName, $params)
 {
-    call_user_func($GLOBALS['actions'][$actionName], $params, array());
+    try {
+        call_user_func($GLOBALS['actions'][$actionName], $params, array());
+    } catch (Exception $e) {
+        echo json_encode(array(
+            'error' => 'Caught exception: ',  $e->getMessage()
+        ));
+    }
 }
 
 function DoPostAction($actionName, $f3, $params)
 {
     $postBody = json_decode(urldecode($f3->get('BODY')), true);
-    call_user_func($GLOBALS['actions'][$actionName], $params, $postBody);
+    try {
+        call_user_func($GLOBALS['actions'][$actionName], $params, $postBody);
+    } catch (Exception $e) {
+        echo json_encode(array(
+            'error' => 'Caught exception: ',  $e->getMessage()
+        ));
+    }
 }
 // Other services
 $it = new RecursiveDirectoryIterator("./extensions");
@@ -371,10 +383,22 @@ if (\Base::instance()->get('use_request_query_action')) {
     if (empty($actionName)) {
         echo ";)";
     } else if ($requestMethod === 'GET') {
-        call_user_func($GLOBALS['actions'][$actionName], $_GET, array());
+        try {
+            call_user_func($GLOBALS['actions'][$actionName], $_GET, array());
+        } catch (Exception $e) {
+            echo json_encode(array(
+                'error' => 'Caught exception: ',  $e->getMessage()
+            ));
+        }
     } else if ($requestMethod === 'POST') {
         $postBody = json_decode(urldecode(file_get_contents('php://input')), true);
-        call_user_func($GLOBALS['actions'][$actionName], $_GET, $postBody);
+        try {
+            call_user_func($GLOBALS['actions'][$actionName], $_GET, $postBody);
+        } catch (Exception $e) {
+            echo json_encode(array(
+                'error' => 'Caught exception: ',  $e->getMessage()
+            ));
+        }
     }
 } else {
     // Services
