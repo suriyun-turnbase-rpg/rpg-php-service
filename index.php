@@ -191,22 +191,23 @@ if (\Base::instance()->get('use_request_query_action')) {
         return;
     }
 
-    if (!isset($GLOBALS['actions'][$actionName])) {
+    $data = $GLOBALS['actions'][$actionName];
+    if (!isset($data)) {
         echo json_encode(array('error' => 'No action: ', $actionName));
         return;
     }
 
-    $actionMethod = $GLOBALS['actions'][$actionName][0];
+    $actionMethod = $data[0];
     if ($requestMethod !== $actionMethod) {
         echo json_encode(array('error' => 'Wrong method: ', $requestMethod, ' for ', $actionName));
         return;
     }
 
-    $functionName = $GLOBALS['actions'][$actionName][1];
+    $functionName = $data[1];
     $functionParams = array();
-    if (isset($GLOBALS['actions'][$actionName][2]) && !empty($GLOBALS['actions'][$actionName][2])) {
+    if (isset($data[2]) && !empty($data[2])) {
         $dataSource = $actionMethod === 'GET' ? $_GET : json_decode(urldecode(file_get_contents('php://input')), true);
-        $fieldNames = $GLOBALS['actions'][$actionName][2];
+        $fieldNames = $data[2];
         foreach ($fieldNames as $fieldName) {
             $functionParams[] = $dataSource[$fieldName];
         }
@@ -219,30 +220,42 @@ if (\Base::instance()->get('use_request_query_action')) {
     }
 } else {
     // Services
-    $f3->route('GET /', function() {
+    $f3->route('GET /', function($f3) {
         echo ";)";
     });
     // Implement services
     foreach ($GLOBALS['actions'] as $actionName => $data) {
         $actionMethod = $data[0];
         $functionName = $data[1];
-        $route = "$actionMethod /$actionName";
-        $functionParams = array();
+        $fieldNames = array();
         if (isset($data[2]) && !empty($data[2])) {
             $fieldNames = $data[2];
-            if ($actionMethod === 'GET') {
-                foreach ($fieldNames as $fieldName) {
-                    $route .= "/@$fieldName";
-                }
-            } else {
+        }
+
+        $route = "$actionMethod /$actionName";
+        if ($actionMethod === 'GET' && isset($fieldNames) && !empty($fieldNames)) {
+            foreach ($fieldNames as $fieldName) {
+                $route .= "/@$fieldName";
+            }
+        }
+
+        $f3->route($route, function($f3, $params) {
+            $actionName = substr($f3->get('PATH'), 1);
+            $data = $GLOBALS['actions'][$actionName];
+            $actionMethod = $data[0];
+            $functionName = $data[1];
+            $fieldNames = array();
+            if (isset($data[2]) && !empty($data[2])) {
+                $fieldNames = $data[2];
+            }
+            $functionParams = array();
+            if ($actionMethod !== 'GET' && isset($fieldNames) && !empty($fieldNames)) {
                 $dataSource = json_decode(urldecode($f3->get('BODY')), true);
                 foreach ($fieldNames as $fieldName) {
                     $functionParams[] = $dataSource[$fieldName];
                 }
             }
-        }
 
-        $f3->route($route, function($f3, $params) {
             if ($actionMethod === 'GET') {
                 try {
                     call_user_func_array($functionName, $params);
