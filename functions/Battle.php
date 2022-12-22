@@ -299,4 +299,9 @@ function SetFormation($characterId, $formationName, $position)
     $output['list'] = CursorsToArray($list);
     echo json_encode($output);
 }
+
+function GetFormationCharactersAndEquipments($playerId, $formationDataId)
+{
+    echo json_encode(GetFormationCharactersAndEquipmentsInternal($playerId, $formationDataId));
+}
 ?>
