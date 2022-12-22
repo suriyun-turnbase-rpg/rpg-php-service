@@ -262,28 +262,4 @@ if (\Base::instance()->get('use_request_query_action')) {
     // Run the fatfree instance
     $f3->run();
 }
-
-// API actions functions
-function DoGetAction($actionName, $params)
-{
-    try {
-        call_user_func($GLOBALS['actions'][$actionName], $params, array());
-    } catch (Exception $e) {
-        echo json_encode(array(
-            'error' => 'Caught exception: ',  $e->getMessage()
-        ));
-    }
-}
-
-function DoPostAction($actionName, $f3, $params)
-{
-    $postBody = json_decode(urldecode($f3->get('BODY')), true);
-    try {
-        call_user_func($GLOBALS['actions'][$actionName], $params, $postBody);
-    } catch (Exception $e) {
-        echo json_encode(array(
-            'error' => 'Caught exception: ',  $e->getMessage()
-        ));
-    }
-}
 ?>
