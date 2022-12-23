@@ -46,4 +46,73 @@ function GetUnlockTitleListInternal($playerId)
         $playerId
     ));
 }
+
+function SetPlayerIcon($dataId) {
+    $gameData = \Base::instance()->get('GameData');
+    $output = array('error' => '');
+    $player = GetPlayer();
+    $playerId = $player->id;
+    $data = $gameData['playerIcons'][$dataId];
+    $canUse = true;
+    if ($data['locked']) {
+        $db = new PlayerUnlockIcon();
+        $count = $db->count(array('playerId = ? AND dataId = ?', $playerId, $dataId));
+        if ($count <= 0) {
+            $canUse = false;
+        }
+    }
+    if (!$canUse) {
+        $output['error'] = 'ERROR_NOT_HAVE_PERMISSION';
+    } else {
+        $player->iconId = $dataId;
+        $player->update();
+    }
+    echo json_encode($output);
+}
+
+function SetPlayerFrame($dataId) {
+    $gameData = \Base::instance()->get('GameData');
+    $output = array('error' => '');
+    $player = GetPlayer();
+    $playerId = $player->id;
+    $data = $gameData['playerFrames'][$dataId];
+    $canUse = true;
+    if ($data['locked']) {
+        $db = new PlayerUnlockFrame();
+        $count = $db->count(array('playerId = ? AND dataId = ?', $playerId, $dataId));
+        if ($count <= 0) {
+            $canUse = false;
+        }
+    }
+    if (!$canUse) {
+        $output['error'] = 'ERROR_NOT_HAVE_PERMISSION';
+    } else {
+        $player->frameId = $dataId;
+        $player->update();
+    }
+    echo json_encode($output);
+}
+
+function SetPlayerTitle($dataId) {
+    $gameData = \Base::instance()->get('GameData');
+    $output = array('error' => '');
+    $player = GetPlayer();
+    $playerId = $player->id;
+    $data = $gameData['playerTitles'][$dataId];
+    $canUse = true;
+    if ($data['locked']) {
+        $db = new PlayerUnlockTitle();
+        $count = $db->count(array('playerId = ? AND dataId = ?', $playerId, $dataId));
+        if ($count <= 0) {
+            $canUse = false;
+        }
+    }
+    if (!$canUse) {
+        $output['error'] = 'ERROR_NOT_HAVE_PERMISSION';
+    } else {
+        $player->titleId = $dataId;
+        $player->update();
+    }
+    echo json_encode($output);
+}
 ?>
