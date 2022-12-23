@@ -66,6 +66,7 @@ function SetPlayerIcon($dataId) {
     } else {
         $player->iconId = $dataId;
         $player->update();
+        $output['dataId'] = $dataId;
     }
     echo json_encode($output);
 }
@@ -89,6 +90,7 @@ function SetPlayerFrame($dataId) {
     } else {
         $player->frameId = $dataId;
         $player->update();
+        $output['dataId'] = $dataId;
     }
     echo json_encode($output);
 }
@@ -112,6 +114,7 @@ function SetPlayerTitle($dataId) {
     } else {
         $player->titleId = $dataId;
         $player->update();
+        $output['dataId'] = $dataId;
     }
     echo json_encode($output);
 }

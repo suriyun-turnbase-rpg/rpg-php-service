@@ -71,6 +71,7 @@ function SetClanIcon($dataId) {
     } else {
         $clan->frameId = $dataId;
         $clan->update();
+        $output['dataId'] = $dataId;
     }
     echo json_encode($output);
 }
@@ -99,6 +100,7 @@ function SetClanFrame($dataId) {
     } else {
         $clan->titleId = $dataId;
         $clan->update();
+        $output['dataId'] = $dataId;
     }
     echo json_encode($output);
 }
@@ -127,6 +129,7 @@ function SetClanTitle($dataId) {
     } else {
         $clan->titleId = $dataId;
         $clan->update();
+        $output['dataId'] = $dataId;
     }
     echo json_encode($output);
 }
