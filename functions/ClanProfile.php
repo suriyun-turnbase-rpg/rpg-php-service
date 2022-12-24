@@ -62,14 +62,15 @@ function SetClanIcon($dataId) {
             $canUse = false;
         }
     }
-    $clan = GetClan();
-    if (!$clan) {
+    $clanDb = new Clan();
+    $clan = $clanDb->findone(array('id = ?', $clanId));
+    if (!$clan || !GetClanOwner($playerId, $clanId)) {
         $canUse = false;
     }
     if (!$canUse) {
         $output['error'] = 'ERROR_NOT_HAVE_PERMISSION';
     } else {
-        $clan->frameId = $dataId;
+        $clan->iconId = $dataId;
         $clan->update();
         $output['dataId'] = $dataId;
     }
@@ -91,14 +92,15 @@ function SetClanFrame($dataId) {
             $canUse = false;
         }
     }
-    $clan = GetClan();
-    if (!$clan) {
+    $clanDb = new Clan();
+    $clan = $clanDb->findone(array('id = ?', $clanId));
+    if (!$clan || !GetClanOwner($playerId, $clanId)) {
         $canUse = false;
     }
     if (!$canUse) {
         $output['error'] = 'ERROR_NOT_HAVE_PERMISSION';
     } else {
-        $clan->titleId = $dataId;
+        $clan->frameId = $dataId;
         $clan->update();
         $output['dataId'] = $dataId;
     }
@@ -120,8 +122,9 @@ function SetClanTitle($dataId) {
             $canUse = false;
         }
     }
-    $clan = GetClan();
-    if (!$clan) {
+    $clanDb = new Clan();
+    $clan = $clanDb->findone(array('id = ?', $clanId));
+    if (!$clan || !GetClanOwner($playerId, $clanId)) {
         $canUse = false;
     }
     if (!$canUse) {
