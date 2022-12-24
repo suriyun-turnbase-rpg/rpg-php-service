@@ -1160,7 +1160,7 @@ function GetFormationCharacterIds($playerId, $playerSelectedFormation)
     return $characterIds;
 }
 
-function GetFormationCharactersAndEquipments($playerId, $formationDataId)
+function GetFormationCharactersAndEquipmentsInternal($playerId, $formationDataId)
 {
     $output = array();
     $characters = [];

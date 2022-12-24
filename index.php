@@ -42,6 +42,8 @@ require_once('functions/Battle.php');
 require_once('functions/Arena.php');
 require_once('functions/Billing.php');
 require_once('functions/Clan.php');
+require_once('functions/ClanProfile.php');
+require_once('functions/PlayerProfile.php');
 require_once('functions/Chat.php');
 require_once('functions/RaidBoss.php');
 require_once('functions/ClanBoss.php');
@@ -59,320 +61,129 @@ if ($player) {
 }
 // API actions
 $actions = array(
-    'login' => function($params, $postBody) {
-        Login($postBody['username'], $postBody['password']);
-    },
-    'register' => function($params, $postBody) {
-        Register($postBody['username'], $postBody['password']);
-    },
-    'guest-login' => function($params, $postBody) {
-        GuestLogin($postBody['deviceId']);
-    },
-    'validate-login-token' => function($params, $postBody) {
-        ValidateLoginToken($postBody['refreshToken']);
-    },
-    'set-profile-name' => function($params, $postBody) {
-        SetProfileName($postBody['profileName']);
-    },
-    'achievements' => function($params, $postBody) {
-        GetAchievementList();
-    },
-    'items' => function($params, $postBody) {
-        GetItemList();
-    },
-    'currencies' => function($params, $postBody) {
-        GetCurrencyList();
-    },
-    'staminas' => function($params, $postBody) {
-        GetStaminaList();
-    },
-    'formations' => function($params, $postBody) {
-        GetFormationList();
-    },
-    'unlock-items' => function($params, $postBody) {
-        GetUnlockItemList();
-    },
-    'clear-stages' => function($params, $postBody) {
-        GetClearStageList();
-    },
-    'helpers' => function($params, $postBody) {
-        GetHelperList();
-    },
-    'friends' => function($params, $postBody) {
-        GetFriendList();
-    },
-    'friend-requests' => function($params, $postBody) {
-        GetFriendRequestList();
-    },
-    'pending-requests' => function($params, $postBody) {
-        GetPendingRequestList();
-    },
-    'opponents' => function($params, $postBody) {
-        GetOpponentList();
-    },
-    'raid-events' => function($params, $postBody) {
-        GetRaidEventList();
-    },
-    'clan-events' => function($params, $postBody) {
-        GetClanEventList();
-    },
-    'service-time' => function($params, $postBody) {
-        GetServiceTime();
-    },
-    'levelup-item' => function($params, $postBody) {
-        LevelUpItem($postBody['itemId'], $postBody['materials']);
-    },
-    'evolve-item' => function($params, $postBody) {
-        EvolveItem($postBody['itemId'], $postBody['materials']);
-    },
-    'sell-items' => function($params, $postBody) {
-        SellItems($postBody['items']);
-    },
-    'equip-item' => function($params, $postBody) {
-        EquipItem($postBody['characterId'], $postBody['equipmentId'], $postBody['equipPosition']);
-    },
-    'unequip-item' => function($params, $postBody) {
-        UnEquipItem($postBody['equipmentId']);
-    },
-    'craft-item' => function($params, $postBody) {
-        CraftItem($postBody['itemCraftId'], $postBody['materials']);
-    },
-    'available-lootboxes' => function($params, $postBody) {
-        GetAvailableLootBoxList();
-    },
-    'available-iap-packages' => function($params, $postBody) {
-        GetAvailableIapPackageList();
-    },
-    'available-ingame-packages' => function($params, $postBody) {
-        GetAvailableInGamePackageList();
-    },
-    'open-lootbox' => function($params, $postBody) {
-        OpenLootBox($postBody['lootBoxDataId'], $postBody['packIndex']);
-    },
-    'open-ingame-package' => function($params, $postBody) {
-        OpenInGamePackage($postBody['inGamePackageDataId']);
-    },
-    'convert-hard-currency' => function($params, $postBody) {
-        ConvertHardCurrency($postBody['requireHardCurrency']);
-    },
-    'refill-stamina' => function($params, $postBody) {
-        RefillStamina($postBody['staminaDataId']);
-    },
-    'refill-stamina-info' => function($params, $postBody) {
-        GetRefillStaminaInfo($params['staminaDataId']);
-    },
-    'available-stages' => function($params, $postBody) {
-        GetAvailableStageList();
-    },
-    'friend-request' => function($params, $postBody) {
-        FriendRequest($postBody['targetPlayerId']);
-    },
-    'friend-accept' => function($params, $postBody) {
-        FriendAccept($postBody['targetPlayerId']);
-    },
-    'friend-decline' => function($params, $postBody) {
-        FriendDecline($postBody['targetPlayerId']);
-    },
-    'friend-delete' => function($params, $postBody) {
-        FriendDelete($postBody['targetPlayerId']);
-    },
-    'friend-request-delete' => function($params, $postBody) {
-        FriendRequestDelete($postBody['targetPlayerId']);
-    },
-    'find-player' => function($params, $postBody) {
-        FindPlayer($postBody['profileName']);
-    },
-    'start-stage' => function($params, $postBody) {
-        StartStage($postBody['stageDataId'], $postBody['helperPlayerId']);
-    },
-    'finish-stage' => function($params, $postBody) {
-        FinishStage($postBody['session'], $postBody['battleResult'], $postBody['totalDamage'], $postBody['deadCharacters']);
-    },
-    'revive-characters' => function($params, $postBody) {
-        ReviveCharacters();
-    },
-    'select-formation' => function($params, $postBody) {
-        SelectFormation($postBody['formationName'], $postBody['formationType']);
-    },
-    'set-formation' => function($params, $postBody) {
-        SetFormation($postBody['characterId'], $postBody['formationName'], $postBody['position']);
-    },
-    'start-duel' => function($params, $postBody) {
-        StartDuel($postBody['targetPlayerId']);
-    },
-    'finish-duel' => function($params, $postBody) {
-        FinishDuel($postBody['session'], $postBody['battleResult'], $postBody['totalDamage'], $postBody['deadCharacters']);
-    },
-    'start-raid-boss-battle' => function($params, $postBody) {
-        StartRaidBossBattle($postBody['eventId']);
-    },
-    'finish-raid-boss-battle' => function($params, $postBody) {
-        FinishRaidBossBattle($postBody['session'], $postBody['battleResult'], $postBody['totalDamage'], $postBody['deadCharacters']);
-    },
-    'start-clan-boss-battle' => function($params, $postBody) {
-        StartClanBossBattle($postBody['eventId']);
-    },
-    'finish-clan-boss-battle' => function($params, $postBody) {
-        FinishClanBossBattle($postBody['session'], $postBody['battleResult'], $postBody['totalDamage'], $postBody['deadCharacters']);
-    },
-    'ios-buy-goods' => function($params, $postBody) {
-        IOSBuyGoods($postBody['iapPackageDataId'], $postBody['receipt']);
-    },
-    'google-play-buy-goods' => function($params, $postBody) {
-        AndroidBuyGoods($postBody['iapPackageDataId'], $postBody['data'], $postBody['signature']);
-    },
-    'earn-achievement-reward' => function($params, $postBody) {
-        EarnAchievementReward($postBody['achievementId']);
-    },
-    'create-clan' => function($params, $postBody) {
-        CreateClan($postBody['clanName']);
-    },
-    'find-clan' => function($params, $postBody) {
-        FindClan($postBody['clanName']);
-    },
-    'clan-join-request' => function($params, $postBody) {
-        ClanJoinRequest($postBody['clanId']);
-    },
-    'clan-join-accept' => function($params, $postBody) {
-        ClanJoinAccept($postBody['targetPlayerId']);
-    },
-    'clan-join-decline' => function($params, $postBody) {
-        ClanJoinDecline($postBody['targetPlayerId']);
-    },
-    'clan-member-delete' => function($params, $postBody) {
-        ClanMemberDelete($postBody['targetPlayerId']);
-    },
-    'clan-join-request-delete' => function($params, $postBody) {
-        ClanJoinRequestDelete($postBody['clanId']);
-    },
-    'clan-members' => function($params, $postBody) {
-        ClanMembers();
-    },
-    'clan-owner-transfer' => function($params, $postBody) {
-        ClanOwnerTransfer($postBody['targetPlayerId']);
-    },
-    'clan-terminate' => function($params, $postBody) {
-        ClanTerminate();
-    },
-    'clan' => function($params, $postBody) {
-        GetClan();
-    },
-    'clan-join-requests' => function($params, $postBody) {
-        ClanJoinRequests();
-    },
-    'clan-join-pending-requests' => function($params, $postBody) {
-        ClanJoinPendingRequests();
-    },
-    'clan-exit' => function($params, $postBody) {
-        ClanExit();
-    },
-    'clan-set-role' => function($params, $postBody) {
-        ClanSetRole($postBody['targetPlayerId'], $postBody['clanRole']);
-    },
-    'clan-checkin' => function($params, $postBody) {
-        ClanCheckin();
-    },
-    'clan-checkin-status' => function($params, $postBody) {
-        GetClanCheckinStatus();
-    },
-    'clan-donation' => function($params, $postBody) {
-        ClanDonation($postBody['clanDonationDataId']);
-    },
-    'clan-donation-status' => function($params, $postBody) {
-        GetClanDonationStatus();
-    },
-    'chat-messages' => function($params, $postBody) {
-        GetChatMessages($params['lastTime']);
-    },
-    'clan-chat-messages' => function($params, $postBody) {
-        GetClanChatMessages($params['lastTime']);
-    },
-    'enter-chat-message' => function($params, $postBody) {
-        EnterChatMessage($postBody['message']);
-    },
-    'enter-clan-chat-message' => function($params, $postBody) {
-        EnterClanChatMessage($postBody['message']);
-    },
-    'start-raid-boss-battle' => function($params, $postBody) {
-        StartRaidBossBattle($postBody['eventId']);
-    },
-    'finish-raid-boss-battle' => function($params, $postBody) {
-        FinishRaidBossBattle($postBody['session'], $postBody['battleResult'], $postBody['totalDamage'], $postBody['deadCharacters']);
-    },
-    'start-clan-boss-battle' => function($params, $postBody) {
-        StartClanBossBattle($postBody['eventId']);
-    },
-    'finish-clan-boss-battle' => function($params, $postBody) {
-        FinishClanBossBattle($postBody['session'], $postBody['battleResult'], $postBody['totalDamage'], $postBody['deadCharacters']);
-    },
-    'mails' => function($params, $postBody) {
-        GetMailList();
-    },
-    'read-mail' => function($params, $postBody) {
-        ReadMail($postBody['id']);
-    },
-    'claim-mail-rewards' => function($params, $postBody) {
-        ClaimMailRewards($postBody['id']);
-    },
-    'delete-mail' => function($params, $postBody) {
-        DeleteMail($postBody['id']);
-    },
-    'mails-count' => function($params, $postBody) {
-        GetMailsCount();
-    },
-    'random-store' => function($params, $postBody) {
-        GetRandomStore($params['id']);
-    },
-    'purchase-random-store-item' => function($params, $postBody) {
-        PurchaseRandomStoreItem($postBody['id'], $postBody['index']);
-    },
-    'refresh-random-store' => function($params, $postBody) {
-        RefreshRandomStore($postBody['id']);
-    },
-    'all-daily-rewarding' => function($params, $postBody) {
-        GetAllDailyRewardList();
-    },
-    'daily-rewarding' => function($params, $postBody) {
-        GetDailyRewardList($params['id']);
-    },
-    'daily-rewarding-claim' => function($params, $postBody) {
-        ClaimDailyReward($postBody['id']);
-    },
-    'formation-characters-and-equipments' => function($params, $postBody) {
-        echo json_encode(GetFormationCharactersAndEquipments($params['playerId'], $params['formationDataId']));
-    },
-    'arena-formation-characters-and-equipments' => function($params, $postBody) {
-        $playerDb = new Player();
-        $player = $playerDb->findone(array(
-            'id = ?',
-            $params['playerId']
-        ));
-        echo json_encode(GetFormationCharactersAndEquipments($params['playerId'], $player->selectedArenaFormation));
-    },
+    // Auth services
+    'login' => array('POST', 'Login', array('username', 'password')),
+    'register' => array('POST', 'Register', array('username', 'password')),
+    'guest-login' => array('POST', 'GuestLogin', array('deviceId')),
+    'validate-login-token' => array('POST', 'ValidateLoginToken', array('refreshToken')),
+    'set-profile-name' => array('POST', 'SetProfileName', array('profileName')),
+    // Listing services
+    'achievements' => array('GET', 'GetAchievementList', array()),
+    'items' => array('GET', 'GetItemList', array()),
+    'currencies' => array('GET', 'GetCurrencyList', array()),
+    'staminas' => array('GET', 'GetStaminaList', array()),
+    'formations' => array('GET', 'GetFormationList', array()),
+    'unlock-items' => array('GET', 'GetUnlockItemList', array()),
+    'clear-stages' => array('GET', 'GetClearStageList', array()),
+    'helpers' => array('GET', 'GetHelperList', array()),
+    'friends' => array('GET', 'GetFriendList', array()),
+    'friend-requests' => array('GET', 'GetFriendRequestList', array()),
+    'pending-requests' => array('GET', 'GetPendingRequestList', array()),
+    'opponents' => array('GET', 'GetOpponentList', array()),
+    'raid-events' => array('GET', 'GetRaidEventList', array()),
+    'clan-events' => array('GET', 'GetClanEventList', array()),
+    'service-time' => array('GET', 'GetServiceTime', array()),
+    // Item services
+    'levelup-item' => array('POST', 'LevelUpItem', array('itemId', 'materials')),
+    'evolve-item' => array('POST', 'EvolveItem', array('itemId', 'materials')),
+    'sell-items' => array('POST', 'SellItems', array('items')),
+    'equip-item' => array('POST', 'EquipItem', array('characterId', 'equipmentId', 'equipPosition')),
+    'unequip-item' => array('POST', 'UnEquipItem', array('equipmentId')),
+    'craft-item' => array('POST', 'CraftItem', array('itemCraftId', 'materials')),
+    'available-lootboxes' => array('GET', 'GetAvailableLootBoxList', array()),
+    'available-iap-packages' => array('GET', 'GetAvailableIapPackageList', array()),
+    'available-ingame-packages' => array('GET', 'GetAvailableInGamePackageList', array()),
+    'open-lootbox' => array('POST', 'OpenLootBox', array('lootBoxDataId', 'packIndex')),
+    'open-ingame-package' => array('POST', 'OpenInGamePackage', array('inGamePackageDataId')),
+    'convert-hard-currency' => array('POST', 'ConvertHardCurrency', array('requireHardCurrency')),
+    'refill-stamina' => array('POST', 'RefillStamina', array('staminaDataId')),
+    'refill-stamina-info' => array('GET', 'GetRefillStaminaInfo', array('staminaDataId')),
+    'available-stages' => array('GET', 'GetAvailableStageList', array()),
+    // Social services
+    'friend-request' => array('POST', 'FriendRequest', array('targetPlayerId')),
+    'friend-accept' => array('POST', 'FriendAccept', array('targetPlayerId')),
+    'friend-decline' => array('POST', 'FriendDecline', array('targetPlayerId')),
+    'friend-delete' => array('POST', 'FriendDelete', array('targetPlayerId')),
+    'friend-request-delete' => array('POST', 'FriendRequestDelete', array('targetPlayerId')),
+    'find-player' => array('POST', 'FindPlayer', array('profileName')),
+    // Battle services
+    'start-stage' => array('POST', 'StartStage', array('stageDataId', 'helperPlayerId')),
+    'finish-stage' => array('POST', 'FinishStage', array('session', 'battleResult', 'totalDamage', 'deadCharacters')),
+    'revive-characters' => array('POST', 'ReviveCharacters', array()),
+    'select-formation' => array('POST', 'SelectFormation', array('formationName', 'formationType')),
+    'set-formation' => array('POST', 'SetFormation', array('characterId', 'formationName', 'position')),
+    // Arena services
+    'start-duel' => array('POST', 'StartDuel', array('targetPlayerId')),
+    'finish-duel' => array('POST', 'FinishDuel', array('session', 'battleResult', 'totalDamage', 'deadCharacters')),
+    // Raid boss services
+    'start-raid-boss-battle' => array('POST', 'StartRaidBossBattle', array('eventId')),
+    'finish-raid-boss-battle' => array('POST', 'FinishRaidBossBattle', array('session', 'battleResult', 'totalDamage', 'deadCharacters')),
+    // Clan boss services
+    'start-clan-boss-battle' => array('POST', 'StartClanBossBattle', array('eventId')),
+    'finish-clan-boss-battle' => array('POST', 'FinishClanBossBattle', array('session', 'battleResult', 'totalDamage', 'deadCharacters')),
+    // Billing services
+    'ios-buy-goods' => array('POST', 'IOSBuyGoods', array('iapPackageDataId', 'receipt')),
+    'google-play-buy-goods' => array('POST', 'AndroidBuyGoods', array('iapPackageDataId', 'data', 'signature')),
+    // Achievement services
+    'earn-achievement-reward' => array('POST', 'EarnAchievementReward', array('achievementId')),
+    // Clan services
+    'create-clan' => array('POST', 'CreateClan', array('clanName')),
+    'find-clan' => array('POST', 'FindClan', array('clanName')),
+    'clan-join-request' => array('POST', 'ClanJoinRequest', array('clanId')),
+    'clan-join-accept' => array('POST', 'ClanJoinAccept', array('targetPlayerId')),
+    'clan-join-decline' => array('POST', 'ClanJoinDecline', array('targetPlayerId')),
+    'clan-member-delete' => array('POST', 'ClanMemberDelete', array('targetPlayerId')),
+    'clan-join-request-delete' => array('POST', 'ClanJoinRequestDelete', array('clanId')),
+    'clan-members' => array('GET', 'ClanMembers', array()),
+    'clan-owner-transfer' => array('POST', 'ClanOwnerTransfer', array('targetPlayerId')),
+    'clan-terminate' => array('POST', 'ClanTerminate', array()),
+    'clan' => array('GET', 'GetClan', array()),
+    'clan-join-requests' => array('GET', 'ClanJoinRequests', array()),
+    'clan-join-pending-requests' => array('GET', 'ClanJoinPendingRequests', array()),
+    'clan-exit' => array('POST', 'ClanExit', array()),
+    'clan-set-role' => array('POST', 'ClanSetRole', array('targetPlayerId', 'clanRole')),
+    'clan-checkin' => array('POST', 'ClanCheckin', array()),
+    'clan-checkin-status' => array('GET', 'GetClanCheckinStatus', array()),
+    'clan-donation' => array('POST', 'ClanDonation', array('clanDonationDataId')),
+    'clan-donation-status' => array('GET', 'GetClanDonationStatus', array()),
+    // Chat services
+    'chat-messages' => array('GET', 'GetChatMessages', array('lastTime')),
+    'clan-chat-messages' => array('GET', 'GetClanChatMessages', array('lastTime')),
+    'enter-chat-message' => array('POST', 'EnterChatMessage', array('message')),
+    'enter-clan-chat-message' => array('POST', 'EnterClanChatMessage', array('message')),
+    // Mail services
+    'mails' => array('GET', 'GetMailList', array()),
+    'read-mail' => array('POST', 'ReadMail', array('id')),
+    'claim-mail-rewards' => array('POST', 'ClaimMailRewards', array('id')),
+    'delete-mail' => array('POST', 'DeleteMail', array('id')),
+    'mails-count' => array('GET', 'GetMailsCount', array()),
+    // Random store services
+    'random-store' => array('GET', 'GetRandomStore', array('id')),
+    'purchase-random-store-item' => array('POST', 'PurchaseRandomStoreItem', array('id', 'index')),
+    'refresh-random-store' => array('POST', 'RefreshRandomStore', array('id')),
+    // Daily reward services
+    'all-daily-rewarding' => array('GET', 'GetAllDailyRewardList', array()),
+    'daily-rewarding' => array('GET', 'GetDailyRewardList', array('id')),
+    'daily-rewarding-claim' => array('POST', 'ClaimDailyReward', array('id')),
+    // Player profile
+    'unlock-icons' => array('GET', 'GetUnlockIconList', array()),
+    'unlock-frames' => array('GET', 'GetUnlockFrameList', array()),
+    'unlock-titles' => array('GET', 'GetUnlockTitleList', array()),
+    'set-icon' => array('POST', 'SetPlayerIcon', array('iconDataId')),
+    'set-frame' => array('POST', 'SetPlayerFrame', array('frameDataId')),
+    'set-title' => array('POST', 'SetPlayerTitle', array('titleDataId')),
+    // Clan profile
+    'clan-unlock-icons' => array('GET', 'GetClanUnlockIconList', array()),
+    'clan-unlock-frames' => array('GET', 'GetClanUnlockFrameList', array()),
+    'clan-unlock-titles' => array('GET', 'GetClanUnlockTitleList', array()),
+    'set-clan-icon' => array('POST', 'SetClanIcon', array('iconDataId')),
+    'set-clan-frame' => array('POST', 'SetClanFrame', array('frameDataId')),
+    'set-clan-title' => array('POST', 'SetClanTitle', array('titleDataId')),
+    // Other services
+    'formation-characters-and-equipments' => array('GET', 'GetFormationCharactersAndEquipments', array('playerId', 'formationDataId')),
+    'arena-formation-characters-and-equipments' => array('GET', 'GetArenaFormationCharactersAndEquipments', array('playerId')),
 );
-// API actions functions
-function DoGetAction($actionName, $params)
-{
-    try {
-        call_user_func($GLOBALS['actions'][$actionName], $params, array());
-    } catch (Exception $e) {
-        echo json_encode(array(
-            'error' => 'Caught exception: ',  $e->getMessage()
-        ));
-    }
-}
 
-function DoPostAction($actionName, $f3, $params)
-{
-    $postBody = json_decode(urldecode($f3->get('BODY')), true);
-    try {
-        call_user_func($GLOBALS['actions'][$actionName], $params, $postBody);
-    } catch (Exception $e) {
-        echo json_encode(array(
-            'error' => 'Caught exception: ',  $e->getMessage()
-        ));
-    }
-}
 // Other services
 $it = new RecursiveDirectoryIterator("./extensions");
 foreach(new RecursiveIteratorIterator($it) as $file) {
@@ -385,318 +196,81 @@ if (\Base::instance()->get('use_request_query_action')) {
     $actionName = $_GET['action'];
     if (empty($actionName)) {
         echo ";)";
-    } else if ($requestMethod === 'GET') {
-        try {
-            call_user_func($GLOBALS['actions'][$actionName], $_GET, array());
-        } catch (Exception $e) {
-            echo json_encode(array(
-                'error' => 'Caught exception: ',  $e->getMessage()
-            ));
+        return;
+    }
+
+    $data = $GLOBALS['actions'][$actionName];
+    if (!isset($data)) {
+        echo json_encode(array('error' => 'No action: ', $actionName));
+        return;
+    }
+
+    $actionMethod = $data[0];
+    if ($requestMethod !== $actionMethod) {
+        echo json_encode(array('error' => 'Wrong method: ', $requestMethod, ' for ', $actionName));
+        return;
+    }
+
+    $functionName = $data[1];
+    $functionParams = array();
+    if (isset($data[2]) && !empty($data[2])) {
+        $dataSource = $actionMethod === 'GET' ? $_GET : json_decode(urldecode(file_get_contents('php://input')), true);
+        $fieldNames = $data[2];
+        foreach ($fieldNames as $fieldName) {
+            $functionParams[] = $dataSource[$fieldName];
         }
-    } else if ($requestMethod === 'POST') {
-        $postBody = json_decode(urldecode(file_get_contents('php://input')), true);
-        try {
-            call_user_func($GLOBALS['actions'][$actionName], $_GET, $postBody);
-        } catch (Exception $e) {
-            echo json_encode(array(
-                'error' => 'Caught exception: ',  $e->getMessage()
-            ));
-        }
+    }
+    
+    try {
+        call_user_func_array($functionName, $functionParams);
+    } catch (Exception $ex) {
+        echo json_encode(array('error' => 'Caught exception: ', $ex->getMessage()));
     }
 } else {
     // Services
-    $f3->route('GET /', function() {
+    $f3->route('GET /', function($f3) {
         echo ";)";
     });
-    // Auth services
-    $f3->route('POST /login', function($f3, $params) {
-        DoPostAction('login', $f3, $params);
-    });
-    $f3->route('POST /register', function($f3, $params) {
-        DoPostAction('register', $f3, $params);
-    });
-    $f3->route('POST /guest-login', function($f3, $params) {
-        DoPostAction('guest-login', $f3, $params);
-    });
-    $f3->route('POST /validate-login-token', function($f3, $params) {
-        DoPostAction('validate-login-token', $f3, $params);
-    });
-    $f3->route('POST /set-profile-name', function($f3, $params) {
-        DoPostAction('set-profile-name', $f3, $params);
-    });
-    // Listing services
-    $f3->route('GET /achievements', function($f3, $params) {
-        DoGetAction('achievements', $params);
-    });
-    $f3->route('GET /items', function($f3, $params) {
-        DoGetAction('items', $params);
-    });
-    $f3->route('GET /currencies', function($f3, $params) {
-        DoGetAction('currencies', $params);
-    });
-    $f3->route('GET /staminas', function($f3, $params) {
-        DoGetAction('staminas', $params);
-    });
-    $f3->route('GET /formations', function($f3, $params) {
-        DoGetAction('formations', $params);
-    });
-    $f3->route('GET /unlock-items', function($f3, $params) {
-        DoGetAction('unlock-items', $params);
-    });
-    $f3->route('GET /clear-stages', function($f3, $params) {
-        DoGetAction('clear-stages', $params);
-    });
-    $f3->route('GET /helpers', function($f3, $params) {
-        DoGetAction('helpers', $params);
-    });
-    $f3->route('GET /friends', function($f3, $params) {
-        DoGetAction('friends', $params);
-    });
-    $f3->route('GET /friend-requests', function($f3, $params) {
-        DoGetAction('friend-requests', $params);
-    });
-    $f3->route('GET /pending-requests', function($f3, $params) {
-        DoGetAction('pending-requests', $params);
-    });
-    $f3->route('GET /opponents', function($f3, $params) {
-        DoGetAction('opponents', $params);
-    });
-    $f3->route('GET /raid-events', function($f3, $params) {
-        DoGetAction('raid-events', $params);
-    });
-    $f3->route('GET /clan-events', function($f3, $params) {
-        DoGetAction('clan-events', $params);
-    });
-    $f3->route('GET /service-time', function($f3, $params) {
-        DoGetAction('service-time', $params);
-    });
-    // Item services
-    $f3->route('POST /levelup-item', function($f3, $params) {
-        DoPostAction('levelup-item', $f3, $params);
-    });
-    $f3->route('POST /evolve-item', function($f3, $params) {
-        DoPostAction('evolve-item', $f3, $params);
-    });
-    $f3->route('POST /sell-items', function($f3, $params) {
-        DoPostAction('sell-items', $f3, $params);
-    });
-    $f3->route('POST /equip-item', function($f3, $params) {
-        DoPostAction('equip-item', $f3, $params);
-    });
-    $f3->route('POST /unequip-item', function($f3, $params) {
-        DoPostAction('unequip-item', $f3, $params);
-    });
-    $f3->route('POST /craft-item', function($f3, $params) {
-        DoPostAction('craft-item', $f3, $params);
-    });
-    $f3->route('GET /available-lootboxes', function($f3, $params) {
-        DoGetAction('available-lootboxes', $params);
-    });
-    $f3->route('GET /available-iap-packages', function($f3, $params) {
-        DoGetAction('available-iap-packages', $params);
-    });
-    $f3->route('GET /available-ingame-packages', function($f3, $params) {
-        DoGetAction('available-ingame-packages', $params);
-    });
-    $f3->route('POST /open-lootbox', function($f3, $params) {
-        DoPostAction('open-lootbox', $f3, $params);
-    });
-    $f3->route('POST /open-ingame-package', function($f3, $params) {
-        DoPostAction('open-ingame-package', $f3, $params);
-    });
-    $f3->route('POST /convert-hard-currency', function($f3, $params) {
-        DoPostAction('convert-hard-currency', $f3, $params);
-    });
-    $f3->route('POST /refill-stamina', function($f3, $params) {
-        DoPostAction('refill-stamina', $f3, $params);
-    });
-    $f3->route('GET /refill-stamina-info/@staminaDataId', function($f3, $params) {
-        DoGetAction('refill-stamina-info', $params);
-    });
-    $f3->route('GET /available-stages', function($f3, $params) {
-        DoGetAction('available-stages', $params);
-    });
-    // Social services
-    $f3->route('POST /friend-request', function($f3, $params) {
-        DoPostAction('friend-request', $f3, $params);
-    });
-    $f3->route('POST /friend-accept', function($f3, $params) {
-        DoPostAction('friend-accept', $f3, $params);
-    });
-    $f3->route('POST /friend-decline', function($f3, $params) {
-        DoPostAction('friend-decline', $f3, $params);
-    });
-    $f3->route('POST /friend-delete', function($f3, $params) {
-        DoPostAction('friend-delete', $f3, $params);
-    });
-    $f3->route('POST /friend-request-delete', function($f3, $params) {
-        DoPostAction('friend-request-delete', $f3, $params);
-    });
-    $f3->route('POST /find-player', function($f3, $params) {
-        DoPostAction('find-player', $f3, $params);
-    });
-    // Battle services
-    $f3->route('POST /start-stage', function($f3, $params) {
-        DoPostAction('start-stage', $f3, $params);
-    });
-    $f3->route('POST /finish-stage', function($f3, $params) {
-        DoPostAction('finish-stage', $f3, $params);
-    });
-    $f3->route('POST /revive-characters', function($f3, $params) {
-        DoPostAction('revive-characters', $f3, $params);
-    });
-    $f3->route('POST /select-formation', function($f3, $params) {
-        DoPostAction('select-formation', $f3, $params);
-    });
-    $f3->route('POST /set-formation', function($f3, $params) {
-        DoPostAction('set-formation', $f3, $params);
-    });
-    // Arena services
-    $f3->route('POST /start-duel', function($f3, $params) {
-        DoPostAction('start-duel', $f3, $params);
-    });
-    $f3->route('POST /finish-duel', function($f3, $params) {
-        DoPostAction('finish-duel', $f3, $params);
-    });
-    // Raid boss services
-    $f3->route('POST /start-raid-boss-battle', function($f3, $params) {
-        DoPostAction('start-raid-boss-battle', $f3, $params);
-    });
-    $f3->route('POST /finish-raid-boss-battle', function($f3, $params) {
-        DoPostAction('finish-raid-boss-battle', $f3, $params);
-    });
-    // Clan boss services
-    $f3->route('POST /start-clan-boss-battle', function($f3, $params) {
-        DoPostAction('start-clan-boss-battle', $f3, $params);
-    });
-    $f3->route('POST /finish-clan-boss-battle', function($f3, $params) {
-        DoPostAction('finish-clan-boss-battle', $f3, $params);
-    });
-    // Billing services
-    $f3->route('POST /ios-buy-goods', function($f3, $params) {
-        DoPostAction('ios-buy-goods', $f3, $params);
-    });
-    $f3->route('POST /google-play-buy-goods', function($f3, $params) {
-        DoPostAction('google-play-buy-goods', $f3, $params);
-    });
-    // Achievement services
-    $f3->route('POST /earn-achievement-reward', function($f3, $params) {
-        DoPostAction('earn-achievement-reward', $f3, $params);
-    });
-    // Clan services
-    $f3->route('POST /create-clan', function($f3, $params) {
-        DoPostAction('create-clan', $f3, $params);
-    });
-    $f3->route('POST /find-clan', function($f3, $params) {
-        DoPostAction('find-clan', $f3, $params);
-    });
-    $f3->route('POST /clan-join-request', function($f3, $params) {
-        DoPostAction('clan-join-request', $f3, $params);
-    });
-    $f3->route('POST /clan-join-accept', function($f3, $params) {
-        DoPostAction('clan-join-accept', $f3, $params);
-    });
-    $f3->route('POST /clan-join-decline', function($f3, $params) {
-        DoPostAction('clan-join-decline', $f3, $params);
-    });
-    $f3->route('POST /clan-member-delete', function($f3, $params) {
-        DoPostAction('clan-member-delete', $f3, $params);
-    });
-    $f3->route('POST /clan-join-request-delete', function($f3, $params) {
-        DoPostAction('clan-join-request-delete', $f3, $params);
-    });
-    $f3->route('GET /clan-members', function($f3, $params) {
-        DoGetAction('clan-members', $params);
-    });
-    $f3->route('POST /clan-owner-transfer', function($f3, $params) {
-        DoPostAction('clan-owner-transfer', $f3, $params);
-    });
-    $f3->route('POST /clan-terminate', function($f3, $params) {
-        DoPostAction('clan-terminate', $f3, $params);
-    });
-    $f3->route('GET /clan', function($f3, $params) {
-        DoGetAction('clan', $params);
-    });
-    $f3->route('GET /clan-join-requests', function($f3, $params) {
-        DoGetAction('clan-join-requests', $params);
-    });
-    $f3->route('GET /clan-join-pending-requests', function($f3, $params) {
-        DoGetAction('clan-join-pending-requests', $params);
-    });
-    $f3->route('POST /clan-exit', function($f3, $params) {
-        DoPostAction('clan-exit', $f3, $params);
-    });
-    $f3->route('POST /clan-set-role', function($f3, $params) {
-        DoPostAction('clan-set-role', $f3, $params);
-    });
-    $f3->route('POST /clan-checkin', function($f3, $params) {
-        DoPostAction('clan-checkin', $f3, $params);
-    });
-    $f3->route('GET /clan-checkin-status', function($f3, $params) {
-        DoGetAction('clan-checkin-status', $params);
-    });
-    $f3->route('POST /clan-donation', function($f3, $params) {
-        DoPostAction('clan-donation', $f3, $params);
-    });
-    $f3->route('GET /clan-donation-status', function($f3, $params) {
-        DoGetAction('clan-donation-status', $params);
-    });
-    // Chat services
-    $f3->route('GET /chat-messages/@lastTime', function($f3, $params) {
-        DoGetAction('chat-messages', $params);
-    });
-    $f3->route('GET /clan-chat-messages/@lastTime', function($f3, $params) {
-        DoGetAction('clan-chat-messages', $params);
-    });
-    $f3->route('POST /enter-chat-message', function($f3, $params) {
-        DoPostAction('enter-chat-message', $f3, $params);
-    });
-    $f3->route('POST /enter-clan-chat-message', function($f3, $params) {
-        DoPostAction('enter-clan-chat-message', $f3, $params);
-    });
-    // Mail services
-    $f3->route('GET /mails', function($f3, $params) {
-        DoGetAction('mails', $params);
-    });
-    $f3->route('POST /read-mail', function($f3, $params) {
-        DoPostAction('read-mail', $f3, $params);
-    });
-    $f3->route('POST /claim-mail-rewards', function($f3, $params) {
-        DoPostAction('claim-mail-rewards', $f3, $params);
-    });
-    $f3->route('POST /delete-mail', function($f3, $params) {
-        DoPostAction('delete-mail', $f3, $params);
-    });
-    $f3->route('GET /mails-count', function($f3, $params) {
-        DoGetAction('mails-count', $params);
-    });
-    // Random store services
-    $f3->route('GET /random-store/@id', function($f3, $params) {
-        DoGetAction('random-store', $params);
-    });
-    $f3->route('POST /purchase-random-store-item', function($f3, $params) {
-        DoPostAction('purchase-random-store-item', $f3, $params);
-    });
-    $f3->route('POST /refresh-random-store', function($f3, $params) {
-        DoPostAction('refresh-random-store', $f3, $params);
-    });
-    // Daily reward services
-    $f3->route('GET /daily-rewarding/@id', function ($f3, $params) {
-        DoGetAction('daily-rewarding', $params);
-    });
-    $f3->route('GET /all-daily-rewarding', function ($f3, $params) {
-        DoGetAction('all-daily-rewarding', $params);
-    });
-    $f3->route('POST /daily-rewarding-claim', function ($f3, $params) {
-        DoPostAction('daily-rewarding-claim', $f3, $params);
-    });
-    // Other services
-    $f3->route('GET /formation-characters-and-equipments/@playerId/@formationDataId', function($f3, $params) {
-        DoGetAction('formation-characters-and-equipments', $params);
-    });
-    $f3->route('GET /arena-formation-characters-and-equipments/@playerId', function($f3, $params) {
-        DoGetAction('arena-formation-characters-and-equipments', $params);
-    });
+    // Implement services
+    foreach ($GLOBALS['actions'] as $actionName => $data) {
+        $actionMethod = $data[0];
+        $functionName = $data[1];
+        $fieldNames = array();
+        if (isset($data[2]) && !empty($data[2])) {
+            $fieldNames = $data[2];
+        }
+
+        $route = "$actionMethod /$actionName";
+        if ($actionMethod === 'GET' && isset($fieldNames) && !empty($fieldNames)) {
+            foreach ($fieldNames as $fieldName) {
+                $route .= "/@$fieldName";
+            }
+        }
+
+        $f3->route($route, function($f3, $params) {
+            $actionName = explode('/', $f3->get('PATH'))[1];
+            $data = $GLOBALS['actions'][$actionName];
+            $actionMethod = $data[0];
+            $functionName = $data[1];
+            $fieldNames = array();
+            if (isset($data[2]) && !empty($data[2])) {
+                $fieldNames = $data[2];
+            }
+            $functionParams = array();
+            $dataSource = $actionMethod === 'GET' ? $params : json_decode(urldecode($f3->get('BODY')), true);
+            foreach ($fieldNames as $fieldName) {
+                $functionParams[] = $dataSource[$fieldName];
+            }
+
+            try {
+                call_user_func_array($functionName, $functionParams);
+            } catch (Exception $ex) {
+                echo json_encode(array('error' => 'Caught exception: ', $ex->getMessage()));
+            }
+        });
+    }
+
+    // Run the fatfree instance
     $f3->run();
 }
 ?>

@@ -38,7 +38,7 @@ function StartDuel($targetPlayerId)
         $output['stamina'] = CursorToArray($stamina);
         $output['session'] = $session;
         
-        $charactersAndEquipments = GetFormationCharactersAndEquipments($opponent->id, $opponent->selectedArenaFormation);
+        $charactersAndEquipments = GetFormationCharactersAndEquipmentsInternal($opponent->id, $opponent->selectedArenaFormation);
         $output['opponentCharacters'] = $charactersAndEquipments['characters'];
         $output['opponentEquipments'] = $charactersAndEquipments['equipments'];
     }
@@ -180,5 +180,15 @@ function FinishDuel($session, $battleResult, $totalDamage, $deadCharacters)
         $output['player'] = CursorToArray($player);
     }
     echo json_encode($output);
+}
+
+function GetArenaFormationCharactersAndEquipments($playerId, $formationDataId)
+{
+    $playerDb = new Player();
+    $player = $playerDb->findone(array(
+        'id = ?',
+        $playerId
+    ));
+    echo json_encode(GetFormationCharactersAndEquipmentsInternal($playerId, $player->selectedArenaFormation));
 }
 ?>
