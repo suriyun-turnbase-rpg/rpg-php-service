@@ -75,6 +75,9 @@ function FindClan($clanName)
         $list[] = array(
             'id' => $foundClan->id,
             'name' => $foundClan->name,
+            'iconId' => $foundClan->iconId,
+            'frameId' => $foundClan->frameId,
+            'titleId' => $foundClan->titleId,
             'owner' => GetClanOwner($playerId, $foundClan->id)
         );
     }
@@ -265,6 +268,9 @@ function GetClan()
             'name' => $clan->name,
             'description' => $clan->description,
             'exp' => $clan->exp,
+            'iconId' => $clan->iconId,
+            'frameId' => $clan->frameId,
+            'titleId' => $clan->titleId,
             'owner' => GetClanOwner($playerId, $clanId)
         );
     }
