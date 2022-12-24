@@ -42,6 +42,8 @@ require_once('functions/Battle.php');
 require_once('functions/Arena.php');
 require_once('functions/Billing.php');
 require_once('functions/Clan.php');
+require_once('functions/ClanProfile.php');
+require_once('functions/PlayerProfile.php');
 require_once('functions/Chat.php');
 require_once('functions/RaidBoss.php');
 require_once('functions/ClanBoss.php');
@@ -246,7 +248,7 @@ if (\Base::instance()->get('use_request_query_action')) {
         }
 
         $f3->route($route, function($f3, $params) {
-            $actionName = substr($f3->get('PATH'), 1);
+            $actionName = explode('/', $f3->get('PATH'))[1];
             $data = $GLOBALS['actions'][$actionName];
             $actionMethod = $data[0];
             $functionName = $data[1];
@@ -255,25 +257,15 @@ if (\Base::instance()->get('use_request_query_action')) {
                 $fieldNames = $data[2];
             }
             $functionParams = array();
-            if ($actionMethod !== 'GET' && isset($fieldNames) && !empty($fieldNames)) {
-                $dataSource = json_decode(urldecode($f3->get('BODY')), true);
-                foreach ($fieldNames as $fieldName) {
-                    $functionParams[] = $dataSource[$fieldName];
-                }
+            $dataSource = $actionMethod === 'GET' ? $params : json_decode(urldecode($f3->get('BODY')), true);
+            foreach ($fieldNames as $fieldName) {
+                $functionParams[] = $dataSource[$fieldName];
             }
 
-            if ($actionMethod === 'GET') {
-                try {
-                    call_user_func_array($functionName, $params);
-                } catch (Exception $ex) {
-                    echo json_encode(array('error' => 'Caught exception: ', $ex->getMessage()));
-                }
-            } else {
-                try {
-                    call_user_func_array($functionName, $functionParams);
-                } catch (Exception $ex) {
-                    echo json_encode(array('error' => 'Caught exception: ', $ex->getMessage()));
-                }
+            try {
+                call_user_func_array($functionName, $functionParams);
+            } catch (Exception $ex) {
+                echo json_encode(array('error' => 'Caught exception: ', $ex->getMessage()));
             }
         });
     }
