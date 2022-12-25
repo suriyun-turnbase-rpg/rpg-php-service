@@ -55,6 +55,7 @@ function SpinFortuneWheel($fortuneWheelDataId)
         $deleteItemIds = array();
         $updateCurrencies = array();
         $requirementType = $fortuneWheel['requirementType'];
+        $price = $fortuneWheel['price'];
         if ($requirementType == ELootboxRequirementType::SoftCurrency && $price > $softCurrency->amount) {
             $output['error'] = 'ERROR_NOT_ENOUGH_SOFT_CURRENCY';
         } else if ($requirementType == ELootboxRequirementType::HardCurrency && $price > $hardCurrency->amount) {
