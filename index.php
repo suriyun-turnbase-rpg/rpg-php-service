@@ -37,6 +37,8 @@ require_once('functions/Listing.php');
 require_once('functions/Achievement.php');
 require_once('functions/Auth.php');
 require_once('functions/Item.php');
+require_once('functions/IAP.php');
+require_once('functions/LootBox.php');
 require_once('functions/Social.php');
 require_once('functions/Battle.php');
 require_once('functions/Arena.php');
