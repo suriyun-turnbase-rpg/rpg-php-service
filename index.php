@@ -39,6 +39,7 @@ require_once('functions/Auth.php');
 require_once('functions/Item.php');
 require_once('functions/IAP.php');
 require_once('functions/LootBox.php');
+require_once('functions/FortuneWheel.php');
 require_once('functions/Social.php');
 require_once('functions/Battle.php');
 require_once('functions/Arena.php');
@@ -167,6 +168,9 @@ $actions = array(
     'all-daily-rewarding' => array('GET', 'GetAllDailyRewardList', array()),
     'daily-rewarding' => array('GET', 'GetDailyRewardList', array('id')),
     'daily-rewarding-claim' => array('POST', 'ClaimDailyReward', array('id')),
+    // Fortune wheel services
+    'available-fortune-wheels' => array('GET', 'GetAvailableFortuneWheelList', array()),
+    'spin-fortune-wheel' => array('POST', 'SpinFortuneWheel', array('fortuneWheelDataId')),
     // Player profile
     'unlock-icons' => array('GET', 'GetUnlockIconList', array()),
     'unlock-frames' => array('GET', 'GetUnlockFrameList', array()),
