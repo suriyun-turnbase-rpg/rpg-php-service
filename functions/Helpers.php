@@ -157,27 +157,6 @@ function WeightedRandom($weights, $noResultWeight)
     return $selected;
 }
 
-function RandomLootBoxReward($lootBox)
-{
-    $lootboxRewards = $lootBox['lootboxRewards'];
-    $generatedResult = array();
-    $generatedWeight = array();
-    $countLootboxRewards = count($lootboxRewards);
-    for ($i = 0; $i < $countLootboxRewards; ++$i)
-    {
-        $lootboxReward = $lootboxRewards[$i];
-        $id = '_' . $i;
-        $generatedResult[$id] = $lootboxReward;
-        $generatedWeight[$id] = $lootboxReward['randomWeight'];
-    }
-    
-    $takenId = WeightedRandom($generatedWeight, 0);
-    if ($takenId) {
-        return $generatedResult[$takenId];
-    }
-    return NULL;
-}
-
 function RandomRandomStoreItems($store)
 {
     $items = $store['items'];
