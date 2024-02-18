@@ -182,7 +182,7 @@ function FinishDuel($session, $battleResult, $totalDamage, $deadCharacters)
     echo json_encode($output);
 }
 
-function GetArenaFormationCharactersAndEquipments($playerId, $formationDataId)
+function GetArenaFormationCharactersAndEquipments($playerId)
 {
     $playerDb = new Player();
     $player = $playerDb->findone(array(
